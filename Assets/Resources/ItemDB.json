@@ -1,0 +1,22 @@
+[
+  {
+    "itemName": "Bomb_DefuseKit",
+    "itemID": 1,
+    "amount": 1
+  },
+  {
+    "itemName": "Medikit",
+    "itemID": 2,
+    "amount": 1
+  },
+  {
+    "itemName": "Armor_RepairKit",
+    "itemID": 3,
+    "amount": 1
+  },
+  {
+    "itemName": "AmmoBox",
+    "itemID": 4,
+    "amount": 1
+  }
+]
