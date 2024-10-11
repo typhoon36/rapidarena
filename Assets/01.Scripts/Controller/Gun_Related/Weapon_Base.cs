@@ -6,7 +6,7 @@ public enum WeaponType { Main = 0, Sub,Snifer, Melee, Throw }
 // 주무기, 보조무기, 근접무기, 투척무기
 public enum GrenadeType { Default, Smoke }
 
-// 무기 베이스 클래스
+// 무기 부모 클래스
 public abstract class Weapon_Base : MonoBehaviour
 {
     [Header("Weapon Base")]
@@ -18,8 +18,8 @@ public abstract class Weapon_Base : MonoBehaviour
     protected bool IsReload = false;
     protected bool IsAttack = false;
     protected AudioSource m_ASource;
-    protected Base_Ctrl m_BAnim;
-    protected Base_Ctrl m_Anim => m_BAnim; // protected로 변경
+    protected Base_Ctrl m_BAnim; // Base Controller 참조
+    protected Base_Ctrl m_Anim => m_BAnim;// Base Controller의 애니메이션 참조
 
     [Header("Ammo Settings")]
     [SerializeField] protected int m_MaxAmmo;
