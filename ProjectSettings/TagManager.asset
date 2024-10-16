@@ -13,6 +13,7 @@ TagManager:
   - Fire
   - ExplosiveBarrel
   - Knife
+  - UserNode_Item
   layers:
   - Default
   - TransparentFX

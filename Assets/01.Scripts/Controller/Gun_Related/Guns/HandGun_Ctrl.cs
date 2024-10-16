@@ -31,8 +31,6 @@ public class HandGun_Ctrl : Weapon_Base
     #endregion
 
     #region Aim
-    [Header("Aim")]
-    [SerializeField] private Image m_AimImg;
     bool IsModeChange = false;
     float DefFov = 60;
     float AimFov = 30;
@@ -63,7 +61,7 @@ public class HandGun_Ctrl : Weapon_Base
     {
         PlaySound(m_TakeOutSound);
         m_FireEffect.SetActive(false);
-        UI_Mgr.Inst.UpdateAmmoText(m_AmmoInClip, m_CurrentAmmo);
+        Game_Mgr.Inst.UpdateAmmoText(m_AmmoInClip, m_CurrentAmmo);
         ResetVar();
 
         // 무기 교체 시 애니메이터 다시 설정
@@ -100,7 +98,7 @@ public class HandGun_Ctrl : Weapon_Base
     {
         if (m_AmmoInClip > 0 && Time.time - m_LastAttackTime > m_WeaponSetting.m_AttackRate)
         {
-            if (m_Base.DefState != State.DefState.Run)
+            if (m_Base.PlayerState != Base_Ctrl.DefState.Run)
             {
                 m_LastAttackTime = Time.time;
                 m_Base.Fire();
@@ -108,14 +106,13 @@ public class HandGun_Ctrl : Weapon_Base
 
                 m_CasingPool.SpawnCase(m_SpawnPoint.position, m_SpawnPoint.right);
                 m_AmmoInClip--;
-                UI_Mgr.Inst.UpdateAmmoText(m_AmmoInClip, m_CurrentAmmo);
+                Game_Mgr.Inst.UpdateAmmoText(m_AmmoInClip, m_CurrentAmmo);
 
                 string Anim = m_Base.Aim ? "AimFire" : "Fire";
                 if (m_Base.m_Anim != null && m_Base.m_Anim.gameObject.activeInHierarchy)
                 {
                     m_Base.SetAnimation(Anim);
                 }
-
 
                 if (!m_Base.Aim)
                 {
@@ -139,11 +136,11 @@ public class HandGun_Ctrl : Weapon_Base
     public override void Reload()
     {
         //예외 처리
-        if (m_Base.DefState == State.DefState.Reload || m_CurrentAmmo <= 0) return;
-        if (m_Base.DefState == State.DefState.Inspect) return;
-        if (m_Base.DefState == State.DefState.Jump) return;
-        if (m_Base.DefState == State.DefState.Run) return;
-        if (m_Base.DefState == State.DefState.Walk) return;
+        if (m_Base.PlayerState == Base_Ctrl.DefState.Reload || m_CurrentAmmo <= 0) return;
+        if (m_Base.PlayerState == Base_Ctrl.DefState.Inspect) return;
+        if (m_Base.PlayerState == Base_Ctrl.DefState.Jump) return;
+        if (m_Base.PlayerState == Base_Ctrl.DefState.Run) return;
+        if (m_Base.PlayerState == Base_Ctrl.DefState.Walk) return;
 
         //리로드하기전 탄약 업데이트
         int ammoNeeded = m_ClipSize - m_AmmoInClip;
@@ -157,7 +154,7 @@ public class HandGun_Ctrl : Weapon_Base
             m_AmmoInClip += m_CurrentAmmo;
             m_CurrentAmmo = 0;
         }
-        UI_Mgr.Inst.UpdateAmmoText(m_AmmoInClip, m_CurrentAmmo);
+        Game_Mgr.Inst.UpdateAmmoText(m_AmmoInClip, m_CurrentAmmo);
         //리로드 사운드 
         PlaySound(m_ReloadSound);
         //리로드 애니메이션
@@ -185,7 +182,6 @@ public class HandGun_Ctrl : Weapon_Base
         float m_Time = 0.35f;
 
         m_Base.Aim = !m_Base.Aim;
-        m_AimImg.enabled = !m_AimImg.enabled;
 
         float m_StartFov = Camera.main.fieldOfView;
         float m_EndFov = m_Base.Aim ? AimFov : DefFov;

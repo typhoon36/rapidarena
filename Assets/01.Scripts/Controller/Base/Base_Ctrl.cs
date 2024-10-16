@@ -2,13 +2,44 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum GunType { AssaultRifle = 0, Snifer, Shotgun, Handgun, CombatKnife, Grenade }
+public enum ThrowType { Default, Smoke }
+
+[System.Serializable]
+public class WeaponSetting
+{
+    public GunType name; // 총의 이름
+    public ThrowType Throwname; // 수류탄 이름
+    public int m_Damage; // 총의 데미지
+    public float m_AttackRate;
+    public float m_AttackDist;
+    public bool IsAutoAttack;
+    public int m_ClipSize;
+    public int m_MaxAmmo;
+}
+
+
+
 // 모든 컨트롤러의 부모 클래스
 public class Base_Ctrl : MonoBehaviour
 {
+    public enum DefState
+    {
+        Idle,
+        Jump,
+        Walk,
+        Run,
+        Fire,
+        Reload,
+        Inspect,
+        Damaged, 
+        Death
+    }
+
     [HideInInspector] public Animator m_Anim;
 
     [SerializeField]
-    protected State.DefState m_PlayerState = State.DefState.Idle;
+    protected DefState m_PlayerState = DefState.Idle;
 
     void Awake()
     {
@@ -16,7 +47,7 @@ public class Base_Ctrl : MonoBehaviour
     }
 
     #region 플레이어 상태에 따른 애니메이션
-    public virtual State.DefState DefState
+    public virtual DefState PlayerState
     {
         get { return m_PlayerState; }
         set
@@ -43,22 +74,22 @@ public class Base_Ctrl : MonoBehaviour
 
         switch (m_PlayerState)
         {
-            case State.DefState.Idle:
+            case DefState.Idle:
                 m_Anim.CrossFade("Idle", 0.2f);
                 break;
-            case State.DefState.Walk:
+            case DefState.Walk:
                 m_Anim.CrossFade("Walk", 0.2f);
                 break;
-            case State.DefState.Run:
+            case DefState.Run:
                 m_Anim.CrossFade("Run", 0.2f);
                 break;
-            case State.DefState.Fire:
+            case DefState.Fire:
                 m_Anim.CrossFade("Fire", 0.2f);
                 break;
-            case State.DefState.Reload:
+            case DefState.Reload:
                 m_Anim.CrossFade("Reload", 0.2f);
                 break;
-            case State.DefState.Inspect:
+            case DefState.Inspect:
                 m_Anim.CrossFade("Inspect", 0.2f);
                 break;
         }
@@ -76,25 +107,25 @@ public class Base_Ctrl : MonoBehaviour
     public virtual void Reload()
     {
         //예외 처리
-        if (m_PlayerState == State.DefState.Reload) return;
+        if (m_PlayerState == DefState.Reload) return;
 
-        if (m_PlayerState == State.DefState.Fire) return;
+        if (m_PlayerState == DefState.Fire) return;
 
-        if (m_PlayerState == State.DefState.Inspect) return;
+        if (m_PlayerState == DefState.Inspect) return;
 
-        if (m_PlayerState == State.DefState.Jump) return;
+        if (m_PlayerState == DefState.Jump) return;
 
-        if (m_PlayerState == State.DefState.Run) return;
+        if (m_PlayerState == DefState.Run) return;
 
-        if(m_PlayerState == State.DefState.Walk) return;
+        if (m_PlayerState == DefState.Walk) return;
 
         // 리로드
-        DefState = State.DefState.Reload; // 리로드 상태로 전환
+        PlayerState = DefState.Reload; // 리로드 상태로 전환
     }
 
     public virtual void Inspect()
     {
-        DefState = State.DefState.Inspect;
+        PlayerState = DefState.Inspect;
     }
 
     public void SetAnimation(string animName)

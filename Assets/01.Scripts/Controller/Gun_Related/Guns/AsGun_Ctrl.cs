@@ -30,8 +30,6 @@ public class AsGun_Ctrl : Weapon_Base//베이스가 되는 부모로부터 상속
     #endregion
 
     #region Aim
-    [Header("Aim")]
-    [SerializeField] private Image m_AimImg;
     bool IsModeChange = false;
     float DefFov = 60;
     float AimFov = 30;
@@ -60,9 +58,17 @@ public class AsGun_Ctrl : Weapon_Base//베이스가 되는 부모로부터 상속
 
     void OnEnable()
     {
-        PlaySound(m_TakeOutSound);
-        m_FireEffect.SetActive(false);
-        UI_Mgr.Inst.UpdateAmmoText(m_AmmoInClip, m_CurrentAmmo);
+        if (m_TakeOutSound != null)
+        {
+            PlaySound(m_TakeOutSound);
+        }
+
+        if (m_FireEffect != null)
+        {
+            m_FireEffect.SetActive(false);
+        }
+
+        Game_Mgr.Inst.UpdateAmmoText(m_AmmoInClip, m_CurrentAmmo);
         ResetVar();
 
         // 무기 교체 시 애니메이터 다시 설정
@@ -130,7 +136,7 @@ public class AsGun_Ctrl : Weapon_Base//베이스가 되는 부모로부터 상속
 
             m_CasingPool.SpawnCase(m_SpawnPoint.position, m_SpawnPoint.right);
             m_AmmoInClip--;
-            UI_Mgr.Inst.UpdateAmmoText(m_AmmoInClip, m_CurrentAmmo);
+            Game_Mgr.Inst.UpdateAmmoText(m_AmmoInClip, m_CurrentAmmo);
 
             string Anim = m_Base.Aim ? "AimFire" : "Fire";
             m_Base.SetAnimation(Anim);
@@ -155,12 +161,12 @@ public class AsGun_Ctrl : Weapon_Base//베이스가 되는 부모로부터 상속
     #region Reload & Inspect
     public override void Reload()
     {
-        if (m_Base.DefState == State.DefState.Reload || m_CurrentAmmo <= 0) return;
-        if (m_Base.DefState == State.DefState.Inspect) return;
-        if (m_Base.DefState == State.DefState.Jump) return;
-        if (m_Base.DefState == State.DefState.Run) return;
-        if (m_Base.DefState == State.DefState.Walk) return;
-
+        if (m_Base.PlayerState == Base_Ctrl.DefState.Reload 
+            || m_CurrentAmmo <= 0) return;
+        if (m_Base.PlayerState == Base_Ctrl.DefState.Inspect) return;
+        if (m_Base.PlayerState == Base_Ctrl.DefState.Jump) return;
+        if (m_Base.PlayerState == Base_Ctrl.DefState.Run) return;
+        if (m_Base.PlayerState == Base_Ctrl.DefState.Walk) return;
 
         int ammoNeeded = m_ClipSize - m_AmmoInClip;
         if (m_CurrentAmmo >= ammoNeeded)
@@ -173,10 +179,9 @@ public class AsGun_Ctrl : Weapon_Base//베이스가 되는 부모로부터 상속
             m_AmmoInClip += m_CurrentAmmo;
             m_CurrentAmmo = 0;
         }
-        UI_Mgr.Inst.UpdateAmmoText(m_AmmoInClip, m_CurrentAmmo);
+        Game_Mgr.Inst.UpdateAmmoText(m_AmmoInClip, m_CurrentAmmo);
         m_Base.Reload();
         PlaySound(m_ReloadSound);
-
     }
 
     public override void Inspect()
@@ -200,7 +205,7 @@ public class AsGun_Ctrl : Weapon_Base//베이스가 되는 부모로부터 상속
         float m_Time = 0.35f;
 
         m_Base.Aim = !m_Base.Aim;
-        m_AimImg.enabled = !m_AimImg.enabled;
+        //m_AimImg.enabled = !m_AimImg.enabled;
 
         float m_StartFov = Camera.main.fieldOfView;
         float m_EndFov = m_Base.Aim ? AimFov : DefFov;

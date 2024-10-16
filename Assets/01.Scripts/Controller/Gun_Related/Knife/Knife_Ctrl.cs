@@ -26,7 +26,7 @@ public class Knife_Ctrl : Weapon_Base
     void OnEnable()
     {
         IsAttack = false;
-        UI_Mgr.Inst.UpdateAmmoText(m_AmmoInClip, m_CurrentAmmo);
+        Game_Mgr.Inst.UpdateAmmoText(m_AmmoInClip, m_CurrentAmmo);
 
         // 무기 교체 시 애니메이터 다시 설정
         if (m_Base != null)

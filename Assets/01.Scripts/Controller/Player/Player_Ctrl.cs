@@ -40,6 +40,8 @@ public class Player_Ctrl : Base_Ctrl
 
     Weapon_Base m_GunBase;
 
+    GameState m_GameState;
+
     #region ChangeWepaon
     [SerializeField] private Weapon_Base[] m_weapons;
     private Weapon_Base currentWeapon;
@@ -48,9 +50,6 @@ public class Player_Ctrl : Base_Ctrl
     void Awake()
     {
         #region FPS Cameara
-        Cursor.visible = false;
-        Cursor.lockState = CursorLockMode.Locked;
-
         m_CamCtrl = GetComponent<Cam_Ctrl>();
         #endregion
 
@@ -74,16 +73,22 @@ public class Player_Ctrl : Base_Ctrl
         if (m_weapons.Length > 0)
         {
             // 첫 번째 무기(기본 나이프) 활성화
-            currentWeapon = m_weapons[2]; 
+            currentWeapon = m_weapons[2];
             currentWeapon.gameObject.SetActive(true);
-            UI_Mgr.Inst.SetWeapon(currentWeapon);
+            Game_Mgr.Inst.SetWeapon(currentWeapon);
         }
-        UI_Mgr.Inst.UpdateHPBar(m_CurHP, m_MaxHP);
+        Game_Mgr.Inst.UpdateHPBar(m_CurHP, m_MaxHP);
 
     }
 
     void Update()
     {
+        if (Ready_Mgr.m_GameState != GameState.Play)
+            return;
+
+        // 충돌 처리를 항상 활성화
+        m_CharCtrl.enabled = true;
+
         // 키보드 움직임
         KeyMovement();
         // 점프
@@ -95,7 +100,7 @@ public class Player_Ctrl : Base_Ctrl
         #region 총기 적용
         if (Input.GetMouseButtonDown(0))
         {
-            currentWeapon.StartWAtt(); 
+            currentWeapon.StartWAtt();
         }
         else if (Input.GetMouseButton(0) && currentWeapon.WeaponSetting.IsAutoAttack)
         {
@@ -158,16 +163,16 @@ public class Player_Ctrl : Base_Ctrl
             m_Velocity.y = -2f;
 
         // 공중에 있을 때 Idle 상태로 전환
-        if (!m_IsGrounded && DefState != State.DefState.Idle)
+        if (!m_IsGrounded && PlayerState != Base_Ctrl.DefState.Idle)
         {
-            DefState = State.DefState.Idle;
+            PlayerState = Base_Ctrl.DefState.Idle;
             PlaySound(null, false);
         }
 
         // 플레이어가 멈췄을 때 Idle 상태로 전환
-        if (m_IsGrounded && m_MoveDir == Vector3.zero && DefState != State.DefState.Idle)
+        if (m_IsGrounded && m_MoveDir == Vector3.zero && PlayerState != Base_Ctrl.DefState.Idle)
         {
-            DefState = State.DefState.Idle;
+            PlayerState = Base_Ctrl.DefState.Idle;
             PlaySound(null, false);
         }
 
@@ -176,7 +181,6 @@ public class Player_Ctrl : Base_Ctrl
         {
             TakeDamage(50);
         }
-
     }
 
     #region Camera 회전 업데이트
@@ -201,9 +205,9 @@ public class Player_Ctrl : Base_Ctrl
 
         if (h == 0 && v == 0)
         {
-            if (DefState != State.DefState.Idle && DefState != State.DefState.Inspect && DefState != State.DefState.Reload)
+            if (PlayerState != Base_Ctrl.DefState.Idle && PlayerState != Base_Ctrl.DefState.Inspect && PlayerState != Base_Ctrl.DefState.Reload)
             {
-                DefState = State.DefState.Idle;
+                PlayerState = Base_Ctrl.DefState.Idle;
                 PlaySound(null, false); // Idle 상태에서는 소리를 재생하지 않음
             }
         }
@@ -213,9 +217,9 @@ public class Player_Ctrl : Base_Ctrl
             if (m_IsGrounded && Input.GetKey(KeyCode.LeftShift))
             {
                 a_Dir *= m_RunVel;
-                if (DefState != State.DefState.Run)
+                if (PlayerState != Base_Ctrl.DefState.Run)
                 {
-                    DefState = State.DefState.Run;
+                    PlayerState = Base_Ctrl.DefState.Run;
                     PlaySound(m_RunSound, true);
                 }
             }
@@ -223,9 +227,9 @@ public class Player_Ctrl : Base_Ctrl
             else if (m_IsGrounded)
             {
                 a_Dir *= m_MoveVel;
-                if (DefState != State.DefState.Walk)
+                if (PlayerState != Base_Ctrl.DefState.Walk)
                 {
-                    DefState = State.DefState.Walk;
+                    PlayerState = Base_Ctrl.DefState.Walk;
                     PlaySound(m_WalkSound, true);
                 }
             }
@@ -241,7 +245,7 @@ public class Player_Ctrl : Base_Ctrl
         if (Input.GetButtonDown("Jump") && m_IsGrounded)
         {
             m_Velocity.y = Mathf.Sqrt(m_JumpForce * -2f * m_Gravity);
-            DefState = State.DefState.Jump;
+            PlayerState = Base_Ctrl.DefState.Jump;
         }
     }
     #endregion
@@ -274,15 +278,11 @@ public class Player_Ctrl : Base_Ctrl
         }
         currentWeapon = newWeapon;
         currentWeapon.gameObject.SetActive(true);
-        UI_Mgr.Inst.SetWeapon(currentWeapon);
+        Game_Mgr.Inst.SetWeapon(currentWeapon);
 
         // 무기 변경 후 애니메이션 상태 업데이트
         UpdateAnimationState();
     }
-
-
-
-
     #endregion
 
     #region Damage
@@ -291,10 +291,10 @@ public class Player_Ctrl : Base_Ctrl
         m_CurHP -= damage;
         if (m_CurHP < 0) m_CurHP = 0;
 
-        UI_Mgr.Inst.ShowDamagePanel();
-        UI_Mgr.Inst.UpdateHPBar(m_CurHP, m_MaxHP);
+        Game_Mgr.Inst.ShowDamagePanel();
+        Game_Mgr.Inst.UpdateHPBar(m_CurHP, m_MaxHP);
 
-        DefState = State.DefState.Damaged;
+        PlayerState = Base_Ctrl.DefState.Damaged;
     }
     #endregion
 
@@ -302,8 +302,7 @@ public class Player_Ctrl : Base_Ctrl
     public void ToggleIsAttackMode()
     {
         currentWeapon.WeaponSetting.IsAutoAttack = !currentWeapon.WeaponSetting.IsAutoAttack;
-        UI_Mgr.Inst.UpdateGunModeText(currentWeapon.WeaponType, currentWeapon.WeaponSetting.IsAutoAttack);
+        Game_Mgr.Inst.UpdateGunModeText(currentWeapon.WeaponType, currentWeapon.WeaponSetting.IsAutoAttack);
     }
     #endregion
-
 }
