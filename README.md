@@ -27,13 +27,11 @@
 
 | 항목 | 설명 |
 | ------------ | ------------- |
-| 디자인 패턴 | - 싱글톤 패턴을 사용해서 전역 접근 관리
- -  State Pattern을 사용해 캐릭터 애니메이션을 객체 관리 |
-| Object Pooling | 자주 사용되는 객체는 재사용하여 관리 |
-| FSM | 몬스터들의 패턴을 직관적으로 관리 |
-| 직렬화 | 유니티상에서 클래스를 직렬화하여 작업 편의성 증대 |
-| 코루틴  | 연출은 코루틴으로 관리하여 메모리 확보 |
-| Save | 게임내 데이터를 글로벌 변수에 저장 및 관리 |
+| 디자인 패턴 | - 싱글톤 패턴을 사용해서 전역 접근 관리 |
+| Object Pooling | 자주 사용되는 객체는 Pool로 관리하여 재사용|
+| GoogleSheet    | 구글 스프레드 시트로 데이터 관리   |
+| Save | 게임 내 데이터를 JSON으로 변환해 저장 및 로드|
+| Photon| 포톤을 이용한 멀티플레이 기능 관리 |
 
 
 ## 구현 기능
@@ -43,13 +41,11 @@
         
 
  ## 기술 문서
-[기술 문서](https://docs.google.com/presentation/d/15tD-nxOH4juBukBCzeHNn3QBTxk8-W_Du52wTj0wxL0/edit#slide=id.g301078c2494_0_176)
+[기술 문서](https://docs.google.com/presentation/d/1ASBFL0deqHO50BUfyGx-w9X3S-U0FXeQ4qpRaYTWGsU/edit#slide=id.g301078c2494_0_171)
 
 
  ## velog
 
 [블로그](https://velog.io/@typhoon760/posts?tag=%ED%8F%AC%ED%8A%B8%ED%8F%B4%EB%A6%AC%EC%98%A4)
 
- ## 영상
 
- [플레이 영상](https://youtu.be/B-tIQGz2CaY)
