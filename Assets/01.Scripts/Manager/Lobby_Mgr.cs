@@ -12,6 +12,9 @@ public class Lobby_Mgr : MonoBehaviourPunCallbacks
     public Button m_PlayBtn;
     public Button m_LoadOutBtn;
     public Button m_ShopBtn;
+    public Button m_SettingBtn;
+    public Button m_ExitBtn;
+    public Button m_HomeBtn;
     public GameObject m_RoomPanel;
     #endregion
 
@@ -27,7 +30,6 @@ public class Lobby_Mgr : MonoBehaviourPunCallbacks
 
     void Awake()
     {
-
         if (!PhotonNetwork.IsConnected)
             PhotonNetwork.ConnectUsingSettings();
 
@@ -45,33 +47,47 @@ public class Lobby_Mgr : MonoBehaviourPunCallbacks
             m_PlayBtn.onClick.AddListener(() =>
             {
                 m_RoomPanel.SetActive(true);
-                //바로 방 생성을 누르면 포톤클라우드를 연결하는 시간이 있어,플레이 버튼으로 활성화. 
-                //OnCreateRoomFailed()를 대비.
             });
 
-        if(m_ShopBtn != null)
+        if (m_ShopBtn != null)
             m_ShopBtn.onClick.AddListener(() =>
             {
                 SceneManager.LoadScene("ShopScene");
             });
-        if(m_LoadOutBtn != null)
+        if (m_LoadOutBtn != null)
             m_LoadOutBtn.onClick.AddListener(() =>
             {
                 SceneManager.LoadScene("LoadOutScene");
             });
 
+        if (m_ExitBtn != null)
+            m_ExitBtn.onClick.AddListener(() =>
+            {
+#if UNITY_EDITOR
+                UnityEditor.EditorApplication.isPlaying = false;
+#else
+                        Application.Quit();
+#endif
+            });
 
+        if (m_HomeBtn != null)
+        {
+            m_HomeBtn.onClick.AddListener(() =>
+            {
+            
+                SceneManager.LoadScene("Pt_LobbyScene");
+            });
+        }
     }
+
+    #region Photon methods
     public override void OnConnectedToMaster()
     {
-        //Debug.Log("서버 접속 완료");
         PhotonNetwork.JoinLobby(); //가상 로비 접속
     }
 
     public override void OnJoinedLobby()
     {
-        //Debug.Log("로비 접속 완료");
-
         userId.text = GetUserId();
     }
 
@@ -104,7 +120,6 @@ public class Lobby_Mgr : MonoBehaviourPunCallbacks
     void OnClickCreateRoom()
     {
         string _roomName = roomName.text;
-        //룸 이름이 없거나 null 일 경우 룸 이름 저장
         if (string.IsNullOrEmpty(roomName.text))
         {
             _roomName = "Room_" + Random.Range(0, 999).ToString("000");
@@ -114,20 +129,19 @@ public class Lobby_Mgr : MonoBehaviourPunCallbacks
         PlayerPrefs.SetString("USER_ID", userId.text);
 
         RoomOptions roomOptions = new RoomOptions();
-        roomOptions.IsOpen = true;      
-        roomOptions.IsVisible = true;   
-        roomOptions.MaxPlayers = 8;     
+        roomOptions.IsOpen = true;
+        roomOptions.IsVisible = true;
+        roomOptions.MaxPlayers = 8;
 
         PhotonNetwork.CreateRoom(_roomName, roomOptions, TypedLobby.Default);
-
-
     }
+
     public override void OnCreateRoomFailed(short returnCode, string message)
     {
-        //Debug.Log("방 만들기 실패");
-        Debug.Log(returnCode.ToString());   
-        Debug.Log(message); 
+        Debug.Log(returnCode.ToString());
+        Debug.Log(message);
     }
+
     public override void OnRoomListUpdate(List<RoomInfo> roomList)
     {
         m_RoomItemList = scrollContents.transform.GetComponentsInChildren<RoomItem>(true);
@@ -142,8 +156,6 @@ public class Lobby_Mgr : MonoBehaviourPunCallbacks
             {
                 if (a_ArrIdx < 0)
                 {
-
-
                     GameObject room = Instantiate(roomItem) as GameObject;
 
                     room.transform.SetParent(scrollContents.transform, false);
@@ -153,7 +165,6 @@ public class Lobby_Mgr : MonoBehaviourPunCallbacks
                     roomData.connectPlayer = roomList[i].PlayerCount;
                     roomData.maxPlayer = roomList[i].MaxPlayers;
 
-
                     roomData.DispRoomData(roomList[i].IsOpen);
                 }
                 else
@@ -161,7 +172,6 @@ public class Lobby_Mgr : MonoBehaviourPunCallbacks
                     m_RoomItemList[a_ArrIdx].roomName = roomList[i].Name;
                     m_RoomItemList[a_ArrIdx].connectPlayer = roomList[i].PlayerCount;
                     m_RoomItemList[a_ArrIdx].maxPlayer = roomList[i].MaxPlayers;
-
 
                     m_RoomItemList[a_ArrIdx].DispRoomData(roomList[i].IsOpen);
                 }
@@ -230,5 +240,9 @@ public class Lobby_Mgr : MonoBehaviourPunCallbacks
 
         return userId;
     }
+    #endregion
 
+    #region UI Methods
+
+    #endregion
 }

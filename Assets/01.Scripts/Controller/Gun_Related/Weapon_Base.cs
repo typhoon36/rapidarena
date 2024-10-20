@@ -1,14 +1,15 @@
+using Photon.Pun;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 // 무기 종류
-public enum WeaponType { Main = 0, Sub, Snifer, Melee, Throw }
+public enum WeaponType { Main = 0, Sub, Melee, Throw }
 // 수류탄 종류
 public enum GrenadeType { Default, Smoke }
 
 
-public abstract class Weapon_Base : MonoBehaviour
+public abstract class Weapon_Base : MonoBehaviour 
 {
     [Header("Weapon Base")]
     [SerializeField] protected WeaponType m_WeaponType;
@@ -40,7 +41,6 @@ public abstract class Weapon_Base : MonoBehaviour
     public abstract void Reload();
     public abstract void Inspect();
 
-    #region Init
     protected virtual void Awake()
     {
         m_ASource = GetComponent<AudioSource>();
@@ -54,7 +54,7 @@ public abstract class Weapon_Base : MonoBehaviour
         m_ASource = GetComponent<AudioSource>();
         m_BAnim = GetComponentInParent<Base_Ctrl>();
     }
-    #endregion
+
 
     #region Audio
     protected void PlaySound(AudioClip clip)
@@ -64,4 +64,7 @@ public abstract class Weapon_Base : MonoBehaviour
         m_ASource.Play();
     }
     #endregion
+
+  
 }
+

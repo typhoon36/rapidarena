@@ -63,5 +63,86 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 45b67bd8d873b1640b29ba5a21a18e10, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 8362960079426387892}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 45b67bd8d873b1640b29ba5a21a18e10, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 6909309116570605122}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 45b67bd8d873b1640b29ba5a21a18e10, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: -9143686842988313073}
   m_SourcePrefab: {fileID: 100100000, guid: 45b67bd8d873b1640b29ba5a21a18e10, type: 3}
+--- !u!1 &4537489591782933374 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 45b67bd8d873b1640b29ba5a21a18e10, type: 3}
+  m_PrefabInstance: {fileID: 3618940748714229295}
+  m_PrefabAsset: {fileID: 0}
+--- !u!136 &8362960079426387892
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4537489591782933374}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.05
+  m_Height: 0.21
+  m_Direction: 1
+  m_Center: {x: 0, y: 0.08, z: 0}
+--- !u!54 &6909309116570605122
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4537489591782933374}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
+--- !u!114 &-9143686842988313073
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4537489591782933374}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2e9f490da7df19543a8e0758329925ac, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_ExplosionEff: {fileID: 1000012382359008, guid: 96a94de897daf7249a824fb908bb12a2, type: 3}
+  m_ExplosionRadius: 10
+  m_ExplosionPower: 500
+  m_throwForce: 1000
+  m_ExplosionDelay: 2

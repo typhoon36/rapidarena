@@ -1,28 +1,25 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Photon.Pun;
 
-// 플레이어를 직접 조종
 public class Player_Ctrl : Base_Ctrl
 {
-    #region Camera
-    Cam_Ctrl m_CamCtrl;
-    #endregion
+    [HideInInspector] public PhotonView pv = null;
 
     #region KeyBoard
     float h, v = 0;
     float m_MoveVel = 5f;
-    float m_RunVel = 10f;
-
-    CharacterController m_CharCtrl;
     Vector3 m_MoveDir = Vector3.zero;
-    Vector3 m_Velocity = Vector3.zero; // 추가된 변수
+    float m_RunVel = 10f;
+    Vector3 m_Velocity = Vector3.zero;
+    CharacterController m_CharCtrl;
     #endregion
 
     #region Jump    
     float m_Gravity = -10f;
     float m_JumpForce = 2f;
-    bool m_IsGrounded;
+    bool IsGround;
     #endregion
 
     #region Sound
@@ -32,72 +29,233 @@ public class Player_Ctrl : Base_Ctrl
     AudioSource m_ASource;
     #endregion
 
-    #region HP
-    //HP들만 있는것은 UI 매니저가 관리하기에
-    float m_MaxHP = 440;
-    float m_CurHP = 440;
+    #region References
+    Weapon_Base m_GunBase;
+    GameState m_GameState;
+    Cam_Ctrl m_CamCtrl;
     #endregion
 
-    Weapon_Base m_GunBase;
-
-    GameState m_GameState;
-
-    #region ChangeWepaon
+    #region ChangeWeapon
     [SerializeField] private Weapon_Base[] m_weapons;
     private Weapon_Base currentWeapon;
     #endregion
 
+    #region HP
+    float m_MaxHP = 440;
+    float m_CurHP = 440;
+    #endregion
+
     void Awake()
     {
-        #region FPS Cameara
-        m_CamCtrl = GetComponent<Cam_Ctrl>();
-        #endregion
+        pv = GetComponent<PhotonView>();
 
-        #region Init
+
+        if (pv.IsMine == true)
+        {
+            Cam_Ctrl a_CamCt = Camera.main.GetComponent<Cam_Ctrl>();
+
+            if (a_CamCt != null)
+            {
+                a_CamCt.Init(this.gameObject);
+            }
+        }
+
         m_CharCtrl = GetComponent<CharacterController>();
         m_Anim = GetComponentInChildren<Animator>();
-
         m_ASource = GetComponent<AudioSource>();
-
-        m_GunBase = GetComponentInChildren<AsGun_Ctrl>();
-        #endregion
+        m_GunBase = GetComponentInChildren<Weapon_Base>();
+        m_CamCtrl = GetComponent<Cam_Ctrl>();
     }
 
     void Start()
     {
-        // 모든 무기를 비활성화
-        foreach (var weapon in m_weapons)
-        {
-            weapon.gameObject.SetActive(false);
-        }
-        if (m_weapons.Length > 0)
-        {
-            // 첫 번째 무기(기본 나이프) 활성화
-            currentWeapon = m_weapons[2];
-            currentWeapon.gameObject.SetActive(true);
-            Game_Mgr.Inst.SetWeapon(currentWeapon);
-        }
-        Game_Mgr.Inst.UpdateHPBar(m_CurHP, m_MaxHP);
+        m_CurHP = m_MaxHP;
 
+        if (pv.IsMine)
+        {
+            Game_Mgr.Inst.UpdateHPBar(m_CurHP, m_MaxHP);
+
+            foreach (var weapon in m_weapons)
+                weapon.gameObject.SetActive(false);
+
+            if (m_weapons.Length > 0)
+            {
+                currentWeapon = m_weapons[0];
+                currentWeapon.gameObject.SetActive(true);
+                Game_Mgr.Inst.SetWeapon(currentWeapon);
+            }
+        }
     }
 
     void Update()
     {
-        if (Ready_Mgr.m_GameState != GameState.Play)
+        if (Ready_Mgr.m_GameState == GameState.Ready) return; // 시작 전에 움직이지 못하게
+
+        if (PhotonNetwork.CurrentRoom == null ||
+            PhotonNetwork.LocalPlayer == null)
             return;
 
-        // 충돌 처리를 항상 활성화
-        m_CharCtrl.enabled = true;
+        if (!pv.IsMine) return;
 
-        // 키보드 움직임
         KeyMovement();
-        // 점프
         Jump();
-
-        // 카메라
         UpdateRot();
+        IsChange();
+        HandleWeaponActions();
 
-        #region 총기 적용
+        m_Velocity.y += m_Gravity * Time.deltaTime;
+        m_CharCtrl.Move((m_MoveDir + m_Velocity) * Time.deltaTime);
+        IsGround = m_CharCtrl.isGrounded;
+
+        if (IsGround && m_Velocity.y < 0)
+            m_Velocity.y = -2f;
+
+        if (!IsGround && PlayerState != DefState.Idle)
+        {
+            PlayerState = DefState.Idle;
+            PlaySound(null, false);
+        }
+
+        if (IsGround && m_MoveDir == Vector3.zero && PlayerState != DefState.Idle)
+        {
+            PlayerState = DefState.Idle;
+            PlaySound(null, false);
+        }
+    }
+
+    void UpdateRot()
+    {
+        if (pv.IsMine == false) return;
+
+        if (pv.IsMine)
+        {
+            float a_MouseX = Input.GetAxis("Mouse X");
+            float a_MouseY = Input.GetAxis("Mouse Y");
+
+            m_CamCtrl.UpdateRot(a_MouseX, a_MouseY);
+        }
+    }
+
+    void KeyMovement()
+    {
+
+        if(pv.IsMine == false) return;
+
+        h = Input.GetAxis("Horizontal");
+        v = Input.GetAxis("Vertical");
+
+        Vector3 a_Dir = new Vector3(h, 0, v);
+        a_Dir = transform.TransformDirection(a_Dir);
+
+        if (h == 0 && v == 0)
+        {
+            if (PlayerState != DefState.Idle && PlayerState != DefState.Inspect && PlayerState != DefState.Reload)
+            {
+                PlayerState = DefState.Idle;
+                PlaySound(null, false);
+            }
+        }
+        else
+        {
+            if (IsGround && Input.GetKey(KeyCode.LeftShift))
+            {
+                a_Dir *= m_RunVel;
+                if (PlayerState != DefState.Run)
+                {
+                    PlayerState = DefState.Run;
+                    PlaySound(m_RunSound, true);
+                }
+            }
+            else if (IsGround)
+            {
+                a_Dir *= m_MoveVel;
+                if (PlayerState != DefState.Walk)
+                {
+                    PlayerState = DefState.Walk;
+                    PlaySound(m_WalkSound, true);
+                }
+            }
+        }
+
+        m_MoveDir.x = a_Dir.x;
+        m_MoveDir.z = a_Dir.z;
+    }
+
+    void Jump()
+    {
+        if(pv.IsMine == false) return;
+
+        if (Input.GetButtonDown("Jump") && IsGround)
+        {
+            m_Velocity.y = Mathf.Sqrt(m_JumpForce * -2f * m_Gravity);
+            PlayerState = DefState.Jump;
+        }
+    }
+
+    void PlaySound(AudioClip clip, bool loop)
+    {
+        if (m_ASource == null) return;
+
+        if (m_ASource.isPlaying)
+        {
+            m_ASource.Stop();
+        }
+
+        if (clip != null)
+        {
+            m_ASource.clip = clip;
+            m_ASource.loop = loop;
+            m_ASource.Play();
+        }
+    }
+
+    public void C_Weapon(Weapon_Base newWeapon)
+    {
+        if(pv.IsMine == false) return;
+
+        if (currentWeapon != null)
+        {
+            currentWeapon.gameObject.SetActive(false);
+        }
+        currentWeapon = newWeapon;
+        currentWeapon.gameObject.SetActive(true);
+        Game_Mgr.Inst.SetWeapon(currentWeapon);
+
+        UpdateAnimationState();
+    }
+
+    void IsChange()
+    {
+        if (pv.IsMine == false) return;
+
+        float scroll = Input.GetAxis("Mouse ScrollWheel");
+        if (scroll != 0)
+        {
+            int CurIdx = System.Array.IndexOf(m_weapons, currentWeapon);
+            if (scroll > 0)
+            {
+                CurIdx = (CurIdx + 1) % m_weapons.Length;
+            }
+            else if (scroll < 0)
+            {
+                CurIdx = (CurIdx - 1 + m_weapons.Length) % m_weapons.Length;
+            }
+            C_Weapon(m_weapons[CurIdx]);
+        }
+    }
+
+    public void ToggleIsAttackMode()
+    {
+        if (pv.IsMine == false) return;
+
+        currentWeapon.WeaponSetting.IsAutoAttack = !currentWeapon.WeaponSetting.IsAutoAttack;
+        Game_Mgr.Inst.UpdateGunModeText(currentWeapon.WeaponType, currentWeapon.WeaponSetting.IsAutoAttack);
+    }
+
+    void HandleWeaponActions()
+    {
+        if (pv.IsMine == false) return;
+
         if (Input.GetMouseButtonDown(0))
         {
             currentWeapon.StartWAtt();
@@ -131,178 +289,6 @@ public class Player_Ctrl : Base_Ctrl
         {
             ToggleIsAttackMode();
         }
-
-        #endregion
-
-        #region 총기 교체
-        // 마우스 휠로 무기 변경
-        float scroll = Input.GetAxis("Mouse ScrollWheel");
-        if (scroll != 0)
-        {
-            int CurIdx = System.Array.IndexOf(m_weapons, currentWeapon);
-            if (scroll > 0)
-            {
-                CurIdx = (CurIdx + 1) % m_weapons.Length;
-            }
-            else if (scroll < 0)
-            {
-                CurIdx = (CurIdx - 1 + m_weapons.Length) % m_weapons.Length;
-            }
-            ChangeWeapon(m_weapons[CurIdx]);
-        }
-
-        #endregion
-
-        m_Velocity.y += m_Gravity * Time.deltaTime;
-
-        // 캐릭터 컨트롤러에 이동 적용
-        m_CharCtrl.Move((m_MoveDir + m_Velocity) * Time.deltaTime);
-        m_IsGrounded = m_CharCtrl.isGrounded;
-
-        if (m_IsGrounded && m_Velocity.y < 0)
-            m_Velocity.y = -2f;
-
-        // 공중에 있을 때 Idle 상태로 전환
-        if (!m_IsGrounded && PlayerState != Base_Ctrl.DefState.Idle)
-        {
-            PlayerState = Base_Ctrl.DefState.Idle;
-            PlaySound(null, false);
-        }
-
-        // 플레이어가 멈췄을 때 Idle 상태로 전환
-        if (m_IsGrounded && m_MoveDir == Vector3.zero && PlayerState != Base_Ctrl.DefState.Idle)
-        {
-            PlayerState = Base_Ctrl.DefState.Idle;
-            PlaySound(null, false);
-        }
-
-        // 피격 테스트용 코드 (실제 게임에서는 적의 공격 로직에서 호출)
-        if (Input.GetKeyDown(KeyCode.H))
-        {
-            TakeDamage(50);
-        }
     }
-
-    #region Camera 회전 업데이트
-    void UpdateRot()
-    {
-        float a_MouseX = Input.GetAxis("Mouse X");
-        float a_MouseY = Input.GetAxis("Mouse Y");
-
-        m_CamCtrl.UpdateRot(a_MouseX, a_MouseY);
-    }
-    #endregion
-
-    #region 키보드 움직임
-    void KeyMovement()
-    {
-        //# 기본 움직임 
-        h = Input.GetAxis("Horizontal");
-        v = Input.GetAxis("Vertical");
-
-        Vector3 a_Dir = new Vector3(h, 0, v);
-        a_Dir = transform.TransformDirection(a_Dir);
-
-        if (h == 0 && v == 0)
-        {
-            if (PlayerState != Base_Ctrl.DefState.Idle && PlayerState != Base_Ctrl.DefState.Inspect && PlayerState != Base_Ctrl.DefState.Reload)
-            {
-                PlayerState = Base_Ctrl.DefState.Idle;
-                PlaySound(null, false); // Idle 상태에서는 소리를 재생하지 않음
-            }
-        }
-        else
-        {
-            //# 달리기(상태 확인후 속도 적용)
-            if (m_IsGrounded && Input.GetKey(KeyCode.LeftShift))
-            {
-                a_Dir *= m_RunVel;
-                if (PlayerState != Base_Ctrl.DefState.Run)
-                {
-                    PlayerState = Base_Ctrl.DefState.Run;
-                    PlaySound(m_RunSound, true);
-                }
-            }
-            //# 걷기상태시
-            else if (m_IsGrounded)
-            {
-                a_Dir *= m_MoveVel;
-                if (PlayerState != Base_Ctrl.DefState.Walk)
-                {
-                    PlayerState = Base_Ctrl.DefState.Walk;
-                    PlaySound(m_WalkSound, true);
-                }
-            }
-        }
-
-        //# 캐릭터 컨트롤러에 적용
-        m_MoveDir.x = a_Dir.x;
-        m_MoveDir.z = a_Dir.z;
-    }
-
-    void Jump()
-    {
-        if (Input.GetButtonDown("Jump") && m_IsGrounded)
-        {
-            m_Velocity.y = Mathf.Sqrt(m_JumpForce * -2f * m_Gravity);
-            PlayerState = Base_Ctrl.DefState.Jump;
-        }
-    }
-    #endregion
-
-    #region Audio
-    void PlaySound(AudioClip clip, bool loop)
-    {
-        if (m_ASource == null) return;
-
-        if (m_ASource.isPlaying)
-        {
-            m_ASource.Stop();
-        }
-
-        if (clip != null)
-        {
-            m_ASource.clip = clip;
-            m_ASource.loop = loop;
-            m_ASource.Play();
-        }
-    }
-    #endregion
-
-    #region 총기교체
-    public void ChangeWeapon(Weapon_Base newWeapon)
-    {
-        if (currentWeapon != null)
-        {
-            currentWeapon.gameObject.SetActive(false);
-        }
-        currentWeapon = newWeapon;
-        currentWeapon.gameObject.SetActive(true);
-        Game_Mgr.Inst.SetWeapon(currentWeapon);
-
-        // 무기 변경 후 애니메이션 상태 업데이트
-        UpdateAnimationState();
-    }
-    #endregion
-
-    #region Damage
-    public void TakeDamage(float damage)
-    {
-        m_CurHP -= damage;
-        if (m_CurHP < 0) m_CurHP = 0;
-
-        Game_Mgr.Inst.ShowDamagePanel();
-        Game_Mgr.Inst.UpdateHPBar(m_CurHP, m_MaxHP);
-
-        PlayerState = Base_Ctrl.DefState.Damaged;
-    }
-    #endregion
-
-    #region ToggleIsAttMode
-    public void ToggleIsAttackMode()
-    {
-        currentWeapon.WeaponSetting.IsAutoAttack = !currentWeapon.WeaponSetting.IsAutoAttack;
-        Game_Mgr.Inst.UpdateGunModeText(currentWeapon.WeaponType, currentWeapon.WeaponSetting.IsAutoAttack);
-    }
-    #endregion
 }
+

@@ -39,7 +39,10 @@ MonoBehaviour:
   - DestroySpaceship
   - Fire
   - RespawnSpaceship
+  - OnTrigItemRPC
+  - TakeItemRPC
   - LogMsg
+  - SyncTransform
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

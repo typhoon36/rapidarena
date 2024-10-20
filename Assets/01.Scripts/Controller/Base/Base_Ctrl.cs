@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum GunType { AssaultRifle = 0, Snifer, Shotgun, Handgun, CombatKnife, Grenade }
+public enum GunType { AssaultRifle = 0, Handgun, CombatKnife, Grenade }
 public enum ThrowType { Default, Smoke }
 
 [System.Serializable]
@@ -18,8 +18,6 @@ public class WeaponSetting
     public int m_MaxAmmo;
 }
 
-
-
 // 모든 컨트롤러의 부모 클래스
 public class Base_Ctrl : MonoBehaviour
 {
@@ -32,12 +30,11 @@ public class Base_Ctrl : MonoBehaviour
         Fire,
         Reload,
         Inspect,
-        Damaged, 
+        Damaged,
         Death
     }
 
     [HideInInspector] public Animator m_Anim;
-
     [SerializeField]
     protected DefState m_PlayerState = DefState.Idle;
 
@@ -52,8 +49,11 @@ public class Base_Ctrl : MonoBehaviour
         get { return m_PlayerState; }
         set
         {
-            m_PlayerState = value;
-            UpdateAnimationState();
+            if (m_PlayerState != value)
+            {
+                m_PlayerState = value;
+                UpdateAnimationState();
+            }
         }
     }
 
@@ -106,21 +106,17 @@ public class Base_Ctrl : MonoBehaviour
 
     public virtual void Reload()
     {
-        //예외 처리
+        // 예외 처리
         if (m_PlayerState == DefState.Reload) return;
-
         if (m_PlayerState == DefState.Fire) return;
-
         if (m_PlayerState == DefState.Inspect) return;
-
         if (m_PlayerState == DefState.Jump) return;
-
         if (m_PlayerState == DefState.Run) return;
-
         if (m_PlayerState == DefState.Walk) return;
 
-        // 리로드
-        PlayerState = DefState.Reload; // 리로드 상태로 전환
+        // 리로드 상태로 전환
+        PlayerState = DefState.Reload;
+        SetTrigger("Reload"); // 애니메이션 트리거 설정
     }
 
     public virtual void Inspect()

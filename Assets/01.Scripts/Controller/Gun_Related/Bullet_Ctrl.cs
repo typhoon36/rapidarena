@@ -12,6 +12,11 @@ public class Bullet_Ctrl : MonoBehaviour
     //벽에 맞았을때의 이펙트
     public GameObject SparkEffect;
 
+    //발사한 플레이어의 ID 저장
+    [HideInInspector] public int AttackerId = -1;
+    [HideInInspector] public string AttackerTeam = "blue"; 
+
+
     void Start()
     {
         speed = 3000.0f;
@@ -31,15 +36,18 @@ public class Bullet_Ctrl : MonoBehaviour
 
         else if (coll.collider.tag == "Player") return;
 
-        else if(coll.collider.tag == "Item") return;
+        else if (coll.collider.tag == "Item") return;
 
         else if (coll.collider.includeLayers == 1 << LayerMask.NameToLayer("Default")) return;
 
+        //충돌한 게임 오브젝트의 태그값 비교
+        if (coll.collider.tag == "Wall")
+        {
+            GameObject Spark = Instantiate(SparkEffect, transform.position, Quaternion.identity);
 
-        GameObject Spark = Instantiate(SparkEffect, transform.position, Quaternion.identity);
+            Destroy(Spark, Spark.GetComponent<ParticleSystem>().main.duration + 0.2f);
 
-        Destroy(Spark, Spark.GetComponent<ParticleSystem>().main.duration + 0.2f);
-
-        Destroy(gameObject);
+            Destroy(gameObject);
+        }
     }
 }

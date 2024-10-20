@@ -18,7 +18,7 @@ public class UserNodeItem : MonoBehaviour
     {
         if (isMine == true)
         {
-            NameText.color = Color.magenta;
+            NameText.color = Color.gray;
             NameText.text = a_TankName;
         }
         else

@@ -19,14 +19,16 @@ public class Game_Mgr : MonoBehaviour
     void Awake()
     {
         Inst = this;
+        pv = GetComponent<PhotonView>(); // 추가
     }
     #endregion
 
     public GameObject m_GameObj;
     public GameState m_GameState { get; private set; } = GameState.Ready;
 
-    PhotonView pv;
+    private PhotonView pv; // 추가
 
+    Player_Ctrl m_RefPlayer;
 
     #region 장탄수 
     [Header("Ammo")]
@@ -61,7 +63,6 @@ public class Game_Mgr : MonoBehaviour
     [HideInInspector] public int m_RoundCnt = 0; // 라운드 카운트
     public Text m_Tm1LeftCount; //남은 인원 표시
     public Text m_Tm2LeftCount; //남은 인원 표시
-
 
     void Start()
     {
@@ -108,7 +109,6 @@ public class Game_Mgr : MonoBehaviour
                 break;
         }
     }
-
     #endregion
 
     #region HP

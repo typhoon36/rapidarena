@@ -5,6 +5,8 @@ using UnityEngine;
 //FPS 카메라를 위한 컨트롤러
 public class Cam_Ctrl : MonoBehaviour
 {
+    GameObject m_Player;
+
     #region CamMove
     [SerializeField]
     private float m_CamRotXSpeed = 5f;
@@ -16,6 +18,11 @@ public class Cam_Ctrl : MonoBehaviour
     float eulerAngleX;
     float eulerAngleY;
     #endregion
+
+    public void Init(GameObject a_Player)
+    {
+        m_Player = a_Player;
+    }
 
     public void UpdateRot(float a_MouseX, float a_MouseY)
     {
@@ -35,4 +42,6 @@ public class Cam_Ctrl : MonoBehaviour
 
         return Mathf.Clamp(a_Angle, a_Min, a_Max);
     }
+
+
 }

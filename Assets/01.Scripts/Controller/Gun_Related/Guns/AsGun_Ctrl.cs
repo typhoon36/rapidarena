@@ -1,10 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
-//라이플
-public class AsGun_Ctrl : Weapon_Base//베이스가 되는 부모로부터 상속
+
+public class AsGun_Ctrl : Weapon_Base
 {
     #region Audio 
     [Header("Audio Clip")]
@@ -37,7 +36,7 @@ public class AsGun_Ctrl : Weapon_Base//베이스가 되는 부모로부터 상속
 
     Base_Ctrl m_Base;
 
-    protected override void Awake()//Init
+    protected override void Awake()
     {
         base.Awake();
         base.Setup();
@@ -45,7 +44,6 @@ public class AsGun_Ctrl : Weapon_Base//베이스가 되는 부모로부터 상속
         m_CasingPool = GetComponentInChildren<Casing_Pool>();
     }
 
-    //Init 함수
     void ResetVar()
     {
         IsAttack = false;
@@ -71,7 +69,6 @@ public class AsGun_Ctrl : Weapon_Base//베이스가 되는 부모로부터 상속
         Game_Mgr.Inst.UpdateAmmoText(m_AmmoInClip, m_CurrentAmmo);
         ResetVar();
 
-        // 무기 교체 시 애니메이터 다시 설정
         if (m_Base != null)
         {
             m_Base.m_Anim = GetComponentInChildren<Animator>();
@@ -161,7 +158,7 @@ public class AsGun_Ctrl : Weapon_Base//베이스가 되는 부모로부터 상속
     #region Reload & Inspect
     public override void Reload()
     {
-        if (m_Base.PlayerState == Base_Ctrl.DefState.Reload 
+        if (m_Base.PlayerState == Base_Ctrl.DefState.Reload
             || m_CurrentAmmo <= 0) return;
         if (m_Base.PlayerState == Base_Ctrl.DefState.Inspect) return;
         if (m_Base.PlayerState == Base_Ctrl.DefState.Jump) return;
@@ -205,7 +202,6 @@ public class AsGun_Ctrl : Weapon_Base//베이스가 되는 부모로부터 상속
         float m_Time = 0.35f;
 
         m_Base.Aim = !m_Base.Aim;
-        //m_AimImg.enabled = !m_AimImg.enabled;
 
         float m_StartFov = Camera.main.fieldOfView;
         float m_EndFov = m_Base.Aim ? AimFov : DefFov;

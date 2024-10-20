@@ -4,8 +4,6 @@ using Photon.Pun;
 using Photon.Realtime;
 using UnityEngine.SceneManagement;
 using System.Collections.Generic;
-using UnityEngine.EventSystems;
-
 
 
 public class Ready_Mgr : MonoBehaviourPunCallbacks
@@ -20,7 +18,6 @@ public class Ready_Mgr : MonoBehaviourPunCallbacks
     #endregion
 
     PhotonView pv;
-
 
     #region Chatting
     public InputField InputFdChat;
@@ -70,15 +67,15 @@ public class Ready_Mgr : MonoBehaviourPunCallbacks
 
     void Awake()
     {
-        m_Team1Pos[0] = new Vector3(31.3f, 1.2f, -75f);
-        m_Team1Pos[1] = new Vector3(31.3f, 1.2f, -77f);
-        m_Team1Pos[2] = new Vector3(31.3f, 1.2f, -79f);
-        m_Team1Pos[3] = new Vector3(31.3f, 1.2f, -82f);
+        m_Team1Pos[0] = new Vector3(31.3f, 4f, -75f);
+        m_Team1Pos[1] = new Vector3(31.3f, 4f, -77f);
+        m_Team1Pos[2] = new Vector3(31.3f, 4f, -79f);
+        m_Team1Pos[3] = new Vector3(31.3f, 4, -82f);
 
-        m_Team2Pos[0] = new Vector3(102.3f, 1.2f, -77.24f);
-        m_Team2Pos[1] = new Vector3(102.3f, 1.2f, -79.14f);
-        m_Team2Pos[2] = new Vector3(102.3f, 1.2f, -81.10f);
-        m_Team2Pos[3] = new Vector3(102.3f, 1.2f, -83.42f);
+        m_Team2Pos[0] = new Vector3(102.3f, 4f, -77.24f);
+        m_Team2Pos[1] = new Vector3(102.3f, 4f, -79.14f);
+        m_Team2Pos[2] = new Vector3(102.3f, 4f, -81.10f);
+        m_Team2Pos[3] = new Vector3(102.3f, 4f, -83.42f);
 
         m_GameState = GameState.Ready;
 
@@ -247,8 +244,7 @@ public class Ready_Mgr : MonoBehaviourPunCallbacks
             if (PhotonNetwork.CurrentRoom != null)
                 PhotonNetwork.CurrentRoom.CustomProperties.Clear();
         }
-        //custom properties 초기화 -- 그래야  다음 사용자가 방에 들어왔을 때 초기화된 상태로 시작할 수 있다.
-
+    
         if (PhotonNetwork.LocalPlayer != null)
             PhotonNetwork.LocalPlayer.CustomProperties.Clear();
 
@@ -278,40 +274,14 @@ public class Ready_Mgr : MonoBehaviourPunCallbacks
         return true;
     }
 
-    public static bool IsPointerOverUIObject() //UGUI의 UI들이 먼저 피킹되는지 확인하는 함수
-    {
-        PointerEventData a_EDCurPos = new PointerEventData(EventSystem.current);
-
-#if !UNITY_EDITOR && (UNITY_IPHONE || UNITY_ANDROID)
-
-			List<RaycastResult> results = new List<RaycastResult>();
-			for (int i = 0; i < Input.touchCount; ++i)
-			{
-				a_EDCurPos.position = Input.GetTouch(i).position;  
-				results.Clear();
-				EventSystem.current.RaycastAll(a_EDCurPos, results);
-                if (0 < results.Count)
-                    return true;
-			}
-
-			return false;
-#else
-        a_EDCurPos.position = Input.mousePosition;
-        List<RaycastResult> results = new List<RaycastResult>();
-        EventSystem.current.RaycastAll(a_EDCurPos, results);
-        return (0 < results.Count);
-#endif
-    }
-
     List<string> m_MsgList = new List<string>();
 
     [PunRPC]
     void LogMsg(string msg, bool isChatMsg, PhotonMessageInfo info)
     {
         if (info.Sender.IsLocal && isChatMsg == true)
-        {
             msg = msg.Replace("#ffffff", "#ffff00");
-        }
+        
 
         m_MsgList.Add(msg);
         if (20 < m_MsgList.Count)
@@ -520,7 +490,6 @@ public class Ready_Mgr : MonoBehaviourPunCallbacks
         m_PlayerReady.Clear();
         m_PlayerReady.Add("IamReady", 0);   //기본적으로 아직 준비전 상태로 시작한다.
         PhotonNetwork.LocalPlayer.SetCustomProperties(m_PlayerReady);
-        //캐릭터별 동기화
     }
 
     void SendReady(int a_Ready = 1)
@@ -537,7 +506,6 @@ public class Ready_Mgr : MonoBehaviourPunCallbacks
             m_PlayerReady.Add("IamReady", a_Ready);
 
         PhotonNetwork.LocalPlayer.SetCustomProperties(m_PlayerReady);
-        //캐릭터별 동기화
     }
 
     bool ReceiveReady(Player a_Player)
@@ -554,7 +522,7 @@ public class Ready_Mgr : MonoBehaviourPunCallbacks
         return false;
     }
 
-    #endregion ---------  Ready 상태 동기화 처리
+    #endregion
 
     #region ------------ Observer Method 모음
 
@@ -592,11 +560,13 @@ public class Ready_Mgr : MonoBehaviourPunCallbacks
 
 
                 if (PhotonNetwork.IsMasterClient == true)
+                {
                     if (0.0f < m_GoWaitGame && a_OldGoWait != (int)m_GoWaitGame)
                     {
 
                         SitPosInxMasterCtrl();
-                    } //1초에 한번씩 3번 자리 배정
+                    }
+                }
 
                 if (m_GoWaitGame <= 0.0f)
                 {
@@ -654,6 +624,8 @@ public class Ready_Mgr : MonoBehaviourPunCallbacks
                 a_Tm2Count++;
             }
         }
+
+      
     }
     #endregion
 
