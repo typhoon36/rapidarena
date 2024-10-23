@@ -201,6 +201,7 @@ public class Ready_Mgr : MonoBehaviourPunCallbacks
     {
         float Pos = Random.Range(-10.0f, 10.0f);
         PhotonNetwork.Instantiate("Player", new Vector3(Pos, 3f, Pos), Quaternion.identity, 0);
+
     }
     void OnApplicationFocus(bool a_Focus)
     {

@@ -2,10 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
+using UnityStandardAssets.Utility;
 
 public class Player_Ctrl : Base_Ctrl
 {
     [HideInInspector] public PhotonView pv = null;
+
+    public Transform m_CamPos;
 
     #region KeyBoard
     float h, v = 0;
@@ -40,6 +43,7 @@ public class Player_Ctrl : Base_Ctrl
     private Weapon_Base currentWeapon;
     #endregion
 
+
     #region HP
     float m_MaxHP = 440;
     float m_CurHP = 440;
@@ -48,18 +52,6 @@ public class Player_Ctrl : Base_Ctrl
     void Awake()
     {
         pv = GetComponent<PhotonView>();
-
-
-        if (pv.IsMine == true)
-        {
-            Cam_Ctrl a_CamCt = Camera.main.GetComponent<Cam_Ctrl>();
-
-            if (a_CamCt != null)
-            {
-                a_CamCt.Init(this.gameObject);
-            }
-        }
-
         m_CharCtrl = GetComponent<CharacterController>();
         m_Anim = GetComponentInChildren<Animator>();
         m_ASource = GetComponent<AudioSource>();
@@ -71,75 +63,73 @@ public class Player_Ctrl : Base_Ctrl
     {
         m_CurHP = m_MaxHP;
 
+        Game_Mgr.Inst.UpdateHPBar(m_CurHP, m_MaxHP);
+
+        foreach (var weapon in m_weapons)
+            weapon.gameObject.SetActive(false);
+
+        if (m_weapons.Length > 0)
+        {
+            currentWeapon = m_weapons[0];
+            currentWeapon.gameObject.SetActive(true);
+            Game_Mgr.Inst.SetWeapon(currentWeapon);
+        }
+
+      
+
         if (pv.IsMine)
         {
-            Game_Mgr.Inst.UpdateHPBar(m_CurHP, m_MaxHP);
-
-            foreach (var weapon in m_weapons)
-                weapon.gameObject.SetActive(false);
-
-            if (m_weapons.Length > 0)
-            {
-                currentWeapon = m_weapons[0];
-                currentWeapon.gameObject.SetActive(true);
-                Game_Mgr.Inst.SetWeapon(currentWeapon);
-            }
+            Camera.main.GetComponent<SmoothFollow>().target = m_CamPos;
+            Camera.main.GetComponent<Cam_Ctrl>().Init(gameObject);
         }
+        else
+        {
+            m_CharCtrl.enabled = false;
+        }
+
     }
 
     void Update()
     {
-        if (Ready_Mgr.m_GameState == GameState.Ready) return; // 시작 전에 움직이지 못하게
+        if (Ready_Mgr.m_GameState == GameState.Ready) return;
 
-        if (PhotonNetwork.CurrentRoom == null ||
-            PhotonNetwork.LocalPlayer == null)
+        if (PhotonNetwork.CurrentRoom == null || PhotonNetwork.LocalPlayer == null)
             return;
 
-        if (!pv.IsMine) return;
-
-        KeyMovement();
-        Jump();
-        UpdateRot();
-        IsChange();
-        HandleWeaponActions();
-
-        m_Velocity.y += m_Gravity * Time.deltaTime;
-        m_CharCtrl.Move((m_MoveDir + m_Velocity) * Time.deltaTime);
-        IsGround = m_CharCtrl.isGrounded;
-
-        if (IsGround && m_Velocity.y < 0)
-            m_Velocity.y = -2f;
-
-        if (!IsGround && PlayerState != DefState.Idle)
-        {
-            PlayerState = DefState.Idle;
-            PlaySound(null, false);
-        }
-
-        if (IsGround && m_MoveDir == Vector3.zero && PlayerState != DefState.Idle)
-        {
-            PlayerState = DefState.Idle;
-            PlaySound(null, false);
-        }
-    }
-
-    void UpdateRot()
-    {
-        if (pv.IsMine == false) return;
+        if(!pv.IsMine)
+            return;
 
         if (pv.IsMine)
         {
-            float a_MouseX = Input.GetAxis("Mouse X");
-            float a_MouseY = Input.GetAxis("Mouse Y");
+            KeyMovement();
+            Jump();
+            RotateCam();
+            IsChange();
+            HandleWeaponActions();
 
-            m_CamCtrl.UpdateRot(a_MouseX, a_MouseY);
+            m_Velocity.y += m_Gravity * Time.deltaTime;
+            m_CharCtrl.Move((m_MoveDir + m_Velocity) * Time.deltaTime);
+            IsGround = m_CharCtrl.isGrounded;
+
+            if (IsGround && m_Velocity.y < 0)
+                m_Velocity.y = -2f;
+
+            if (!IsGround && PlayerState != DefState.Idle)
+            {
+                PlayerState = DefState.Idle;
+                PlaySound(null, false);
+            }
+
+            if (IsGround && m_MoveDir == Vector3.zero && PlayerState != DefState.Idle)
+            {
+                PlayerState = DefState.Idle;
+                PlaySound(null, false);
+            }
         }
     }
 
     void KeyMovement()
     {
-
-        if(pv.IsMine == false) return;
 
         h = Input.GetAxis("Horizontal");
         v = Input.GetAxis("Vertical");
@@ -183,7 +173,6 @@ public class Player_Ctrl : Base_Ctrl
 
     void Jump()
     {
-        if(pv.IsMine == false) return;
 
         if (Input.GetButtonDown("Jump") && IsGround)
         {
@@ -192,9 +181,17 @@ public class Player_Ctrl : Base_Ctrl
         }
     }
 
+
+    void RotateCam()
+    {
+        // 마우스 입력에 따라 카메라 회전 업데이트
+        float mouseX = Input.GetAxis("Mouse X");
+        float mouseY = Input.GetAxis("Mouse Y");
+        Camera.main.GetComponent<Cam_Ctrl>().UpdateRot(mouseX, mouseY);
+    }
+
     void PlaySound(AudioClip clip, bool loop)
     {
-        if (m_ASource == null) return;
 
         if (m_ASource.isPlaying)
         {
@@ -211,7 +208,6 @@ public class Player_Ctrl : Base_Ctrl
 
     public void C_Weapon(Weapon_Base newWeapon)
     {
-        if(pv.IsMine == false) return;
 
         if (currentWeapon != null)
         {
@@ -226,8 +222,6 @@ public class Player_Ctrl : Base_Ctrl
 
     void IsChange()
     {
-        if (pv.IsMine == false) return;
-
         float scroll = Input.GetAxis("Mouse ScrollWheel");
         if (scroll != 0)
         {
@@ -246,7 +240,6 @@ public class Player_Ctrl : Base_Ctrl
 
     public void ToggleIsAttackMode()
     {
-        if (pv.IsMine == false) return;
 
         currentWeapon.WeaponSetting.IsAutoAttack = !currentWeapon.WeaponSetting.IsAutoAttack;
         Game_Mgr.Inst.UpdateGunModeText(currentWeapon.WeaponType, currentWeapon.WeaponSetting.IsAutoAttack);
@@ -254,7 +247,7 @@ public class Player_Ctrl : Base_Ctrl
 
     void HandleWeaponActions()
     {
-        if (pv.IsMine == false) return;
+
 
         if (Input.GetMouseButtonDown(0))
         {
@@ -290,5 +283,6 @@ public class Player_Ctrl : Base_Ctrl
             ToggleIsAttackMode();
         }
     }
+
 }
 

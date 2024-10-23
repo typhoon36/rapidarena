@@ -28,11 +28,17 @@ public class Grenade_Ctrl : Weapon_Base
 
     }
 
+
     protected override void Awake()
     {
         base.Awake();
         base.Setup();
         m_Base = GetComponentInParent<Player_Ctrl>();
+    }
+
+    protected override void LateUpdate()
+    {
+        base.LateUpdate();
     }
 
     public override void StartWAtt(int type = 0)

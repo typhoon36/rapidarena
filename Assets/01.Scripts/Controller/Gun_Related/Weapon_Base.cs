@@ -49,6 +49,15 @@ public abstract class Weapon_Base : MonoBehaviour
         m_AmmoInClip = m_ClipSize;
     }
 
+    protected virtual void LateUpdate()
+    {
+        // 플레이어의 회전을 따라가도록 무기의 회전 설정
+        if (m_BAnim != null)
+        {
+            transform.rotation = m_BAnim.transform.rotation;
+        }
+    }
+
     protected void Setup()
     {
         m_ASource = GetComponent<AudioSource>();

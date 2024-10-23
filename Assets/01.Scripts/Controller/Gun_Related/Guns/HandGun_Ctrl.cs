@@ -46,6 +46,11 @@ public class HandGun_Ctrl : Weapon_Base
         m_CasingPool = GetComponentInChildren<Casing_Pool>();
     }
 
+    protected override void LateUpdate()
+    {
+        base.LateUpdate();
+    }
+
     //Init ÇÔ¼ö
     void ResetVar()
     {

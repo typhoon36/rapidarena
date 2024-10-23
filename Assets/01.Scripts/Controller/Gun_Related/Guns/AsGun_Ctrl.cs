@@ -44,6 +44,11 @@ public class AsGun_Ctrl : Weapon_Base
         m_CasingPool = GetComponentInChildren<Casing_Pool>();
     }
 
+    protected override void LateUpdate()
+    {
+        base.LateUpdate();
+    }
+
     void ResetVar()
     {
         IsAttack = false;

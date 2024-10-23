@@ -10,7 +10,7 @@
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <RootNamespace></RootNamespace>
-    <ProjectGuid>{593C5896-425E-3D93-541F-C9E9F6CCFB74}</ProjectGuid>
+    <ProjectGuid>{9F0FB6EA-08E0-6467-E452-B0C79381CB09}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <AssemblyName>Hierarchy2.Editor</AssemblyName>
@@ -1023,7 +1023,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="Hierarchy2.Runtime.csproj">
-      <Project>{5617A7DD-208B-5331-C521-D2BCD020F613}</Project>
+      <Project>{ABBD23DC-794F-CAF2-3FA8-5A40A3C89988}</Project>
       <Name>Hierarchy2.Runtime</Name>
     </ProjectReference>
   </ItemGroup>

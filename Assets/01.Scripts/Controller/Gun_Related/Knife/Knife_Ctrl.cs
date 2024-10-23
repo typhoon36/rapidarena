@@ -35,6 +35,11 @@ public class Knife_Ctrl : Weapon_Base
         Camera.main.fieldOfView = 60;
     }
 
+    protected override void LateUpdate()
+    {
+        base.LateUpdate();
+    }
+
     #region Knife Action
     public override void StartWAtt(int type = 0)
     {

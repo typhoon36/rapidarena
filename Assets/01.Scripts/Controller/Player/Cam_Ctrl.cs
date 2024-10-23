@@ -2,46 +2,33 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-//FPS 카메라를 위한 컨트롤러
+//FPS 카메라 컨트롤 스크립트
 public class Cam_Ctrl : MonoBehaviour
 {
-    GameObject m_Player;
+    private Transform playerTransform;
+    private float rotationSpeed = 5.0f;
+    private float verticalRotation = 0.0f;
 
-    #region CamMove
-    [SerializeField]
-    private float m_CamRotXSpeed = 5f;
-    [SerializeField]
-    private float m_CamRotYSpeed = 3f;
-
-    float limitMinX = -80f;
-    float limitMaxX = 50f;
-    float eulerAngleX;
-    float eulerAngleY;
-    #endregion
-
-    public void Init(GameObject a_Player)
+    public void Init(GameObject player)
     {
-        m_Player = a_Player;
+        playerTransform = player.transform;
     }
 
-    public void UpdateRot(float a_MouseX, float a_MouseY)
+    public void UpdateRot(float mouseX, float mouseY)
     {
-        eulerAngleY += a_MouseX * m_CamRotXSpeed;
-        eulerAngleX -= a_MouseY * m_CamRotYSpeed;
+        // 플레이어의 Y축 회전
+        playerTransform.Rotate(0, mouseX * rotationSpeed, 0);
 
-        //X축회전시 제한을 위한 함수 호출
-        eulerAngleX = ClampAngle(eulerAngleX, limitMinX, limitMaxX);
+        // 카메라의 X축 회전 (상하 회전)
+        verticalRotation -= mouseY * rotationSpeed;
+        verticalRotation = Mathf.Clamp(verticalRotation, -10f, 10f);
 
-        transform.rotation = Quaternion.Euler(eulerAngleX, eulerAngleY, 0);
+        transform.localRotation = Quaternion.Euler(verticalRotation, 0, 0);
     }
 
-    float ClampAngle(float a_Angle, float a_Min, float a_Max)
+    void LateUpdate()
     {
-        if (a_Angle < -360) a_Angle += 360;
-        if (a_Angle > 360) a_Angle -= 360;
-
-        return Mathf.Clamp(a_Angle, a_Min, a_Max);
+        // 카메라의 회전을 플레이어의 회전과 동기화
+        transform.rotation = Quaternion.Euler(verticalRotation, playerTransform.eulerAngles.y, 0);
     }
-
-
 }
