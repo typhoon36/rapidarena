@@ -138,5 +138,5 @@ MonoBehaviour:
   m_ExplosionEff: {fileID: 100010, guid: 031d08f52af1daa4f929b85221519426, type: 3}
   m_ExplosionRadius: 10
   m_ExplosionPower: 500
-  m_throwForce: 1000
+  m_throwForce: 2000
   m_ExplosionDelay: 2

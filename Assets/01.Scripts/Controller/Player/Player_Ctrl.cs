@@ -247,8 +247,6 @@ public class Player_Ctrl : Base_Ctrl
 
     void HandleWeaponActions()
     {
-
-
         if (Input.GetMouseButtonDown(0))
         {
             currentWeapon.StartWAtt();

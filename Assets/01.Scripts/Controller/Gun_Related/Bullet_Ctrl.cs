@@ -38,7 +38,6 @@ public class Bullet_Ctrl : MonoBehaviour
 
         else if (coll.collider.tag == "Item") return;
 
-        else if (coll.collider.includeLayers == 1 << LayerMask.NameToLayer("Default")) return;
 
         //충돌한 게임 오브젝트의 태그값 비교
         if (coll.collider.tag == "Wall")

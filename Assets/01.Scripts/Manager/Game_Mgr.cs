@@ -26,7 +26,7 @@ public class Game_Mgr : MonoBehaviour
     public GameObject m_GameObj;
     public GameState m_GameState { get; private set; } = GameState.Ready;
 
-    private PhotonView pv; // Ãß°¡
+    private PhotonView pv;
 
     Player_Ctrl m_RefPlayer;
 

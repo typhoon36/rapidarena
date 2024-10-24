@@ -1,3 +1,4 @@
+using Photon.Pun;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -19,7 +20,7 @@ public class WeaponSetting
 }
 
 // 모든 컨트롤러의 부모 클래스
-public class Base_Ctrl : MonoBehaviour
+public class Base_Ctrl : MonoBehaviourPunCallbacks
 {
     public enum DefState
     {
@@ -93,6 +94,19 @@ public class Base_Ctrl : MonoBehaviour
                 m_Anim.CrossFade("Inspect", 0.2f);
                 break;
         }
+
+        // 애니메이션 상태를 네트워크에 동기화
+        if (photonView.IsMine)
+        {
+            photonView.RPC("RPC_UpdateAnimationState", RpcTarget.Others, m_PlayerState);
+        }
+    }
+
+    [PunRPC]
+    void RPC_UpdateAnimationState(DefState state)
+    {
+        m_PlayerState = state;
+        UpdateAnimationState();
     }
 
     public virtual void Fire()
@@ -108,7 +122,6 @@ public class Base_Ctrl : MonoBehaviour
     {
         // 예외 처리
         if (m_PlayerState == DefState.Reload) return;
-        if (m_PlayerState == DefState.Fire) return;
         if (m_PlayerState == DefState.Inspect) return;
         if (m_PlayerState == DefState.Jump) return;
         if (m_PlayerState == DefState.Run) return;

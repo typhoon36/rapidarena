@@ -2475,14 +2475,14 @@ GameObject:
   - component: {fileID: 1844240994773203092}
   - component: {fileID: 5575134911543880061}
   - component: {fileID: 3479330319241355576}
-  - component: {fileID: 2644998805485138790}
+  - component: {fileID: 820059717611915464}
   m_Layer: 6
   m_Name: arms_handgun_01
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &958468358975181794
 Transform:
   m_ObjectHideFlags: 0
@@ -2675,7 +2675,7 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!114 &2644998805485138790
+--- !u!114 &820059717611915464
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2691,25 +2691,25 @@ MonoBehaviour:
   ShowParameterInspector: 1
   m_SynchronizeParameters:
   - Type: 9
-    SynchronizeType: 0
+    SynchronizeType: 1
     Name: Idle
   - Type: 9
-    SynchronizeType: 0
+    SynchronizeType: 1
     Name: Walk
   - Type: 9
-    SynchronizeType: 0
+    SynchronizeType: 1
     Name: Run
   - Type: 9
-    SynchronizeType: 0
+    SynchronizeType: 1
     Name: Fire
   - Type: 9
-    SynchronizeType: 0
+    SynchronizeType: 1
     Name: Reload
   - Type: 9
-    SynchronizeType: 0
+    SynchronizeType: 1
     Name: Inspect
   - Type: 4
-    SynchronizeType: 0
+    SynchronizeType: 1
     Name: Aim
   m_SynchronizeLayers:
   - SynchronizeType: 0
@@ -3129,14 +3129,14 @@ GameObject:
   - component: {fileID: 3775432248520047061}
   - component: {fileID: 1599792041413307137}
   - component: {fileID: 3038701026777968442}
-  - component: {fileID: 471935660258827573}
+  - component: {fileID: 3764494820331956527}
   m_Layer: 6
   m_Name: arms_assault_rifle_01
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &803380084163825943
 Transform:
   m_ObjectHideFlags: 0
@@ -3329,7 +3329,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Anim: {fileID: 0}
   m_PlayerState: 0
---- !u!114 &471935660258827573
+--- !u!114 &3764494820331956527
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -3366,7 +3366,7 @@ MonoBehaviour:
     SynchronizeType: 0
     Name: Aim
   m_SynchronizeLayers:
-  - SynchronizeType: 2
+  - SynchronizeType: 0
     LayerIndex: 0
 --- !u!1 &4036170357539298571
 GameObject:
@@ -3510,6 +3510,7 @@ GameObject:
   - component: {fileID: 2735253636069079525}
   - component: {fileID: 4004507648081932464}
   - component: {fileID: 9088909504218399075}
+  - component: {fileID: 4047303102142923237}
   m_Layer: 6
   m_Name: Player
   m_TagString: Player
@@ -3715,16 +3716,32 @@ MonoBehaviour:
   prefixField: -1
   Synchronization: 3
   OwnershipTransfer: 0
-  observableSearch: 0
+  observableSearch: 2
   ObservedComponents:
-  - {fileID: 2735253636069079525}
-  - {fileID: 471935660258827573}
-  - {fileID: 2644998805485138790}
-  - {fileID: 4296150281288431384}
-  - {fileID: 4192916804274021053}
+  - {fileID: 4047303102142923237}
+  - {fileID: 3764494820331956527}
+  - {fileID: 820059717611915464}
+  - {fileID: 2829991641062151665}
+  - {fileID: 5929928493069377474}
   sceneViewId: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
+--- !u!114 &4047303102142923237
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4378128199904896530}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 627855c7f81362d41938ffe0b1475957, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SynchronizePosition: 1
+  m_SynchronizeRotation: 1
+  m_SynchronizeScale: 0
+  m_UseLocal: 1
 --- !u!1 &4410463833084036311
 GameObject:
   m_ObjectHideFlags: 0
@@ -6451,7 +6468,7 @@ GameObject:
   - component: {fileID: 3864640099664422952}
   - component: {fileID: 3392865119067034621}
   - component: {fileID: 4250186560583431799}
-  - component: {fileID: 4192916804274021053}
+  - component: {fileID: 5929928493069377474}
   m_Layer: 6
   m_Name: arms_Grenade
   m_TagString: Untagged
@@ -6637,7 +6654,7 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!114 &4192916804274021053
+--- !u!114 &5929928493069377474
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -6653,16 +6670,16 @@ MonoBehaviour:
   ShowParameterInspector: 1
   m_SynchronizeParameters:
   - Type: 9
-    SynchronizeType: 0
+    SynchronizeType: 1
     Name: Idle
   - Type: 9
-    SynchronizeType: 0
+    SynchronizeType: 1
     Name: Walk
   - Type: 9
-    SynchronizeType: 0
+    SynchronizeType: 1
     Name: Run
   - Type: 9
-    SynchronizeType: 0
+    SynchronizeType: 1
     Name: Attack
   m_SynchronizeLayers:
   - SynchronizeType: 0
@@ -8786,7 +8803,7 @@ GameObject:
   - component: {fileID: 3965877398408771537}
   - component: {fileID: 2241526611311257810}
   - component: {fileID: 6321522706903528305}
-  - component: {fileID: 4296150281288431384}
+  - component: {fileID: 2829991641062151665}
   m_Layer: 6
   m_Name: arms_Knife
   m_TagString: Untagged
@@ -8874,7 +8891,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Anim: {fileID: 0}
   m_PlayerState: 0
---- !u!114 &4296150281288431384
+--- !u!114 &2829991641062151665
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8890,19 +8907,19 @@ MonoBehaviour:
   ShowParameterInspector: 1
   m_SynchronizeParameters:
   - Type: 9
-    SynchronizeType: 0
+    SynchronizeType: 1
     Name: Idle
   - Type: 9
-    SynchronizeType: 0
+    SynchronizeType: 1
     Name: Run
   - Type: 9
-    SynchronizeType: 0
+    SynchronizeType: 1
     Name: Walk
   - Type: 9
-    SynchronizeType: 0
+    SynchronizeType: 1
     Name: Attack
   - Type: 9
-    SynchronizeType: 0
+    SynchronizeType: 1
     Name: Inspect
   m_SynchronizeLayers:
   - SynchronizeType: 0

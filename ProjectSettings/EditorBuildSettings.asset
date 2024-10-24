@@ -15,6 +15,6 @@ EditorBuildSettings:
     path: Assets/02.Scenes/ShopScene.unity
     guid: f15bf51cafa877848ab34ab865829ae7
   - enabled: 1
-    path: Assets/02.Scenes/Inventory_Scene.unity
-    guid: 26bf8780cc73ac848b37bed930d1d767
+    path: Assets/02.Scenes/Inven_Scene.unity
+    guid: d1611f4bc71c76e4891f8632d3fd1599
   m_configObjects: {}

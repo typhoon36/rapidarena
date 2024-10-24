@@ -13,7 +13,11 @@ public class Shop_Mgr : MonoBehaviour
     public Button m_SettingBtn;
     public Button m_ExitBtn;
     public Button m_HomeBtn;
-    public GameObject m_RoomPanel;
+    #endregion
+
+    #region Product_Panel
+    public GameObject m_ProductContent;
+    public GameObject m_Product;
     #endregion
 
 
@@ -28,7 +32,7 @@ public class Shop_Mgr : MonoBehaviour
         if (m_LoadOutBtn != null)
             m_LoadOutBtn.onClick.AddListener(() =>
             {
-                SceneManager.LoadScene("Inventory_Scene");
+                SceneManager.LoadScene("Inven_Scene");
             });
 
         if (m_ShopBtn != null)

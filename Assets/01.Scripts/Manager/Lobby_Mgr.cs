@@ -57,7 +57,7 @@ public class Lobby_Mgr : MonoBehaviourPunCallbacks
         if (m_LoadOutBtn != null)
             m_LoadOutBtn.onClick.AddListener(() =>
             {
-                SceneManager.LoadScene("LoadOutScene");
+                SceneManager.LoadScene("Inven_Scene");
             });
 
         if (m_ExitBtn != null)

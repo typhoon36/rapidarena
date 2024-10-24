@@ -83,7 +83,7 @@ CapsuleCollider:
   serializedVersion: 2
   m_Radius: 0.09
   m_Height: 0.28
-  m_Direction: 1
+  m_Direction: 2
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &5232261183148373514
 MonoBehaviour:
@@ -100,6 +100,8 @@ MonoBehaviour:
   speed: 10
   damage: 40
   SparkEffect: {fileID: 100006, guid: 0438351a6e6422d43a09930e9be00ee9, type: 3}
+  AttackerId: -1
+  AttackerTeam: blue
 --- !u!1 &7687106298275165586
 GameObject:
   m_ObjectHideFlags: 0
