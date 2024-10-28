@@ -1,0 +1,39 @@
+{
+  "Sheet1": [
+    {
+      "ItemName": "Medikit",
+      "ItemID": 1,
+      "ItemType": "Consumable",
+      "AmmoType": "None",
+      "Amount": 1
+    },
+    {
+      "ItemName": "Ammon_Box",
+      "ItemID": 2,
+      "ItemType": "Ammo",
+      "AmmoType": "7.62mm",
+      "Amount": 1
+    },
+    {
+      "ItemName": "Armor_RepairKit",
+      "ItemID": 3,
+      "ItemType": "Consumable",
+      "AmmoType": "None",
+      "Amount": 1
+    },
+    {
+      "ItemName": "Bomb_DefuseKit",
+      "ItemID": 4,
+      "ItemType": "Consumable",
+      "AmmoType": "None",
+      "Amount": 1
+    },
+    {
+      "ItemName": "Ak_SkinedBox",
+      "ItemID": 5,
+      "ItemType": "Consumable",
+      "AmmoType": "None",
+      "Amount": 1
+    }
+  ]
+}

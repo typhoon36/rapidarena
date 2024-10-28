@@ -10,7 +10,7 @@
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <RootNamespace></RootNamespace>
-    <ProjectGuid>{BF7E484D-B421-6C50-BB21-CEBB682530B7}</ProjectGuid>
+    <ProjectGuid>{2D93B005-BE8B-0127-0040-CD6C58A5DC41}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <AssemblyName>PhotonChat</AssemblyName>
@@ -419,16 +419,8 @@
       <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.15f1\Editor\Data\PlaybackEngines\WindowsStandaloneSupport\UnityEditor.WindowsStandalone.Extensions.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="TinyJSON">
-      <HintPath>Assets\08.Utilty\Google Sheets to Unity\Scripts\v3\Plugins\TinyJSON.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
     <Reference Include="Unity.VisualScripting.YamlDotNet">
-      <HintPath>Library\PackageCache\com.unity.visualscripting@1.9.1\Editor\VisualScripting.Core\Dependencies\YamlDotNet\Unity.VisualScripting.YamlDotNet.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Newtonsoft.Json">
-      <HintPath>Assets\08.Utilty\GSpreadSheets\Editor\Newtonsoft.Json.dll</HintPath>
+      <HintPath>Library\PackageCache\com.unity.visualscripting@1.9.4\Editor\VisualScripting.Core\Dependencies\YamlDotNet\Unity.VisualScripting.YamlDotNet.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Unity.Collections.LowLevel.ILSupport">
@@ -437,18 +429,6 @@
     </Reference>
     <Reference Include="ReportGeneratorMerged">
       <HintPath>Library\PackageCache\com.unity.testtools.codecoverage@1.2.4\lib\ReportGenerator\ReportGeneratorMerged.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Google.Apis.Sheets.v4">
-      <HintPath>Assets\08.Utilty\GSpreadSheets\Editor\Google.Apis.Sheets.v4.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Google.Apis.PlatformServices">
-      <HintPath>Assets\08.Utilty\GSpreadSheets\Editor\Google.Apis.PlatformServices.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Google.GData.Documents">
-      <HintPath>Assets\08.Utilty\Google Sheets to Unity\Scripts\v3\Plugins\Google.GData.Documents.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="unityplastic">
@@ -463,24 +443,8 @@
       <HintPath>Assets\08.Utilty\Photon\PhotonLibs\WebSocket\websocket-sharp.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="Google.Apis">
-      <HintPath>Assets\08.Utilty\GSpreadSheets\Editor\Google.Apis.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Google.GData.AccessControl">
-      <HintPath>Assets\08.Utilty\Google Sheets to Unity\Scripts\v3\Plugins\Google.GData.AccessControl.DLL</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Google.Apis.Core">
-      <HintPath>Assets\08.Utilty\GSpreadSheets\Editor\Google.Apis.Core.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
     <Reference Include="Unity.Plastic.Newtonsoft.Json">
       <HintPath>Library\PackageCache\com.unity.collab-proxy@2.5.2\Lib\Editor\PlasticSCM\Unity.Plastic.Newtonsoft.Json.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Google.GData.Spreadsheets">
-      <HintPath>Assets\08.Utilty\Google Sheets to Unity\Scripts\v3\Plugins\Google.GData.Spreadsheets.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="log4netPlastic">
@@ -488,7 +452,7 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="Unity.VisualScripting.IonicZip">
-      <HintPath>Library\PackageCache\com.unity.visualscripting@1.9.1\Editor\VisualScripting.Core\Dependencies\DotNetZip\Unity.VisualScripting.IonicZip.dll</HintPath>
+      <HintPath>Library\PackageCache\com.unity.visualscripting@1.9.4\Editor\VisualScripting.Core\Dependencies\DotNetZip\Unity.VisualScripting.IonicZip.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="I18N.CJK">
@@ -496,27 +460,15 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="Unity.VisualScripting.Antlr3.Runtime">
-      <HintPath>Library\PackageCache\com.unity.visualscripting@1.9.1\Runtime\VisualScripting.Flow\Dependencies\NCalc\Unity.VisualScripting.Antlr3.Runtime.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Google.GData.Client">
-      <HintPath>Assets\08.Utilty\Google Sheets to Unity\Scripts\v3\Plugins\Google.GData.Client.dll</HintPath>
+      <HintPath>Library\PackageCache\com.unity.visualscripting@1.9.4\Runtime\VisualScripting.Flow\Dependencies\NCalc\Unity.VisualScripting.Antlr3.Runtime.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Photon3Unity3D">
       <HintPath>Assets\08.Utilty\Photon\PhotonLibs\netstandard2.0\Photon3Unity3D.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="Google.GData.Extensions">
-      <HintPath>Assets\08.Utilty\Google Sheets to Unity\Scripts\v3\Plugins\Google.GData.Extensions.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
     <Reference Include="Unity.VisualScripting.TextureAssets">
-      <HintPath>Library\PackageCache\com.unity.visualscripting@1.9.1\Editor\VisualScripting.Core\EditorAssetResources\Unity.VisualScripting.TextureAssets.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Google.Apis.Auth">
-      <HintPath>Assets\08.Utilty\GSpreadSheets\Editor\Google.Apis.Auth.dll</HintPath>
+      <HintPath>Library\PackageCache\com.unity.visualscripting@1.9.4\Editor\VisualScripting.Core\EditorAssetResources\Unity.VisualScripting.TextureAssets.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="I18N">

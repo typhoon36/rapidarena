@@ -10,7 +10,7 @@
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <RootNamespace></RootNamespace>
-    <ProjectGuid>{9D3D4DED-CF15-E3BD-CC2B-0A44912144D0}</ProjectGuid>
+    <ProjectGuid>{7CDD3584-72AD-3005-69DB-8C673F72CF3F}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <AssemblyName>Assembly-CSharp</AssemblyName>
@@ -62,7 +62,6 @@
   <ItemGroup>
     <Compile Include="Assets\08.Utilty\Standard Assets\CrossPlatformInput\Scripts\CrossPlatformInputManager.cs" />
     <Compile Include="Assets\08.Utilty\Photon\PhotonChat\Demos\DemoChat\ChatGui.cs" />
-    <Compile Include="Assets\08.Utilty\Google Sheets to Unity\Scripts\v4\GoogleAuthrisationHelper.cs" />
     <Compile Include="Assets\08.Utilty\Standard Assets\CrossPlatformInput\Scripts\InputAxisScrollbar.cs" />
     <Compile Include="Assets\08.Utilty\Photon\PhotonChat\Demos\DemoChat\AppSettingsExtensions.cs" />
     <Compile Include="Assets\06.Model\Low Poly FPS Pack - Free (Sample)\Components\Scripts\Casings_&amp;_Projectiles\CasingScript.cs" />
@@ -70,21 +69,20 @@
     <Compile Include="Assets\08.Utilty\Standard Assets\Utility\EventSystemChecker.cs" />
     <Compile Include="Assets\08.Utilty\Standard Assets\Utility\FollowTarget.cs" />
     <Compile Include="Assets\08.Utilty\Standard Assets\CrossPlatformInput\Scripts\AxisTouchButton.cs" />
-    <Compile Include="Assets\01.Scripts\Utilty\Fade_Mgr.cs" />
+    <Compile Include="Assets\01.Scripts\Manager\Content\Sound_Mgr.cs" />
     <Compile Include="Assets\08.Utilty\Standard Assets\CrossPlatformInput\Scripts\ButtonHandler.cs" />
     <Compile Include="Assets\08.Utilty\Standard Assets\CrossPlatformInput\Scripts\TiltInput.cs" />
     <Compile Include="Assets\01.Scripts\Controller\Gun_Related\Weapon_Base.cs" />
     <Compile Include="Assets\06.Model\Low Poly FPS Pack - Free (Sample)\Components\Scripts\Explosions_&amp;_Impacts\ImpactScript.cs" />
     <Compile Include="Assets\01.Scripts\Controller\Player\Player_Ctrl.cs" />
     <Compile Include="Assets\06.Model\Low Poly FPS Pack - Free (Sample)\Components\Scripts\Misc\LookAtCamera.cs" />
+    <Compile Include="Assets\01.Scripts\Manager\Content\Shop\Product_Nd.cs" />
     <Compile Include="Assets\08.Utilty\Photon\PhotonChat\Demos\DemoChat\ChannelSelector.cs" />
     <Compile Include="Assets\06.Model\Low Poly FPS Pack - Free (Sample)\Components\Scripts\Casings_&amp;_Projectiles\GrenadeScript.cs" />
     <Compile Include="Assets\08.Utilty\Standard Assets\Utility\WaypointCircuit.cs" />
-    <Compile Include="Assets\08.Utilty\Google Sheets to Unity\Scripts\v3\PublicSpreadSheetManager.cs" />
     <Compile Include="Assets\06.Model\Low Poly FPS Pack - Free (Sample)\Components\Demo_Scene_Components\Scripts\TargetScript.cs" />
     <Compile Include="Assets\08.Utilty\Standard Assets\Utility\ObjectResetter.cs" />
     <Compile Include="Assets\01.Scripts\Controller\Base\Base_Ctrl.cs" />
-    <Compile Include="Assets\08.Utilty\Google Sheets to Unity\Scripts\Utils\SecondaryKeyDictionary.cs" />
     <Compile Include="Assets\08.Utilty\Standard Assets\Utility\FOVKick.cs" />
     <Compile Include="Assets\08.Utilty\Standard Assets\ParticleSystems\Scripts\AfterburnerPhysicsForce.cs" />
     <Compile Include="Assets\08.Utilty\Standard Assets\ParticleSystems\Scripts\ParticleSystemMultiplier.cs" />
@@ -93,66 +91,54 @@
     <Compile Include="Assets\08.Utilty\Photon\PhotonChat\Demos\Common\EventSystemSpawner.cs" />
     <Compile Include="Assets\08.Utilty\Standard Assets\ParticleSystems\Scripts\WaterHoseParticles.cs" />
     <Compile Include="Assets\08.Utilty\Standard Assets\Utility\AlphaButtonClickMask.cs" />
-    <Compile Include="Assets\01.Scripts\Manager\Shop_Mgr.cs" />
+    <Compile Include="Assets\01.Scripts\Utilty\Produce\Fade_Mgr.cs" />
     <Compile Include="Assets\08.Utilty\Photon\PhotonChat\Demos\Common\OnStartDelete.cs" />
     <Compile Include="Assets\08.Utilty\Standard Assets\Utility\SmoothFollow.cs" />
+    <Compile Include="Assets\01.Scripts\Utilty\Room\RoomItem.cs" />
     <Compile Include="Assets\08.Utilty\Photon\PhotonChat\Demos\Common\TextToggleIsOnTransition.cs" />
     <Compile Include="Assets\08.Utilty\Standard Assets\ParticleSystems\Scripts\SmokeParticles.cs" />
     <Compile Include="Assets\06.Model\Low Poly FPS Pack - Free (Sample)\Components\Scripts\Weapon_Scripts\HandgunScriptLPFP.cs" />
-    <Compile Include="Assets\08.Utilty\Google Sheets to Unity\Scripts\v3\SpreadSheetManager.cs" />
-    <Compile Include="Assets\01.Scripts\Manager\Save\Save_Mgr.cs" />
     <Compile Include="Assets\01.Scripts\Controller\Player\Cam_Ctrl.cs" />
+    <Compile Include="Assets\01.Scripts\Manager\Core\Data_Mgr.cs" />
     <Compile Include="Assets\08.Utilty\Photon\PhotonRealtime\Demos\DemoLoadBalancing\ConnectAndJoinRandomLb.cs" />
     <Compile Include="Assets\08.Utilty\Photon\PhotonChat\Demos\DemoChat\IgnoreUiRaycastWhenInactive.cs" />
     <Compile Include="Assets\08.Utilty\Standard Assets\Utility\ActivateTrigger.cs" />
-    <Compile Include="Assets\08.Utilty\Google Sheets to Unity\Scripts\Utils\GoogleSheetsToUnityUtilities.cs" />
     <Compile Include="Assets\08.Utilty\Standard Assets\CrossPlatformInput\Scripts\Joystick.cs" />
     <Compile Include="Assets\08.Utilty\Standard Assets\Utility\WaypointProgressTracker.cs" />
+    <Compile Include="Assets\01.Scripts\Manager\Content\Shop\Shop_Mgr.cs" />
     <Compile Include="Assets\06.Model\Low Poly FPS Pack - Free (Sample)\Components\Scripts\Weapon_Scripts\AutomaticGunScriptLPFP.cs" />
     <Compile Include="Assets\08.Utilty\Photon\PhotonLibs\WebSocket\SocketWebTcp.cs" />
     <Compile Include="Assets\06.Model\Low Poly FPS Pack - Free (Sample)\Components\Demo_Scene_Components\Scripts\DebrisScript.cs" />
-    <Compile Include="Assets\01.Scripts\Manager\Lobby_Mgr.cs" />
     <Compile Include="Assets\08.Utilty\Photon\PhotonChat\Demos\Common\TextButtonTransition.cs" />
-    <Compile Include="Assets\08.Utilty\Google Sheets to Unity\Animal Example\Scripts\Scriptable Objects\Animal.cs" />
+    <Compile Include="Assets\01.Scripts\Manager\Content\Inven_Mgr.cs" />
+    <Compile Include="Assets\01.Scripts\Manager\Content\Game_Mgr.cs" />
     <Compile Include="Assets\08.Utilty\Standard Assets\Utility\TimedObjectActivator.cs" />
     <Compile Include="Assets\08.Utilty\Photon\PhotonChat\Demos\DemoChat\ChatAppIdCheckerUI.cs" />
     <Compile Include="Assets\06.Model\Low Poly FPS Pack - Free (Sample)\Components\Scripts\Explosions_&amp;_Impacts\ExplosionScript.cs" />
     <Compile Include="Assets\08.Utilty\Standard Assets\ParticleSystems\Scripts\ExplosionPhysicsForce.cs" />
-    <Compile Include="Assets\08.Utilty\Google Sheets to Unity\Scripts\v4\Spreadsheet.cs" />
     <Compile Include="Assets\01.Scripts\Utilty\ObjectPool.cs" />
     <Compile Include="Assets\08.Utilty\Standard Assets\Utility\TimedObjectDestructor.cs" />
-    <Compile Include="Assets\08.Utilty\Google Sheets to Unity\Animal Example\Scripts\AnimalObject.cs" />
+    <Compile Include="Assets\01.Scripts\Utilty\Room\UserNodeItem.cs" />
     <Compile Include="Assets\01.Scripts\Controller\Gun_Related\Knife\Knife_Ctrl.cs" />
     <Compile Include="Assets\01.Scripts\Manager\Team\Ready_Mgr.cs" />
-    <Compile Include="Assets\01.Scripts\Manager\Sound_Mgr.cs" />
     <Compile Include="Assets\08.Utilty\Standard Assets\ParticleSystems\Scripts\ExplosionFireAndDebris.cs" />
-    <Compile Include="Assets\08.Utilty\Google Sheets to Unity\Animal Example\Scripts\AnimalManager.cs" />
     <Compile Include="Assets\01.Scripts\Controller\Gun_Related\Bullet_Ctrl.cs" />
     <Compile Include="Assets\01.Scripts\Controller\Gun_Related\Grenade\Grenade_Ctrl.cs" />
-    <Compile Include="Assets\08.Utilty\Google Sheets to Unity\Scripts\v3\OAuth2.cs" />
-    <Compile Include="Assets\08.Utilty\Google Sheets to Unity\Scripts\v4\Public\SpreadsheetManager.cs" />
     <Compile Include="Assets\01.Scripts\Utilty\MonoSingleton.cs" />
-    <Compile Include="Assets\08.Utilty\Google Sheets to Unity\Animal Example\Scripts\Scriptable Objects\AnimalContainer.cs" />
     <Compile Include="Assets\08.Utilty\Standard Assets\Utility\FPSCounter.cs" />
-    <Compile Include="Assets\08.Utilty\Google Sheets to Unity\Scripts\Utils\EditorCoroutineRunner.cs" />
     <Compile Include="Assets\01.Scripts\Controller\Gun_Related\Guns\AsGun_Ctrl.cs" />
     <Compile Include="Assets\01.Scripts\Controller\Gun_Related\Shell\Casing_Ctrl.cs" />
-    <Compile Include="Assets\08.Utilty\Google Sheets to Unity\Scripts\Utils\Task.cs" />
     <Compile Include="Assets\08.Utilty\Standard Assets\ParticleSystems\Scripts\Explosive.cs" />
     <Compile Include="Assets\01.Scripts\Controller\Gun_Related\Grenade\Grenade_Projectile.cs" />
-    <Compile Include="Assets\01.Scripts\Utilty\RoomItem.cs" />
     <Compile Include="Assets\01.Scripts\Controller\Gun_Related\Guns\HandGun_Ctrl.cs" />
     <Compile Include="Assets\08.Utilty\Standard Assets\ParticleSystems\Scripts\FireLight.cs" />
-    <Compile Include="Assets\08.Utilty\Google Sheets to Unity\Scripts\v3\SecurityPolicy.cs" />
-    <Compile Include="Assets\01.Scripts\Manager\Game_Mgr.cs" />
+    <Compile Include="Assets\01.Scripts\Manager\Content\Lobby_Mgr.cs" />
     <Compile Include="Assets\08.Utilty\Standard Assets\Utility\SimpleMouseRotator.cs" />
-    <Compile Include="Assets\08.Utilty\Google Sheets to Unity\Scripts\v4\Private\SpreadsheetManager.cs" />
     <Compile Include="Assets\08.Utilty\Standard Assets\Utility\DragRigidbody.cs" />
     <Compile Include="Assets\08.Utilty\Photon\PhotonLibs\WebSocket\WebSocket.cs" />
     <Compile Include="Assets\08.Utilty\Standard Assets\CrossPlatformInput\Scripts\MobileControlRig.cs" />
     <Compile Include="Assets\06.Model\Low Poly FPS Pack - Free (Sample)\Components\Scripts\Bullet\BulletScript.cs" />
     <Compile Include="Assets\08.Utilty\Standard Assets\ParticleSystems\Scripts\ExtinguishableParticleSystem.cs" />
-    <Compile Include="Assets\01.Scripts\Utilty\UserNodeItem.cs" />
     <Compile Include="Assets\08.Utilty\Standard Assets\ParticleSystems\Scripts\Hose.cs" />
     <Compile Include="Assets\08.Utilty\Standard Assets\CrossPlatformInput\Scripts\PlatformSpecific\StandaloneInput.cs" />
     <Compile Include="Assets\08.Utilty\Standard Assets\Utility\CameraRefocus.cs" />
@@ -171,30 +157,21 @@
     <Compile Include="Assets\08.Utilty\Standard Assets\CrossPlatformInput\Scripts\VirtualInput.cs" />
     <Compile Include="Assets\06.Model\Low Poly FPS Pack - Free (Sample)\Components\Demo_Scene_Components\Scripts\ExplosiveBarrelScript.cs" />
     <Compile Include="Assets\08.Utilty\Standard Assets\Utility\AutoMobileShaderSwitch.cs" />
-    <Compile Include="Assets\08.Utilty\Google Sheets to Unity\Scripts\Utils\GoogleSheetsToUnityConfig.cs" />
-    <Compile Include="Assets\01.Scripts\Manager\Inven_Mgr.cs" />
     <Compile Include="Assets\08.Utilty\Standard Assets\Utility\PlatformSpecificContent.cs" />
     <Compile Include="Assets\01.Scripts\Manager\Team\Team_Mgr.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Assets\08.Utilty\Google Sheets to Unity\Scripts\v3\Plugins\TinyJSON.dll" />
     <None Include="Assets\08.Utilty\Photon\PhotonLibs\netstandard2.0\Photon3Unity3D.xml" />
     <None Include="Assets\08.Utilty\Photon\PhotonUnityNetworking\changelog.txt" />
-    <None Include="Assets\08.Utilty\Google Sheets to Unity\Scripts\v3\Plugins\Newtonsoft.Json.dll" />
     <None Include="Assets\08.Utilty\Standard Assets\CrossPlatformInput\CrossPlatformInputGuidelines.txt" />
-    <None Include="Assets\08.Utilty\Google Sheets to Unity\Scripts\v3\Plugins\Google.GData.Documents.dll" />
     <None Include="Assets\08.Utilty\Photon\PhotonLibs\WebSocket\websocket-sharp.dll" />
-    <None Include="Assets\08.Utilty\Google Sheets to Unity\Scripts\v3\Plugins\Google.GData.AccessControl.DLL" />
-    <None Include="Assets\08.Utilty\Google Sheets to Unity\Scripts\v3\Plugins\Google.GData.Spreadsheets.dll" />
     <None Include="Assets\08.Utilty\Photon\PhotonLibs\changes-library.txt" />
     <None Include="Assets\08.Utilty\Standard Assets\ParticleSystems\ParticleSystemsGuidelines.txt" />
     <None Include="Assets\08.Utilty\Standard Assets\ParticleSystems\Shaders\PriorityParticleAddSoft.shader" />
     <None Include="Assets\08.Utilty\Photon\PhotonUnityNetworking\readme.txt" />
-    <None Include="Assets\08.Utilty\Google Sheets to Unity\Scripts\v3\Plugins\Google.GData.Client.dll" />
     <None Include="Assets\08.Utilty\Photon\PhotonLibs\netstandard2.0\Photon3Unity3D.dll" />
     <None Include="Assets\08.Utilty\Photon\PhotonLibs\Photon3Unity3D.dll" />
     <None Include="Assets\08.Utilty\Photon\PhotonLibs\Metro\Photon3Unity3D.dll" />
-    <None Include="Assets\08.Utilty\Google Sheets to Unity\Scripts\v3\Plugins\Google.GData.Extensions.dll" />
     <None Include="Assets\08.Utilty\Standard Assets\ParticleSystems\Shaders\PriorityParticleAdd.shader" />
     <None Include="Assets\08.Utilty\Standard Assets\ParticleSystems\Shaders\PriorityParticleAlpha.shader" />
     <None Include="Assets\08.Utilty\Photon\PhotonLibs\Photon3Unity3D.xml" />
@@ -533,10 +510,6 @@
       <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.15f1\Editor\Data\Managed\UnityEngine\UnityEditor.UnityConnectModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="TinyJSON">
-      <HintPath>Assets\08.Utilty\Google Sheets to Unity\Scripts\v3\Plugins\TinyJSON.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
     <Reference Include="Unity.Collections.LowLevel.ILSupport">
       <HintPath>Library\PackageCache\com.unity.collections@1.2.4\Unity.Collections.LowLevel.ILSupport\Unity.Collections.LowLevel.ILSupport.dll</HintPath>
       <Private>False</Private>
@@ -545,20 +518,8 @@
       <HintPath>Library\PackageCache\com.unity.testtools.codecoverage@1.2.4\lib\ReportGenerator\ReportGeneratorMerged.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="Google.GData.Documents">
-      <HintPath>Assets\08.Utilty\Google Sheets to Unity\Scripts\v3\Plugins\Google.GData.Documents.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
     <Reference Include="websocket-sharp">
       <HintPath>Assets\08.Utilty\Photon\PhotonLibs\WebSocket\websocket-sharp.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Google.GData.AccessControl">
-      <HintPath>Assets\08.Utilty\Google Sheets to Unity\Scripts\v3\Plugins\Google.GData.AccessControl.DLL</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Google.GData.Spreadsheets">
-      <HintPath>Assets\08.Utilty\Google Sheets to Unity\Scripts\v3\Plugins\Google.GData.Spreadsheets.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="I18N.CJK">
@@ -566,19 +527,11 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="Unity.VisualScripting.Antlr3.Runtime">
-      <HintPath>Library\PackageCache\com.unity.visualscripting@1.9.1\Runtime\VisualScripting.Flow\Dependencies\NCalc\Unity.VisualScripting.Antlr3.Runtime.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Google.GData.Client">
-      <HintPath>Assets\08.Utilty\Google Sheets to Unity\Scripts\v3\Plugins\Google.GData.Client.dll</HintPath>
+      <HintPath>Library\PackageCache\com.unity.visualscripting@1.9.4\Runtime\VisualScripting.Flow\Dependencies\NCalc\Unity.VisualScripting.Antlr3.Runtime.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Photon3Unity3D">
       <HintPath>Assets\08.Utilty\Photon\PhotonLibs\netstandard2.0\Photon3Unity3D.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Google.GData.Extensions">
-      <HintPath>Assets\08.Utilty\Google Sheets to Unity\Scripts\v3\Plugins\Google.GData.Extensions.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="I18N">
@@ -1284,55 +1237,55 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="Assembly-CSharp-firstpass.csproj">
-      <Project>{CB9F30C8-963E-F313-48C7-FF562ECE0F86}</Project>
+      <Project>{BDE6BDC5-60AA-07F1-3B77-C845872F03A7}</Project>
       <Name>Assembly-CSharp-firstpass</Name>
     </ProjectReference>
     <ProjectReference Include="PhotonUnityNetworking.csproj">
-      <Project>{DC7F2FCD-8BA1-A694-0D5C-CF1ACBB41C22}</Project>
+      <Project>{55720004-90D8-2C9E-DD6A-3D84816E148C}</Project>
       <Name>PhotonUnityNetworking</Name>
     </ProjectReference>
     <ProjectReference Include="PhotonRealtime.csproj">
-      <Project>{C3C80005-AFC7-A61C-F6F2-207930CEED26}</Project>
+      <Project>{D8AF1991-0B94-63D6-6010-61F799D49D9F}</Project>
       <Name>PhotonRealtime</Name>
     </ProjectReference>
     <ProjectReference Include="Hierarchy2.Editor.csproj">
-      <Project>{593C5896-425E-3D93-541F-C9E9F6CCFB74}</Project>
+      <Project>{9F0FB6EA-08E0-6467-E452-B0C79381CB09}</Project>
       <Name>Hierarchy2.Editor</Name>
     </ProjectReference>
     <ProjectReference Include="Hierarchy2.Runtime.csproj">
-      <Project>{5617A7DD-208B-5331-C521-D2BCD020F613}</Project>
+      <Project>{ABBD23DC-794F-CAF2-3FA8-5A40A3C89988}</Project>
       <Name>Hierarchy2.Runtime</Name>
     </ProjectReference>
     <ProjectReference Include="PhotonUnityNetworking.Utilities.PhotonPlayer.Editor.csproj">
-      <Project>{1047888C-01C3-1DF5-28D6-79303180F3C5}</Project>
+      <Project>{7FAF63B0-EBB4-2256-70C6-4900C6D7CB24}</Project>
       <Name>PhotonUnityNetworking.Utilities.PhotonPlayer.Editor</Name>
     </ProjectReference>
     <ProjectReference Include="PunDemos.DemoHubEditor.csproj">
-      <Project>{26D3102A-479F-9EAD-22B2-064F29ABF42C}</Project>
+      <Project>{32C0E1F2-BC3B-9A37-4A06-B55AD58C066F}</Project>
       <Name>PunDemos.DemoHubEditor</Name>
     </ProjectReference>
     <ProjectReference Include="PunDemos.DemoSlotcarEditor.csproj">
-      <Project>{40F0BBE0-62B1-3600-919B-81E4A3CDE33B}</Project>
+      <Project>{DB08FD39-7D4D-FE8F-E63B-483A616E7A17}</Project>
       <Name>PunDemos.DemoSlotcarEditor</Name>
     </ProjectReference>
     <ProjectReference Include="PhotonChat.csproj">
-      <Project>{BF7E484D-B421-6C50-BB21-CEBB682530B7}</Project>
+      <Project>{2D93B005-BE8B-0127-0040-CD6C58A5DC41}</Project>
       <Name>PhotonChat</Name>
     </ProjectReference>
     <ProjectReference Include="PhotonUnityNetworking.Utilities.Culling.Editor.csproj">
-      <Project>{9F925A67-A9FD-A93E-C692-A9C566BECE43}</Project>
+      <Project>{41499ABD-E91F-6BCA-F958-09DE4C8C65C3}</Project>
       <Name>PhotonUnityNetworking.Utilities.Culling.Editor</Name>
     </ProjectReference>
     <ProjectReference Include="PhotonUnityNetworking.Editor.csproj">
-      <Project>{716BD3CB-AD8A-52F1-B137-F163915EBB0D}</Project>
+      <Project>{149F8C4D-C0F9-1783-47AA-DE95FEA07D38}</Project>
       <Name>PhotonUnityNetworking.Editor</Name>
     </ProjectReference>
     <ProjectReference Include="PhotonUnityNetworking.Utilities.csproj">
-      <Project>{AFA341B2-2253-075F-75F3-F519163B7588}</Project>
+      <Project>{66347E13-5C4C-E03B-298E-CCDF4EE8DFF7}</Project>
       <Name>PhotonUnityNetworking.Utilities</Name>
     </ProjectReference>
     <ProjectReference Include="PhotonUnityNetworking.Demos.csproj">
-      <Project>{1601D310-2D95-808D-B942-3A7CF50066A1}</Project>
+      <Project>{E05A1042-1B4E-C06B-3C94-D23D5AC29E2E}</Project>
       <Name>PhotonUnityNetworking.Demos</Name>
     </ProjectReference>
   </ItemGroup>
