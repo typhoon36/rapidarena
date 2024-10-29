@@ -20,8 +20,14 @@ public class Inven_Mgr : MonoBehaviour
     public GameObject m_ConfigObj;
     #endregion
 
-    private void Start()
+    #region Inventory 
+    [Header("Inventory")]
+    public GameObject m_Inventory;
+    #endregion
+
+    void Start()
     {
+        #region Top_Panel Init
         //LoadOut버튼 text색상 변경
         m_LoadOutBtn.GetComponentInChildren<Text>().color = Color.gray;
 
@@ -58,6 +64,9 @@ public class Inven_Mgr : MonoBehaviour
             {
                 SceneManager.LoadScene("Pt_LobbyScene");
             });
+        #endregion
+
         
+
     }
 }

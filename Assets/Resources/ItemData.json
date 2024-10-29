@@ -1,0 +1,64 @@
+{
+  "Sheet1": [
+    {
+      "ItemName": "Medikit",
+      "ItemID": 1,
+      "ItemType": "Consumable",
+      "ImagePath": "Product/medkit",
+      "AmmoType": "None",
+      "Amount": 1,
+      "ItemDescription": "구급 상자",
+      "ItemPrice": 120
+    },
+    {
+      "ItemName": "Ammo_Box",
+      "ItemID": 2,
+      "ItemType": "Ammo",
+      "ImagePath": "Product/AmmoBox",
+      "AmmoType": "7.62mm",
+      "Amount": 1,
+      "ItemDescription": "AK 탄약 상자",
+      "ItemPrice": 150
+    },
+    {
+      "ItemName": "Armor_Kit",
+      "ItemID": 3,
+      "ItemType": "Consumable",
+      "ImagePath": "",
+      "AmmoType": "None",
+      "Amount": 1,
+      "ItemDescription": "방탄복 수리 키트",
+      "ItemPrice": 200
+    },
+    {
+      "ItemName": "Bomb_Kit",
+      "ItemID": 4,
+      "ItemType": "Consumable",
+      "ImagePath": "",
+      "AmmoType": "None",
+      "Amount": 1,
+      "ItemDescription": "폭탄 해체 키트",
+      "ItemPrice": 300
+    },
+    {
+      "ItemName": "Weapon_Kit",
+      "ItemID": 5,
+      "ItemType": "Consumable",
+      "ImagePath": "",
+      "AmmoType": "None",
+      "Amount": 1,
+      "ItemDescription": "무기수리키트",
+      "ItemPrice": 400
+    },
+    {
+      "ItemName": "SkinnedBox",
+      "ItemID": 6,
+      "ItemType": "Consumable",
+      "ImagePath": "Product/Skinned_Box",
+      "AmmoType": "None",
+      "Amount": 1,
+      "ItemDescription": "AK-스킨 상자",
+      "ItemPrice": 500
+    }
+  ]
+}

@@ -10,7 +10,7 @@
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <RootNamespace></RootNamespace>
-    <ProjectGuid>{6238D38A-2282-850C-B1D0-CBF73EDD670C}</ProjectGuid>
+    <ProjectGuid>{9A92A708-8688-31EB-3558-66D70A6D05EE}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <AssemblyName>Assembly-CSharp-Editor</AssemblyName>
@@ -1186,59 +1186,59 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="Assembly-CSharp-firstpass.csproj">
-      <Project>{BDE6BDC5-60AA-07F1-3B77-C845872F03A7}</Project>
+      <Project>{CB9F30C8-963E-F313-48C7-FF562ECE0F86}</Project>
       <Name>Assembly-CSharp-firstpass</Name>
     </ProjectReference>
     <ProjectReference Include="Assembly-CSharp.csproj">
-      <Project>{7CDD3584-72AD-3005-69DB-8C673F72CF3F}</Project>
+      <Project>{9D3D4DED-CF15-E3BD-CC2B-0A44912144D0}</Project>
       <Name>Assembly-CSharp</Name>
     </ProjectReference>
     <ProjectReference Include="PhotonUnityNetworking.csproj">
-      <Project>{55720004-90D8-2C9E-DD6A-3D84816E148C}</Project>
+      <Project>{DC7F2FCD-8BA1-A694-0D5C-CF1ACBB41C22}</Project>
       <Name>PhotonUnityNetworking</Name>
     </ProjectReference>
     <ProjectReference Include="PhotonRealtime.csproj">
-      <Project>{D8AF1991-0B94-63D6-6010-61F799D49D9F}</Project>
+      <Project>{C3C80005-AFC7-A61C-F6F2-207930CEED26}</Project>
       <Name>PhotonRealtime</Name>
     </ProjectReference>
     <ProjectReference Include="Hierarchy2.Editor.csproj">
-      <Project>{9F0FB6EA-08E0-6467-E452-B0C79381CB09}</Project>
+      <Project>{593C5896-425E-3D93-541F-C9E9F6CCFB74}</Project>
       <Name>Hierarchy2.Editor</Name>
     </ProjectReference>
     <ProjectReference Include="Hierarchy2.Runtime.csproj">
-      <Project>{ABBD23DC-794F-CAF2-3FA8-5A40A3C89988}</Project>
+      <Project>{5617A7DD-208B-5331-C521-D2BCD020F613}</Project>
       <Name>Hierarchy2.Runtime</Name>
     </ProjectReference>
     <ProjectReference Include="PhotonUnityNetworking.Utilities.PhotonPlayer.Editor.csproj">
-      <Project>{7FAF63B0-EBB4-2256-70C6-4900C6D7CB24}</Project>
+      <Project>{1047888C-01C3-1DF5-28D6-79303180F3C5}</Project>
       <Name>PhotonUnityNetworking.Utilities.PhotonPlayer.Editor</Name>
     </ProjectReference>
     <ProjectReference Include="PunDemos.DemoHubEditor.csproj">
-      <Project>{32C0E1F2-BC3B-9A37-4A06-B55AD58C066F}</Project>
+      <Project>{26D3102A-479F-9EAD-22B2-064F29ABF42C}</Project>
       <Name>PunDemos.DemoHubEditor</Name>
     </ProjectReference>
     <ProjectReference Include="PunDemos.DemoSlotcarEditor.csproj">
-      <Project>{DB08FD39-7D4D-FE8F-E63B-483A616E7A17}</Project>
+      <Project>{40F0BBE0-62B1-3600-919B-81E4A3CDE33B}</Project>
       <Name>PunDemos.DemoSlotcarEditor</Name>
     </ProjectReference>
     <ProjectReference Include="PhotonChat.csproj">
-      <Project>{2D93B005-BE8B-0127-0040-CD6C58A5DC41}</Project>
+      <Project>{BF7E484D-B421-6C50-BB21-CEBB682530B7}</Project>
       <Name>PhotonChat</Name>
     </ProjectReference>
     <ProjectReference Include="PhotonUnityNetworking.Utilities.Culling.Editor.csproj">
-      <Project>{41499ABD-E91F-6BCA-F958-09DE4C8C65C3}</Project>
+      <Project>{9F925A67-A9FD-A93E-C692-A9C566BECE43}</Project>
       <Name>PhotonUnityNetworking.Utilities.Culling.Editor</Name>
     </ProjectReference>
     <ProjectReference Include="PhotonUnityNetworking.Editor.csproj">
-      <Project>{149F8C4D-C0F9-1783-47AA-DE95FEA07D38}</Project>
+      <Project>{716BD3CB-AD8A-52F1-B137-F163915EBB0D}</Project>
       <Name>PhotonUnityNetworking.Editor</Name>
     </ProjectReference>
     <ProjectReference Include="PhotonUnityNetworking.Utilities.csproj">
-      <Project>{66347E13-5C4C-E03B-298E-CCDF4EE8DFF7}</Project>
+      <Project>{AFA341B2-2253-075F-75F3-F519163B7588}</Project>
       <Name>PhotonUnityNetworking.Utilities</Name>
     </ProjectReference>
     <ProjectReference Include="PhotonUnityNetworking.Demos.csproj">
-      <Project>{E05A1042-1B4E-C06B-3C94-D23D5AC29E2E}</Project>
+      <Project>{1601D310-2D95-808D-B942-3A7CF50066A1}</Project>
       <Name>PhotonUnityNetworking.Demos</Name>
     </ProjectReference>
   </ItemGroup>
