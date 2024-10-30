@@ -24,9 +24,9 @@ public class Game_Mgr : MonoBehaviour
     #endregion
 
     public GameObject m_GameObj;
-    public GameState m_GameState { get; private set; } = GameState.Ready;
+    public GameState m_GameState = GameState.Ready;
 
-    private PhotonView pv;
+    PhotonView pv;
 
     Player_Ctrl m_RefPlayer;
 
@@ -64,10 +64,19 @@ public class Game_Mgr : MonoBehaviour
     public Text m_Tm1LeftCount; //남은 인원 표시
     public Text m_Tm2LeftCount; //남은 인원 표시
 
+    #region Timer
+    public Text m_Timer;
+    public float m_LimitTime = 240f;
+    public float m_CurTime;
+    #endregion
+
     void Start()
     {
         m_GameObj.SetActive(false);
         m_CurHP = m_MaxHP;
+
+        m_LimitTime = 240f; 
+        m_Timer.text = "04:00";
 
         #region 이미지 초기화
         m_AsGunImg.color = Color.red; // 기본 총
@@ -75,6 +84,24 @@ public class Game_Mgr : MonoBehaviour
         m_KnifeImg.color = Color.red; // 나이프
         m_GrenadeImg.color = Color.red; // 수류탄
         #endregion
+
+        UpdateTeamCounts();
+    }
+
+    void Update()
+    {
+        if (m_GameState == GameState.Play)
+        {
+            m_LimitTime -= Time.deltaTime;
+            System.TimeSpan time = System.TimeSpan.FromSeconds(m_LimitTime);
+            m_Timer.text = time.ToString(@"mm\:ss");
+
+            if (m_LimitTime <= 0)
+            {
+                m_LimitTime = 0;
+                m_GameState = GameState.End;
+            }
+        }
     }
 
     #region Weapon
@@ -143,8 +170,6 @@ public class Game_Mgr : MonoBehaviour
         m_CurHP = 0;
         UpdateHPBar(m_CurHP, m_MaxHP);
     }
-
-
     #endregion
 
     #region 클릭감지 함수
@@ -171,4 +196,13 @@ public class Game_Mgr : MonoBehaviour
 #endif
     }
     #endregion
+
+    public void UpdateTeamCounts()
+    {
+        int team1Count = Ready_Mgr.Inst.GetTeamPlayerCount("red");
+        int team2Count = Ready_Mgr.Inst.GetTeamPlayerCount("blue");
+
+        m_Tm1LeftCount.text = team1Count.ToString();
+        m_Tm2LeftCount.text = team2Count.ToString();
+    }
 }

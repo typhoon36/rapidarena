@@ -7580,7 +7580,6 @@ GameObject:
   - component: {fileID: 334604007}
   - component: {fileID: 334604010}
   - component: {fileID: 334604011}
-  - component: {fileID: 334604012}
   - component: {fileID: 334604009}
   m_Layer: 0
   m_Name: Game_Mgr
@@ -7616,6 +7615,7 @@ MonoBehaviour:
   m_RoundCnt: 0
   m_Tm1LeftCount: {fileID: 1869643248}
   m_Tm2LeftCount: {fileID: 1465229889}
+  m_Timer: {fileID: 1747506483}
 --- !u!4 &334604008
 Transform:
   m_ObjectHideFlags: 0
@@ -7694,20 +7694,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d153a3a97b1c03449b7912edbf27329c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &334604012
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 334604006}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dcf1174436c23ed4ca109ef3112285c5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  IsFadeOut: 0
-  IsFadeIn: 0
 --- !u!1001 &336835241
 PrefabInstance:
   m_ObjectHideFlags: 0

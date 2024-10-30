@@ -21,20 +21,10 @@
       "ItemPrice": 150
     },
     {
-      "ItemName": "Armor_Kit",
+      "ItemName": "Bomb_Kit",
       "ItemID": 3,
       "ItemType": "Consumable",
-      "ImagePath": "",
-      "AmmoType": "None",
-      "Amount": 1,
-      "ItemDescription": "방탄복 수리 키트",
-      "ItemPrice": 200
-    },
-    {
-      "ItemName": "Bomb_Kit",
-      "ItemID": 4,
-      "ItemType": "Consumable",
-      "ImagePath": "",
+      "ImagePath": "Product/DefuseKit",
       "AmmoType": "None",
       "Amount": 1,
       "ItemDescription": "폭탄 해체 키트",
@@ -42,9 +32,9 @@
     },
     {
       "ItemName": "Weapon_Kit",
-      "ItemID": 5,
+      "ItemID": 4,
       "ItemType": "Consumable",
-      "ImagePath": "",
+      "ImagePath": "Product/WeaponKit",
       "AmmoType": "None",
       "Amount": 1,
       "ItemDescription": "무기수리키트",
@@ -52,13 +42,23 @@
     },
     {
       "ItemName": "SkinnedBox",
-      "ItemID": 6,
+      "ItemID": 5,
       "ItemType": "Consumable",
       "ImagePath": "Product/Skinned_Box",
       "AmmoType": "None",
       "Amount": 1,
       "ItemDescription": "AK-스킨 상자",
       "ItemPrice": 500
+    },
+    {
+      "ItemName": "Smoke",
+      "ItemID": 6,
+      "ItemType": "Consumable",
+      "ImagePath": "Product/Smoke",
+      "AmmoType": "None",
+      "Amount": 1,
+      "ItemDescription": "연막탄",
+      "ItemPrice": 700
     }
   ]
 }

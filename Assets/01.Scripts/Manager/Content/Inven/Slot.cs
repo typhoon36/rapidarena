@@ -9,7 +9,7 @@ public class Slot : MonoBehaviour
     public Image m_ItemImg;
     public Text m_ItemCount;
     public Button m_SlotBtn; //사용 및 장착을 위한 버튼(왼쪽 클릭시 사용, 오른쪽 클릭시 장착)
-    public int m_SlotNum; //슬롯 번호
+    int m_SlotNum; //슬롯 번호
     #endregion
 
     ItemData m_ItemData;
@@ -22,7 +22,7 @@ public class Slot : MonoBehaviour
         m_ItemCount.gameObject.SetActive(false);
 
 
-        
+
 
     }
 }

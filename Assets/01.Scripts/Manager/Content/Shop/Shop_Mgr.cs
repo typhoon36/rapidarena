@@ -30,8 +30,17 @@ public class Shop_Mgr : MonoBehaviour
     public Text m_MsgTxt;
     float ShowMsgTimer = 0.0f;
 
+    #region Products
+    [Header("Products")]
     public GameObject ProductObj;
     public Transform productParent;
+    #endregion
+
+    #region Inventory
+    Inven_Mgr m_Inven;//인벤토리와 연동(인벤토리에 있는 아이템을 Inven_View에 표시)
+    public Transform InvenParent;//인벤토리 부모
+    public GameObject SlotObj;//슬롯 오브젝트 
+    #endregion
 
     void Start()
     {

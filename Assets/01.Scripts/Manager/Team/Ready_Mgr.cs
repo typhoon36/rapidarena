@@ -65,8 +65,15 @@ public class Ready_Mgr : MonoBehaviourPunCallbacks
     [HideInInspector] public float m_GoWaitGame = 4.0f;    //게임 시작 후 카운트 Text UI
     #endregion
 
+    #region singleton
+    public static Ready_Mgr Inst;
+    #endregion
+
     void Awake()
     {
+        Inst = this;
+
+
         m_Team1Pos[0] = new Vector3(31.3f, 4f, -75f);
         m_Team1Pos[1] = new Vector3(31.3f, 4f, -77f);
         m_Team1Pos[2] = new Vector3(31.3f, 4f, -79f);
@@ -144,7 +151,6 @@ public class Ready_Mgr : MonoBehaviourPunCallbacks
     }
     void Update()
     {
-        // 게임 Update()를 돌려도 되는 상태인지 확인한다.
         if (IsGamePossible() == false)
         {
             return;
@@ -535,10 +541,6 @@ public class Ready_Mgr : MonoBehaviourPunCallbacks
         return false;
     }
 
-    #endregion
-
-    #region ------------ Observer Method 모음
-
     void AllReadyObserver()
     {
         if (m_GameState != GameState.Ready)
@@ -558,7 +560,6 @@ public class Ready_Mgr : MonoBehaviourPunCallbacks
 
         if (a_AllReady == true)
         {
-
             if (Game_Mgr.Inst.m_RoundCnt == 0 && PhotonNetwork.CurrentRoom.IsOpen == true)
                 PhotonNetwork.CurrentRoom.IsOpen = false;
 
@@ -571,12 +572,10 @@ public class Ready_Mgr : MonoBehaviourPunCallbacks
                     m_WaitTmText.text = ((int)m_GoWaitGame).ToString();
                 }
 
-
                 if (PhotonNetwork.IsMasterClient == true)
                 {
                     if (0.0f < m_GoWaitGame && a_OldGoWait != (int)m_GoWaitGame)
                     {
-
                         SitPosInxMasterCtrl();
                     }
                 }
@@ -594,21 +593,20 @@ public class Ready_Mgr : MonoBehaviourPunCallbacks
                     m_GoWaitGame = 0.0f;
 
                     Game_Mgr.Inst.m_GameObj.SetActive(true);
-
                 }
-
             }
 
-
-
             if (PhotonNetwork.IsMasterClient == true)
+            {
                 if (m_GoWaitGame <= 0.0f)
                 {
                     SendGState(GameState.Play);
                     Cursor.lockState = CursorLockMode.Locked;
                     Cursor.visible = false;
+                    Game_Mgr.Inst.m_GameState = GameState.Play;
+                    Game_Mgr.Inst.m_LimitTime = 240f; // 4분
                 }
-
+            }
         }
     }
 
@@ -642,4 +640,17 @@ public class Ready_Mgr : MonoBehaviourPunCallbacks
     }
     #endregion
 
+
+    public int GetTeamPlayerCount(string team)
+    {
+        int count = 0;
+        foreach (Player player in PhotonNetwork.PlayerList)
+        {
+            if (ReceiveSelTeam(player) == team)
+            {
+                count++;
+            }
+        }
+        return count;
+    }
 }
