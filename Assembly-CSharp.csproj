@@ -156,6 +156,7 @@
     <Compile Include="Assets\01.Scripts\Utilty\ConfigBox.cs" />
     <Compile Include="Assets\08.Utilty\Standard Assets\CrossPlatformInput\Scripts\TouchPad.cs" />
     <Compile Include="Assets\08.Utilty\Standard Assets\Utility\SimpleActivatorMenu.cs" />
+    <Compile Include="Assets\01.Scripts\Controller\Player\Damage.cs" />
     <Compile Include="Assets\08.Utilty\Standard Assets\CrossPlatformInput\Scripts\VirtualInput.cs" />
     <Compile Include="Assets\06.Model\Low Poly FPS Pack - Free (Sample)\Components\Demo_Scene_Components\Scripts\ExplosiveBarrelScript.cs" />
     <Compile Include="Assets\08.Utilty\Standard Assets\Utility\AutoMobileShaderSwitch.cs" />

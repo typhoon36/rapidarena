@@ -19,7 +19,7 @@ public class Game_Mgr : MonoBehaviour
     void Awake()
     {
         Inst = this;
-        pv = GetComponent<PhotonView>(); // 추가
+        pv = GetComponent<PhotonView>();
     }
     #endregion
 
@@ -40,8 +40,8 @@ public class Game_Mgr : MonoBehaviour
     [Header("HP")]
     public GameObject m_DmgPanel;
     public Image m_HPBar;
-    float m_MaxHP = 440;
-    float m_CurHP = 440;
+    [HideInInspector] public float m_MaxHP = 440;
+    [HideInInspector] public float m_CurHP = 440;
     #endregion
 
     #region Gun
@@ -54,28 +54,33 @@ public class Game_Mgr : MonoBehaviour
     private Weapon_Base m_Weapon;
     #endregion
 
-    #region Chat
-    [Header("Chat")]
-    public GameObject m_PanelLogMsg;
-    public Text m_ChatLog;
-    #endregion
-
     [HideInInspector] public int m_RoundCnt = 0; // 라운드 카운트
-    public Text m_Tm1LeftCount; //남은 인원 표시
-    public Text m_Tm2LeftCount; //남은 인원 표시
 
     #region Timer
     public Text m_Timer;
-    public float m_LimitTime = 240f;
-    public float m_CurTime;
+    [HideInInspector] public float m_LimitTime = 240f;
+    [HideInInspector] public float m_CurTime;
     #endregion
+
+    #region WinLose
+    [Header("WinLose")]
+    public Text m_WinLoseTxt;
+    #endregion
+
+    #region End
+    [Header("End")]
+    public Text m_GameEndText;
+    #endregion
+
 
     void Start()
     {
+        m_GameEndText.gameObject.SetActive(false);
+
         m_GameObj.SetActive(false);
         m_CurHP = m_MaxHP;
 
-        m_LimitTime = 240f; 
+        m_LimitTime = 240f;
         m_Timer.text = "04:00";
 
         #region 이미지 초기화
@@ -85,7 +90,6 @@ public class Game_Mgr : MonoBehaviour
         m_GrenadeImg.color = Color.red; // 수류탄
         #endregion
 
-        UpdateTeamCounts();
     }
 
     void Update()
@@ -197,12 +201,5 @@ public class Game_Mgr : MonoBehaviour
     }
     #endregion
 
-    public void UpdateTeamCounts()
-    {
-        int team1Count = Ready_Mgr.Inst.GetTeamPlayerCount("red");
-        int team2Count = Ready_Mgr.Inst.GetTeamPlayerCount("blue");
 
-        m_Tm1LeftCount.text = team1Count.ToString();
-        m_Tm2LeftCount.text = team2Count.ToString();
-    }
 }

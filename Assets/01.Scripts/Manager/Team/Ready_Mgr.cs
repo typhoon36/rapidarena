@@ -73,6 +73,7 @@ public class Ready_Mgr : MonoBehaviourPunCallbacks
     {
         Inst = this;
 
+        m_GameState = GameState.Ready;
 
         m_Team1Pos[0] = new Vector3(31.3f, 4f, -75f);
         m_Team1Pos[1] = new Vector3(31.3f, 4f, -77f);
@@ -84,7 +85,7 @@ public class Ready_Mgr : MonoBehaviourPunCallbacks
         m_Team2Pos[2] = new Vector3(102.3f, 4f, -81.10f);
         m_Team2Pos[3] = new Vector3(102.3f, 4f, -83.42f);
 
-        m_GameState = GameState.Ready;
+
 
 
 
@@ -189,6 +190,9 @@ public class Ready_Mgr : MonoBehaviourPunCallbacks
             Team2Panel.SetActive(false);
             m_WaitTmText.gameObject.SetActive(false);
         }
+
+       Team_Mgr.Inst.WinLossObserver(this); //ÇÑÂÊÆÀ Àü¸ê °¨½Ã ¹× ½ÂÆÐ ÆÇÁ¤
+
     }
 
     void BroadcastingChat()
@@ -283,12 +287,15 @@ public class Ready_Mgr : MonoBehaviourPunCallbacks
            PhotonNetwork.LocalPlayer == null)
             return false;
 
-        if (PhotonNetwork.CurrentRoom.CustomProperties.ContainsKey("GameState") == false)
+        if (PhotonNetwork.CurrentRoom.CustomProperties.ContainsKey("GameState") == false ||
+           PhotonNetwork.CurrentRoom.CustomProperties.ContainsKey("Team1Win") == false ||
+            PhotonNetwork.CurrentRoom.CustomProperties.ContainsKey("Team2Win") == false)
             return false;
 
 
         m_GameState = ReceiveGState();
-
+        Team_Mgr.Inst.m_Team1Win = (int)PhotonNetwork.CurrentRoom.CustomProperties["Team1Win"];
+        Team_Mgr.Inst.m_Team2Win = (int)PhotonNetwork.CurrentRoom.CustomProperties["Team2Win"];
 
         return true;
     }
@@ -341,6 +348,8 @@ public class Ready_Mgr : MonoBehaviourPunCallbacks
             m_StateProps.Add("GameState", (int)a_GState);
 
         PhotonNetwork.CurrentRoom.SetCustomProperties(m_StateProps);
+
+        m_GameState = a_GState;
     }
 
     GameState ReceiveGState()
@@ -641,16 +650,5 @@ public class Ready_Mgr : MonoBehaviourPunCallbacks
     #endregion
 
 
-    public int GetTeamPlayerCount(string team)
-    {
-        int count = 0;
-        foreach (Player player in PhotonNetwork.PlayerList)
-        {
-            if (ReceiveSelTeam(player) == team)
-            {
-                count++;
-            }
-        }
-        return count;
-    }
+    
 }
