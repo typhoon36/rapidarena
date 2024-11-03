@@ -8,13 +8,19 @@ using UnityEngine;
 public class Team_Mgr : MonoBehaviourPunCallbacks
 {
     [HideInInspector] public double m_CheckWinTime = 2.0f;
-    int IsRoomBuf_Team1Win = 0;
+    // 팀1 
+    int IsRoomBuf_Team1Win = 0; //룸 버퍼를 생각.
     [HideInInspector] public int m_Team1Win = 0;
-    int IsRoomBuf_Team2Win = 0;
+    // 팀2
+    int IsRoomBuf_Team2Win = 0;//위와 같은 의미.
     [HideInInspector] public int m_Team2Win = 0;
 
-    ExitGames.Client.Photon.Hashtable m_Team1WinProps = new ExitGames.Client.Photon.Hashtable();
-    ExitGames.Client.Photon.Hashtable m_Team2WinProps = new ExitGames.Client.Photon.Hashtable();
+    #region Custom Properties
+    ExitGames.Client.Photon.Hashtable m_Team1WinProps = 
+        new ExitGames.Client.Photon.Hashtable();
+    ExitGames.Client.Photon.Hashtable m_Team2WinProps = 
+        new ExitGames.Client.Photon.Hashtable();
+    #endregion
 
     #region SingleTon
     public static Team_Mgr Inst = null;
@@ -27,17 +33,19 @@ public class Team_Mgr : MonoBehaviourPunCallbacks
 
     void Start()
     {
+        //Custom Properties 초기화
         InitTeam1WinProps();
         InitTeam2WinProps();
     }
 
-    //한쪽팀이 전멸했는지 체크하고 승리 / 패배를 감시하고 처리해 주는 함수
+
+    //승패 Observer 함수 
     public void WinLossObserver(Ready_Mgr a_ReadyMgr)
     {
         if (a_ReadyMgr == null)
             return;
 
-        //---- 승리 / 패배 체크
+
         if (Ready_Mgr.m_GameState == GameState.Play)
         {
             m_CheckWinTime -= Time.deltaTime;
@@ -48,9 +56,9 @@ public class Team_Mgr : MonoBehaviourPunCallbacks
         }
 
         if (Game_Mgr.Inst.m_WinLoseTxt != null)
-            Game_Mgr.Inst.m_WinLoseTxt.text = "<color=Blue>" + "Team1 : " +
+            Game_Mgr.Inst.m_WinLoseTxt.text = "<color= #4179A3>" + "Team1 : " +
                                               m_Team1Win.ToString() + "</color> : " +
-                                              "<color=red>" + "Team2 : " +
+                                              "<color= #DC626D>" + "Team2 : " +
                                               m_Team2Win.ToString() + "</color>";
 
         if (5 <= (m_Team1Win + m_Team2Win))
@@ -63,13 +71,13 @@ public class Team_Mgr : MonoBehaviourPunCallbacks
                 Game_Mgr.Inst.m_GameEndText.gameObject.SetActive(true);
                 if (m_Team1Win < m_Team2Win)
                 {
-                    Game_Mgr.Inst.m_GameEndText.text = "<color=Black>" + "레드팀 승" + "</color>";
+                    Game_Mgr.Inst.m_GameEndText.text = "<color=#DC626D>" + "레드팀 승리" + "</color>";
                     Cursor.lockState = CursorLockMode.None;
                     Cursor.visible = true;
                 }
                 else
                 {
-                    Game_Mgr.Inst.m_GameEndText.text = "<color=Blue>" + "블루팀 승" + "</color>";
+                    Game_Mgr.Inst.m_GameEndText.text = "<color=#4179A3>" + "블루팀 승리" + "</color>";
                     Cursor.lockState = CursorLockMode.None;
                     Cursor.visible = true;
                 }
@@ -94,7 +102,6 @@ public class Team_Mgr : MonoBehaviourPunCallbacks
         a_ReadyMgr.m_OldState = Ready_Mgr.m_GameState;
     }
 
-    //한쪽팀이 전멸했는지 체크하는 함수
     void CheckAliveTeam(Ready_Mgr a_ReadyMgr)
     {
         int a_Tm1Count = 0;

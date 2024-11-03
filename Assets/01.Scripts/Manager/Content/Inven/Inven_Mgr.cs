@@ -23,6 +23,7 @@ public class Inven_Mgr : MonoBehaviour
     #region Inventory 
     [Header("Inventory")]
     public GameObject m_Inventory;
+    public GameObject m_Slot;//인벤토리 슬롯
     #endregion
 
     void Start()
@@ -65,8 +66,6 @@ public class Inven_Mgr : MonoBehaviour
                 SceneManager.LoadScene("Pt_LobbyScene");
             });
         #endregion
-
-        
 
     }
 }

@@ -43,6 +43,11 @@ public class Player_Ctrl : Base_Ctrl
     private Weapon_Base currentWeapon;
     #endregion
 
+    #region Sticky Bomb
+    public GameObject m_StickyBomb; //설치할 폭탄 프리팹
+    public Vector3 m_StPos; //설치할 위치
+    bool IsSet = false; //설치 여부
+    #endregion
 
     #region HP
     float m_MaxHP = 440;
@@ -75,7 +80,7 @@ public class Player_Ctrl : Base_Ctrl
             Game_Mgr.Inst.SetWeapon(currentWeapon);
         }
 
-      
+
 
         if (pv.IsMine)
         {
@@ -96,7 +101,7 @@ public class Player_Ctrl : Base_Ctrl
         if (PhotonNetwork.CurrentRoom == null || PhotonNetwork.LocalPlayer == null)
             return;
 
-        if(!pv.IsMine)
+        if (!pv.IsMine)
             return;
 
         if (pv.IsMine)
@@ -106,6 +111,7 @@ public class Player_Ctrl : Base_Ctrl
             RotateCam();
             IsChange();
             HandleWeaponActions();
+            BombSet();
 
             m_Velocity.y += m_Gravity * Time.deltaTime;
             m_CharCtrl.Move((m_MoveDir + m_Velocity) * Time.deltaTime);
@@ -279,6 +285,21 @@ public class Player_Ctrl : Base_Ctrl
         else if (Input.GetKeyDown(KeyCode.B))
         {
             ToggleIsAttackMode();
+        }
+    }
+
+    void BombSet()
+    {
+        if (Input.GetKeyDown(KeyCode.F))
+        {
+
+            if (IsSet == false)
+            {
+                IsSet = true;
+                m_StPos = new Vector3(27, 1f, 6f);
+                Instantiate(m_StickyBomb, m_StPos, transform.rotation);
+            }
+
         }
     }
 

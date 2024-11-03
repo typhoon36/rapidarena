@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public enum GameState
@@ -54,7 +55,7 @@ public class Game_Mgr : MonoBehaviour
     private Weapon_Base m_Weapon;
     #endregion
 
-    [HideInInspector] public int m_RoundCnt = 0; // 라운드 카운트
+
 
     #region Timer
     public Text m_Timer;
@@ -65,6 +66,7 @@ public class Game_Mgr : MonoBehaviour
     #region WinLose
     [Header("WinLose")]
     public Text m_WinLoseTxt;
+    [HideInInspector] public int m_RoundCnt = 0;
     #endregion
 
     #region End
@@ -72,14 +74,16 @@ public class Game_Mgr : MonoBehaviour
     public Text m_GameEndText;
     #endregion
 
+    public Text Object_Txt;
 
     void Start()
     {
         m_GameEndText.gameObject.SetActive(false);
-
         m_GameObj.SetActive(false);
+        //HP초기화
         m_CurHP = m_MaxHP;
 
+        //타이머
         m_LimitTime = 240f;
         m_Timer.text = "04:00";
 
@@ -90,10 +94,14 @@ public class Game_Mgr : MonoBehaviour
         m_GrenadeImg.color = Color.red; // 수류탄
         #endregion
 
+        Object_Txt.gameObject.SetActive(false);
+
+
     }
 
     void Update()
     {
+        //타이머
         if (m_GameState == GameState.Play)
         {
             m_LimitTime -= Time.deltaTime;
@@ -106,6 +114,7 @@ public class Game_Mgr : MonoBehaviour
                 m_GameState = GameState.End;
             }
         }
+
     }
 
     #region Weapon
@@ -200,6 +209,9 @@ public class Game_Mgr : MonoBehaviour
 #endif
     }
     #endregion
+
+ 
+
 
 
 }

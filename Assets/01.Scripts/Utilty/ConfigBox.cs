@@ -8,8 +8,6 @@ public class ConfigBox : MonoBehaviour
     public Button m_Ok_Btn = null;
     public Button m_Close_Btn = null;
 
-    public InputField NickInputField = null;
-
     public Toggle m_Sound_Toggle = null;
     public Slider m_Sound_Slider = null;
 
@@ -49,17 +47,17 @@ public class ConfigBox : MonoBehaviour
     void OkBtnClick()
     {
 
-        Time.timeScale = 1.0f;  //일시정지 풀어주기
+        Time.timeScale = 1.0f;  
         Destroy(gameObject);
     }
 
     void CloseBtnClick()
     {
-        Time.timeScale = 1.0f;  //일시정지 풀어주기
+        Time.timeScale = 1.0f;  
         Destroy(gameObject);
     }
 
-    void SoundOnOff(bool value) //체크 상태가 변경되었을 때 호출되는 함수
+    void SoundOnOff(bool value) 
     {
 
         int a_IntV = (value == true) ? 1 : 0;

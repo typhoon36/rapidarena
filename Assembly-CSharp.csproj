@@ -70,6 +70,7 @@
     <Compile Include="Assets\08.Utilty\Standard Assets\Utility\FollowTarget.cs" />
     <Compile Include="Assets\08.Utilty\Standard Assets\CrossPlatformInput\Scripts\AxisTouchButton.cs" />
     <Compile Include="Assets\01.Scripts\Manager\Content\Sound_Mgr.cs" />
+    <Compile Include="Assets\01.Scripts\Manager\Core\Menu_Mgr.cs" />
     <Compile Include="Assets\08.Utilty\Standard Assets\CrossPlatformInput\Scripts\ButtonHandler.cs" />
     <Compile Include="Assets\08.Utilty\Standard Assets\CrossPlatformInput\Scripts\TiltInput.cs" />
     <Compile Include="Assets\01.Scripts\Controller\Gun_Related\Weapon_Base.cs" />
@@ -113,6 +114,7 @@
     <Compile Include="Assets\06.Model\Low Poly FPS Pack - Free (Sample)\Components\Demo_Scene_Components\Scripts\DebrisScript.cs" />
     <Compile Include="Assets\08.Utilty\Photon\PhotonChat\Demos\Common\TextButtonTransition.cs" />
     <Compile Include="Assets\08.Utilty\Standard Assets\Utility\TimedObjectActivator.cs" />
+    <Compile Include="Assets\01.Scripts\Manager\Content\Inven\Equip_Slot.cs" />
     <Compile Include="Assets\08.Utilty\Photon\PhotonChat\Demos\DemoChat\ChatAppIdCheckerUI.cs" />
     <Compile Include="Assets\06.Model\Low Poly FPS Pack - Free (Sample)\Components\Scripts\Explosions_&amp;_Impacts\ExplosionScript.cs" />
     <Compile Include="Assets\08.Utilty\Standard Assets\ParticleSystems\Scripts\ExplosionPhysicsForce.cs" />

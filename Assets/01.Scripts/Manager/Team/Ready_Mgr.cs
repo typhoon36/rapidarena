@@ -115,7 +115,7 @@ public class Ready_Mgr : MonoBehaviourPunCallbacks
         if (m_Team1ToTeam2 != null)
             m_Team1ToTeam2.onClick.AddListener(() =>
             {
-                SendSelTeam("red"); 
+                SendSelTeam("red");
             });
 
         if (m_Team1Ready != null)
@@ -127,7 +127,7 @@ public class Ready_Mgr : MonoBehaviourPunCallbacks
         if (m_Team2ToTeam1 != null)
             m_Team2ToTeam1.onClick.AddListener(() =>
             {
-                SendSelTeam("blue");  
+                SendSelTeam("blue");
             });
 
         if (m_Team2Ready != null)
@@ -166,7 +166,7 @@ public class Ready_Mgr : MonoBehaviourPunCallbacks
         }
 
         #region Chatting
-        if(Input.GetKeyDown(KeyCode.Return) && m_GameState == GameState.Ready)
+        if (Input.GetKeyDown(KeyCode.Return) && m_GameState == GameState.Ready)
         {
             IsEnter = !IsEnter;
 
@@ -191,7 +191,7 @@ public class Ready_Mgr : MonoBehaviourPunCallbacks
             m_WaitTmText.gameObject.SetActive(false);
         }
 
-       Team_Mgr.Inst.WinLossObserver(this); //한쪽팀 전멸 감시 및 승패 판정
+        Team_Mgr.Inst.WinLossObserver(this);
 
     }
 
@@ -267,7 +267,7 @@ public class Ready_Mgr : MonoBehaviourPunCallbacks
             if (PhotonNetwork.CurrentRoom != null)
                 PhotonNetwork.CurrentRoom.CustomProperties.Clear();
         }
-    
+
         if (PhotonNetwork.LocalPlayer != null)
             PhotonNetwork.LocalPlayer.CustomProperties.Clear();
 
@@ -307,7 +307,7 @@ public class Ready_Mgr : MonoBehaviourPunCallbacks
     {
         if (info.Sender.IsLocal && isChatMsg == true)
             msg = msg.Replace("#ffffff", "#ffff00");
-        
+
 
         m_MsgList.Add(msg);
         if (20 < m_MsgList.Count)
@@ -447,7 +447,7 @@ public class Ready_Mgr : MonoBehaviourPunCallbacks
 
     }
 
-    void RefreshPhotonTeam() //각 팀의 리스트뷰 UI 를 갱신해 주는 함수
+    void RefreshPhotonTeam() 
     {
 
         foreach (GameObject obj in GameObject.FindGameObjectsWithTag("UserNode_Item"))
@@ -462,13 +462,13 @@ public class Ready_Mgr : MonoBehaviourPunCallbacks
             a_TeamKind = ReceiveSelTeam(a_RefPlayer);
             a_UserNode = Instantiate(m_UserNodeItem);
 
-            // 팀이 뭐냐?에 따라서 스크롤 뷰를 분기 해 준다.
+
             if (a_TeamKind == "blue")
                 a_UserNode.transform.SetParent(scrollTeam1.transform, false);
             else if (a_TeamKind == "red")
                 a_UserNode.transform.SetParent(scrollTeam2.transform, false);
 
-            // 생성한 UserNodeItem에 표시하기 위한 텍스트 정보 전달
+
             UserNodeItem a_UsData = a_UserNode.GetComponent<UserNodeItem>();
             if (a_UsData != null)
             {
@@ -481,16 +481,15 @@ public class Ready_Mgr : MonoBehaviourPunCallbacks
 
         }
 
-        //--- 나의 Ready 상태에 따라서 UI 변경해 주기
         if (ReceiveReady(PhotonNetwork.LocalPlayer) == true)
-        {  //내가 Ready 상태라면...
+        {  
             m_Team1Ready.gameObject.SetActive(false);
             m_Team2Ready.gameObject.SetActive(false);
 
             m_Team1ToTeam2.gameObject.SetActive(false);
             m_Team2ToTeam1.gameObject.SetActive(false);
         }
-        else  //내가 아직 Ready 상태가 아니라면...
+        else  
         {
             a_TeamKind = ReceiveSelTeam(PhotonNetwork.LocalPlayer);
             if (a_TeamKind == "blue")
@@ -514,9 +513,9 @@ public class Ready_Mgr : MonoBehaviourPunCallbacks
     #region --------- Ready 상태 동기화 처리
 
     void InitReadyProps()
-    { //속도를 위해 버퍼를 미리 만들어 놓는다는 의미
+    { 
         m_PlayerReady.Clear();
-        m_PlayerReady.Add("IamReady", 0);   //기본적으로 아직 준비전 상태로 시작한다.
+        m_PlayerReady.Add("IamReady", 0);  
         PhotonNetwork.LocalPlayer.SetCustomProperties(m_PlayerReady);
     }
 
@@ -614,6 +613,25 @@ public class Ready_Mgr : MonoBehaviourPunCallbacks
                     Cursor.visible = false;
                     Game_Mgr.Inst.m_GameState = GameState.Play;
                     Game_Mgr.Inst.m_LimitTime = 240f; // 4분
+
+                    string a_TeamKind = "blue";
+                    foreach (Player _player in PhotonNetwork.PlayerList)
+                    {
+                        if (_player.CustomProperties.ContainsKey("MyTeam") == true)
+                            a_TeamKind = (string)_player.CustomProperties["MyTeam"];
+
+                        if(a_TeamKind == "blue")
+                        {
+                            Game_Mgr.Inst.Object_Txt.gameObject.SetActive(true);
+                            Game_Mgr.Inst.Object_Txt.text = "Object : "+ "Bomb Defuse/Kill Enermy";
+                        }
+                        else if (a_TeamKind == "red")
+                        {
+                            Game_Mgr.Inst.Object_Txt.gameObject.SetActive(true);
+                            Game_Mgr.Inst.Object_Txt.text = "Object  :" + "Bomb Plant/Kill Enermy";
+                        }
+
+                    }
                 }
             }
         }
@@ -645,10 +663,9 @@ public class Ready_Mgr : MonoBehaviourPunCallbacks
             }
         }
 
-      
+
     }
     #endregion
 
-
-    
+  
 }

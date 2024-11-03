@@ -5,7 +5,7 @@ using UnityEngine;
 public class Bullet_Ctrl : MonoBehaviour
 {
     #region ÃÑ¾Ë ¼Óµµ ¹× ÆÄ±«·Â
-    public float speed = 20.0f;
+    public float speed = 6000.0f;
     public int damage = 10;
     #endregion
 
