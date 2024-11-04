@@ -4,6 +4,8 @@ using Photon.Pun;
 using Photon.Realtime;
 using UnityEngine.SceneManagement;
 using System.Collections.Generic;
+using System.Collections;
+using UnityEditor.VersionControl;
 
 
 public class Ready_Mgr : MonoBehaviourPunCallbacks
@@ -447,7 +449,7 @@ public class Ready_Mgr : MonoBehaviourPunCallbacks
 
     }
 
-    void RefreshPhotonTeam() 
+    void RefreshPhotonTeam()
     {
 
         foreach (GameObject obj in GameObject.FindGameObjectsWithTag("UserNode_Item"))
@@ -482,14 +484,14 @@ public class Ready_Mgr : MonoBehaviourPunCallbacks
         }
 
         if (ReceiveReady(PhotonNetwork.LocalPlayer) == true)
-        {  
+        {
             m_Team1Ready.gameObject.SetActive(false);
             m_Team2Ready.gameObject.SetActive(false);
 
             m_Team1ToTeam2.gameObject.SetActive(false);
             m_Team2ToTeam1.gameObject.SetActive(false);
         }
-        else  
+        else
         {
             a_TeamKind = ReceiveSelTeam(PhotonNetwork.LocalPlayer);
             if (a_TeamKind == "blue")
@@ -513,9 +515,9 @@ public class Ready_Mgr : MonoBehaviourPunCallbacks
     #region --------- Ready 상태 동기화 처리
 
     void InitReadyProps()
-    { 
+    {
         m_PlayerReady.Clear();
-        m_PlayerReady.Add("IamReady", 0);  
+        m_PlayerReady.Add("IamReady", 0);
         PhotonNetwork.LocalPlayer.SetCustomProperties(m_PlayerReady);
     }
 
@@ -549,10 +551,10 @@ public class Ready_Mgr : MonoBehaviourPunCallbacks
         return false;
     }
 
+    //모두가 준비가 되었는지 확인
     void AllReadyObserver()
     {
-        if (m_GameState != GameState.Ready)
-            return;
+        if (m_GameState != GameState.Ready) return;
 
         int a_OldGoWait = (int)m_GoWaitGame;
 
@@ -620,15 +622,15 @@ public class Ready_Mgr : MonoBehaviourPunCallbacks
                         if (_player.CustomProperties.ContainsKey("MyTeam") == true)
                             a_TeamKind = (string)_player.CustomProperties["MyTeam"];
 
-                        if(a_TeamKind == "blue")
+                        if (a_TeamKind == "blue")
                         {
                             Game_Mgr.Inst.Object_Txt.gameObject.SetActive(true);
-                            Game_Mgr.Inst.Object_Txt.text = "Object : "+ "Bomb Defuse/Kill Enermy";
+                            StartCoroutine(Typing("Object : 폭탄 해체 / 테러리스트 사살"));
                         }
                         else if (a_TeamKind == "red")
                         {
                             Game_Mgr.Inst.Object_Txt.gameObject.SetActive(true);
-                            Game_Mgr.Inst.Object_Txt.text = "Object  :" + "Bomb Plant/Kill Enermy";
+                            StartCoroutine(Typing("Object : 폭탄 해체 / 대테러부대 사살"));
                         }
 
                     }
@@ -637,6 +639,7 @@ public class Ready_Mgr : MonoBehaviourPunCallbacks
         }
     }
 
+    //팀별 자리배치 관리
     void SitPosInxMasterCtrl()
     {
         int a_Tm1Count = 0;
@@ -667,5 +670,31 @@ public class Ready_Mgr : MonoBehaviourPunCallbacks
     }
     #endregion
 
-  
+    #region 연출
+    IEnumerator WaitText(float delay = 10)
+    {
+        string currentText = Game_Mgr.Inst.Object_Txt.text;
+        for (int i = currentText.Length; i >= 0; i--)
+        {
+            Game_Mgr.Inst.Object_Txt.text = currentText.Substring(0, i);
+            yield return new WaitForSeconds(0.1f);
+        }
+
+        Game_Mgr.Inst.Object_Txt.gameObject.SetActive(false);
+    }
+
+    IEnumerator Typing(string ObjectTxt)
+    {
+        yield return new WaitForSeconds(1f);
+
+        for (int i = 0; i <= ObjectTxt.Length; i++)
+        {
+            Game_Mgr.Inst.Object_Txt.text = ObjectTxt.Substring(0, i);
+            yield return new WaitForSeconds(0.1f);
+        }
+
+        // Typing 효과 끝나고 3초 후에 텍스트 사라짐
+        StartCoroutine(WaitText(3.0f));
+    }
+    #endregion
 }

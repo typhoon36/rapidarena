@@ -4,6 +4,8 @@ using UnityEngine;
 using Photon.Pun;
 using UnityStandardAssets.Utility;
 
+
+
 public class Player_Ctrl : Base_Ctrl
 {
     [HideInInspector] public PhotonView pv = null;
@@ -36,6 +38,7 @@ public class Player_Ctrl : Base_Ctrl
     Weapon_Base m_GunBase;
     GameState m_GameState;
     Cam_Ctrl m_CamCtrl;
+    StickyBomb m_Sbomb;
     #endregion
 
     #region ChangeWeapon
@@ -43,11 +46,6 @@ public class Player_Ctrl : Base_Ctrl
     private Weapon_Base currentWeapon;
     #endregion
 
-    #region Sticky Bomb
-    public GameObject m_StickyBomb; //설치할 폭탄 프리팹
-    public Vector3 m_StPos; //설치할 위치
-    bool IsSet = false; //설치 여부
-    #endregion
 
     #region HP
     float m_MaxHP = 440;
@@ -62,6 +60,7 @@ public class Player_Ctrl : Base_Ctrl
         m_ASource = GetComponent<AudioSource>();
         m_GunBase = GetComponentInChildren<Weapon_Base>();
         m_CamCtrl = GetComponent<Cam_Ctrl>();
+        m_Sbomb = GetComponentInChildren<StickyBomb>();
     }
 
     void Start()
@@ -80,8 +79,6 @@ public class Player_Ctrl : Base_Ctrl
             Game_Mgr.Inst.SetWeapon(currentWeapon);
         }
 
-
-
         if (pv.IsMine)
         {
             Camera.main.GetComponent<SmoothFollow>().target = m_CamPos;
@@ -91,7 +88,6 @@ public class Player_Ctrl : Base_Ctrl
         {
             m_CharCtrl.enabled = false;
         }
-
     }
 
     void Update()
@@ -111,7 +107,6 @@ public class Player_Ctrl : Base_Ctrl
             RotateCam();
             IsChange();
             HandleWeaponActions();
-            BombSet();
 
             m_Velocity.y += m_Gravity * Time.deltaTime;
             m_CharCtrl.Move((m_MoveDir + m_Velocity) * Time.deltaTime);
@@ -131,12 +126,35 @@ public class Player_Ctrl : Base_Ctrl
                 PlayerState = DefState.Idle;
                 PlaySound(null, false);
             }
+
+            if (Input.GetKeyDown(KeyCode.G) && isInArea)
+            {
+                m_Sbomb.SpawnBomb();
+                Game_Mgr.Inst.ShowMessage(5f, true);
+            }
+        }
+    }
+
+    bool isInArea = false;
+
+    void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Area"))
+        {
+            isInArea = true;
+        }
+    }
+
+    void OnTriggerExit(Collider other)
+    {
+        if (other.CompareTag("Area"))
+        {
+            isInArea = false;
         }
     }
 
     void KeyMovement()
     {
-
         h = Input.GetAxis("Horizontal");
         v = Input.GetAxis("Vertical");
 
@@ -179,14 +197,12 @@ public class Player_Ctrl : Base_Ctrl
 
     void Jump()
     {
-
         if (Input.GetButtonDown("Jump") && IsGround)
         {
             m_Velocity.y = Mathf.Sqrt(m_JumpForce * -2f * m_Gravity);
             PlayerState = DefState.Jump;
         }
     }
-
 
     void RotateCam()
     {
@@ -198,7 +214,6 @@ public class Player_Ctrl : Base_Ctrl
 
     void PlaySound(AudioClip clip, bool loop)
     {
-
         if (m_ASource.isPlaying)
         {
             m_ASource.Stop();
@@ -214,7 +229,6 @@ public class Player_Ctrl : Base_Ctrl
 
     public void C_Weapon(Weapon_Base newWeapon)
     {
-
         if (currentWeapon != null)
         {
             currentWeapon.gameObject.SetActive(false);
@@ -246,7 +260,6 @@ public class Player_Ctrl : Base_Ctrl
 
     public void ToggleIsAttackMode()
     {
-
         currentWeapon.WeaponSetting.IsAutoAttack = !currentWeapon.WeaponSetting.IsAutoAttack;
         Game_Mgr.Inst.UpdateGunModeText(currentWeapon.WeaponType, currentWeapon.WeaponSetting.IsAutoAttack);
     }
@@ -287,21 +300,5 @@ public class Player_Ctrl : Base_Ctrl
             ToggleIsAttackMode();
         }
     }
-
-    void BombSet()
-    {
-        if (Input.GetKeyDown(KeyCode.F))
-        {
-
-            if (IsSet == false)
-            {
-                IsSet = true;
-                m_StPos = new Vector3(27, 1f, 6f);
-                Instantiate(m_StickyBomb, m_StPos, transform.rotation);
-            }
-
-        }
-    }
-
 }
 

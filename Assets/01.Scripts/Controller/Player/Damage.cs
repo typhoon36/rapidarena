@@ -3,18 +3,27 @@ using Photon.Realtime;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Damage : MonoBehaviour
 {
-    //폭발 효과 프리팹을 연결할 변수
-    private GameObject expEffect = null;
-    PhotonView pv = null;
 
+    GameObject expEffect;
+    PhotonView pv;
+
+    public Canvas m_Canvas;
+
+    public Text m_KillCnt;
 
     //플레이어 ID(고유번호) 저장하는 변수
     [HideInInspector] public int PlayerId = -1;
 
+
+    int m_KillCount = 0;
     int m_Cur_LAttId = -1;
+
+    ExitGames.Client.Photon.Hashtable KillProps =
+                                      new ExitGames.Client.Photon.Hashtable();
 
     [HideInInspector] public float m_ReSetTime = 0.0f;
 
@@ -34,10 +43,11 @@ public class Damage : MonoBehaviour
         pv = GetComponent<PhotonView>();
         PlayerId = pv.Owner.ActorNumber;
         expEffect = Resources.Load<GameObject>("ExplosionMobile");
+        InitCustomProperties(pv);
     }
 
     int m_UpdateCk = 2;
-    private void Update()
+    void Update()
     {
         if (0 < m_UpdateCk)
         {
@@ -54,6 +64,10 @@ public class Damage : MonoBehaviour
         if (PhotonNetwork.CurrentRoom == null ||
             PhotonNetwork.LocalPlayer == null)
             return;
+
+        if (m_KillCnt != null)
+            m_KillCnt.text = m_KillCount.ToString();//킬 카운트 표시
+
 
     }
 
@@ -87,7 +101,10 @@ public class Damage : MonoBehaviour
             spawnPos = Ready_Mgr.m_Team2Pos[index];
         }
 
+        SetVisible(true);
 
+        m_StPos = spawnPos;
+        m_StCount = 5;
     }
 
     void OnTriggerEnter(Collider coll)
@@ -121,7 +138,7 @@ public class Damage : MonoBehaviour
 
         string a_DmgTeam = "blue";
 
-        if (pv.Owner.CustomProperties.ContainsKey("MyTeam")==true)
+        if (pv.Owner.CustomProperties.ContainsKey("MyTeam") == true)
             a_DmgTeam = (string)pv.Owner.CustomProperties["MyTeam"];
 
 
@@ -142,6 +159,134 @@ public class Damage : MonoBehaviour
 
     }
 
+    IEnumerator Explosion()
+    {
+        GameObject effect = Instantiate(expEffect, transform.position, Quaternion.identity);
+
+        Destroy(effect, 2.0f);
+
+        SetVisible(false);
+
+        yield return null;
+    }
+
+    void SetVisible(bool IsVisible)
+    {
+
+    }
+
+    void AvartaUpdate()
+    {
+        if (0 < Game_Mgr.Inst.m_CurHP)
+        {
+            Game_Mgr.Inst.m_CurHP = 0;
+
+            Game_Mgr.Inst.m_HPBar.fillAmount = Game_Mgr.Inst.m_CurHP / Game_Mgr.Inst.m_MaxHP;
+
+            if (Game_Mgr.Inst.m_CurHP <= 0)
+            {
+                Game_Mgr.Inst.m_CurHP = 0;
+
+                if (0 <= m_Cur_LAttId)
+                {
+                    SaveKillCount(m_Cur_LAttId);
+                }
+                StartCoroutine(Explosion());
+            }
+
+
+        }
+
+        else
+        {
+            Game_Mgr.Inst.m_CurHP = 0;
+
+            Game_Mgr.Inst.m_HPBar.fillAmount = 1;
+
+            m_Canvas.enabled = true;
+
+            Game_Mgr.Inst.m_CurHP = Game_Mgr.Inst.m_MaxHP;
+
+            SetVisible(true);
+
+        }
+
+
+    }
+
+    void SaveKillCount(int AttackerId)
+    {
+        GameObject[] a_Players = GameObject.FindGameObjectsWithTag("Player");
+
+        foreach (GameObject a_Player in a_Players)
+        {
+            var a_Dmg = a_Player.GetComponent<Damage>();
+
+            if (a_Dmg != null && a_Dmg.PlayerId == AttackerId)
+            {
+                if (a_Dmg.InKillCount() == true)
+                {
+                    return;
+                }
+            }
+        }
+    }
+
+
+    public bool InKillCount()
+    {
+        if (pv != null && pv.IsMine == true)
+        {
+            m_KillCount++;
+
+
+            SendKillCount(m_KillCount);
+            return true;
+        }
+
+        return false;
+    }
+
+
+    void InitCustomProperties(PhotonView pv)
+    {
+        if (pv != null && pv.IsMine == true)
+        {
+            KillProps.Clear();
+            KillProps.Add("KillCount", 0);
+            pv.Owner.SetCustomProperties(KillProps);
+
+        }
+
+    }
+
+    void SendKillCount(int a_KillCount = 0)
+    {
+        if (pv == null && pv.IsMine == false) return;
+
+        if (KillProps == null)
+        {
+            KillProps = new ExitGames.Client.Photon.Hashtable();
+            KillProps.Clear();
+        }
+
+        if (KillProps.ContainsKey("KillCount") == true)
+            KillProps["KillCount"] = a_KillCount;
+        else
+            KillProps.Add("KillCount", a_KillCount);
+
+        pv.Owner.SetCustomProperties(KillProps);
+
+    }
+
+    void ReceiveKillCount()
+    {
+        if (pv == null && pv.IsMine == true && pv.Owner == null) return;//원격 플레이어만 받음
+
+        if (pv.Owner.CustomProperties.ContainsKey("KillCount") == true)
+            m_KillCount = (int)pv.Owner.CustomProperties["KillCount"];
+
+    }
 
     string ReceiveTeam(Player a_Player)
     {

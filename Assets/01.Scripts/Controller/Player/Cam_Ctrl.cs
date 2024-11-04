@@ -21,7 +21,7 @@ public class Cam_Ctrl : MonoBehaviour
 
         // 카메라의 X축 회전 (상하 회전)
         verticalRotation -= mouseY * rotationSpeed;
-        verticalRotation = Mathf.Clamp(verticalRotation, -30f, 10f);
+        verticalRotation = Mathf.Clamp(verticalRotation, -20f, 20f);
 
         transform.localRotation = Quaternion.Euler(verticalRotation, 0, 0);
     }

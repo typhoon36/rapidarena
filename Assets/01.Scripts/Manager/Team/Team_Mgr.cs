@@ -56,9 +56,9 @@ public class Team_Mgr : MonoBehaviourPunCallbacks
         }
 
         if (Game_Mgr.Inst.m_WinLoseTxt != null)
-            Game_Mgr.Inst.m_WinLoseTxt.text = "<color= #4179A3>" + "Team1 : " +
+            Game_Mgr.Inst.m_WinLoseTxt.text = "<color=#4179A3>" + "Team1 : " +
                                               m_Team1Win.ToString() + "</color> : " +
-                                              "<color= #DC626D>" + "Team2 : " +
+                                              "<color=#DC626D>" + "Team2 : " +
                                               m_Team2Win.ToString() + "</color>";
 
         if (5 <= (m_Team1Win + m_Team2Win))
@@ -91,10 +91,10 @@ public class Team_Mgr : MonoBehaviourPunCallbacks
 
         if (a_ReadyMgr.m_OldState != GameState.Ready && Ready_Mgr.m_GameState == GameState.Ready)
         {
-            GameObject[] tanks = GameObject.FindGameObjectsWithTag("Player");
-            foreach (GameObject tank in tanks)
+            GameObject[] users = GameObject.FindGameObjectsWithTag("Player");
+            foreach (GameObject user in users)
             {
-                Damage a_Damage = tank.GetComponent<Damage>();
+                Damage a_Damage = user.GetComponent<Damage>();
                 if (a_Damage != null)
                     a_Damage.ReadyState();
             }

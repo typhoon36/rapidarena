@@ -7,13 +7,11 @@ TagManager:
   - Muzzle
   - Wall
   - Item
-  - Target
   - Bullet
   - Metal
-  - Fire
-  - ExplosiveBarrel
   - Knife
   - UserNode_Item
+  - Area
   layers:
   - Default
   - TransparentFX

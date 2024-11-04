@@ -55,8 +55,10 @@ public class Game_Mgr : MonoBehaviour
     private Weapon_Base m_Weapon;
     #endregion
 
-
-
+    #region  Message(Only Message)
+    [Header("Message")]
+    public Text m_Message;
+    #endregion
     #region Timer
     public Text m_Timer;
     [HideInInspector] public float m_LimitTime = 240f;
@@ -95,7 +97,6 @@ public class Game_Mgr : MonoBehaviour
         #endregion
 
         Object_Txt.gameObject.SetActive(false);
-
 
     }
 
@@ -185,33 +186,28 @@ public class Game_Mgr : MonoBehaviour
     }
     #endregion
 
-    #region 클릭감지 함수
-    public static bool IsPointerOverUIObject()
+
+    public void ShowMessage(float msg = 7f, bool IsMsg = false)
     {
-        PointerEventData a_EDCurPos = new PointerEventData(EventSystem.current);
-
-#if !UNITY_EDITOR && (UNITY_IPHONE || UNITY_ANDROID)
-        List<RaycastResult> results = new List<RaycastResult>();
-        for (int i = 0; i < Input.touchCount; ++i)
+        if (IsMsg == true)
         {
-            a_EDCurPos.position = Input.GetTouch(i).position;  
-            results.Clear();
-            EventSystem.current.RaycastAll(a_EDCurPos, results);
-            if (0 < results.Count)
-                return true;
+            m_Message.text = "장치 감지! " + msg.ToString("N1") + "초 후 폭발합니다.";
+            m_Message.gameObject.SetActive(true);
+            StartCoroutine(HideMsgDelay(3f));
         }
-        return false;
-#else
-        a_EDCurPos.position = Input.mousePosition;
-        List<RaycastResult> results = new List<RaycastResult>();
-        EventSystem.current.RaycastAll(a_EDCurPos, results);
-        return (0 < results.Count);
-#endif
+        else
+        {
+            m_Message.gameObject.SetActive(false);
+            m_Message.text = "";
+        }
+
     }
-    #endregion
 
- 
-
-
+    IEnumerator HideMsgDelay(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        m_Message.gameObject.SetActive(false);
+        m_Message.text = "";
+    }
 
 }

@@ -101,9 +101,11 @@
     <Compile Include="Assets\01.Scripts\Manager\Core\Game_Mgr.cs" />
     <Compile Include="Assets\06.Model\Low Poly FPS Pack - Free (Sample)\Components\Scripts\Weapon_Scripts\HandgunScriptLPFP.cs" />
     <Compile Include="Assets\01.Scripts\Manager\Core\Lobby_Mgr.cs" />
+    <Compile Include="Assets\01.Scripts\Controller\Gun_Related\Grenade\StickyBomb.cs" />
     <Compile Include="Assets\01.Scripts\Controller\Player\Cam_Ctrl.cs" />
     <Compile Include="Assets\01.Scripts\Manager\Core\Data_Mgr.cs" />
     <Compile Include="Assets\08.Utilty\Photon\PhotonRealtime\Demos\DemoLoadBalancing\ConnectAndJoinRandomLb.cs" />
+    <Compile Include="Assets\01.Scripts\Controller\Player\BillboardCanvas.cs" />
     <Compile Include="Assets\08.Utilty\Photon\PhotonChat\Demos\DemoChat\IgnoreUiRaycastWhenInactive.cs" />
     <Compile Include="Assets\08.Utilty\Standard Assets\Utility\ActivateTrigger.cs" />
     <Compile Include="Assets\08.Utilty\Standard Assets\CrossPlatformInput\Scripts\Joystick.cs" />
@@ -132,6 +134,7 @@
     <Compile Include="Assets\08.Utilty\Standard Assets\Utility\FPSCounter.cs" />
     <Compile Include="Assets\01.Scripts\Controller\Gun_Related\Guns\AsGun_Ctrl.cs" />
     <Compile Include="Assets\01.Scripts\Controller\Gun_Related\Shell\Casing_Ctrl.cs" />
+    <Compile Include="Assets\01.Scripts\Utilty\DisplayUserId.cs" />
     <Compile Include="Assets\08.Utilty\Standard Assets\ParticleSystems\Scripts\Explosive.cs" />
     <Compile Include="Assets\01.Scripts\Controller\Gun_Related\Grenade\Grenade_Projectile.cs" />
     <Compile Include="Assets\01.Scripts\Controller\Gun_Related\Guns\HandGun_Ctrl.cs" />
