@@ -14,8 +14,7 @@ public class Bullet_Ctrl : MonoBehaviour
 
     //발사한 플레이어의 ID 저장
     [HideInInspector] public int AttackerId = -1;
-    [HideInInspector] public string AttackerTeam = "blue"; 
-
+    [HideInInspector] public string AttackerTeam = "blue";
 
     void Start()
     {
@@ -34,16 +33,27 @@ public class Bullet_Ctrl : MonoBehaviour
     {
         if (coll.collider.tag == "Muzzle") return;
 
-        else if (coll.collider.tag == "Player") return;
+        if (coll.collider.tag == "Bullet") return;
 
-        else if (coll.collider.tag == "Item") return;
+        if (coll.collider.tag == "Player")
+        {
+            // Damage 클래스를 호출하여 HP 감소
+            Damage damageScript = coll.collider.GetComponent<Damage>();
+            if (damageScript != null)
+            {
+                damageScript.TakeDamage(AttackerId, AttackerTeam);
+            }
 
+            Destroy(gameObject);
+            return;
+        }
 
-        //충돌한 게임 오브젝트의 태그값 비교
+        if (coll.collider.tag == "Item") return;
+
+        // 충돌한 게임 오브젝트의 태그값 비교
         if (coll.collider.tag == "Wall")
         {
             GameObject Spark = Instantiate(SparkEffect, transform.position, Quaternion.identity);
-
             Destroy(Spark, Spark.GetComponent<ParticleSystem>().main.duration + 0.2f);
 
             Destroy(gameObject);

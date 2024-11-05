@@ -59,6 +59,7 @@ public class Game_Mgr : MonoBehaviour
     [Header("Message")]
     public Text m_Message;
     #endregion
+
     #region Timer
     public Text m_Timer;
     [HideInInspector] public float m_LimitTime = 240f;
@@ -98,6 +99,8 @@ public class Game_Mgr : MonoBehaviour
 
         Object_Txt.gameObject.SetActive(false);
 
+        // HP 바 초기화
+        m_HPBar.fillAmount = m_CurHP / m_MaxHP;
     }
 
     void Update()
@@ -167,6 +170,8 @@ public class Game_Mgr : MonoBehaviour
 
     public void UpdateHPBar(float currentHP, float maxHP)
     {
+        m_CurHP = currentHP;
+        m_MaxHP = maxHP;
         m_HPBar.fillAmount = currentHP / maxHP;
     }
 
@@ -179,15 +184,16 @@ public class Game_Mgr : MonoBehaviour
         UpdateHPBar(m_CurHP, m_MaxHP);
     }
 
-    void Death()
+    public void Death()
     {
         m_CurHP = 0;
         UpdateHPBar(m_CurHP, m_MaxHP);
+        // 추가적인 사망 처리 로직
     }
     #endregion
 
 
-    public void ShowMessage(float msg = 7f, bool IsMsg = false)
+    public void ShowMessage(float msg = 50f, bool IsMsg = false)
     {
         if (IsMsg == true)
         {

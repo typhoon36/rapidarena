@@ -28,17 +28,20 @@ public class RoomItem : MonoBehaviour
 
   
 
-    public void DispRoomData(bool a_IsOpen)
+public void DispRoomData(bool a_IsOpen)
     {
-        if(a_IsOpen == true)
+        Color color;
+        if (a_IsOpen == true)
         {
-            textRoomName.color = new Color32(0, 0, 0, 255);
-            textConnectInfo.color = new Color32(0, 0, 0, 255);
+            ColorUtility.TryParseHtmlString("#52CE90", out color); //초록색
+            textRoomName.color = color;
+            textConnectInfo.color = color;
         }
         else
         {
-            textRoomName.color = new Color32(0, 0, 255, 255);
-            textConnectInfo.color = new Color32(0, 0, 255, 255);
+            ColorUtility.TryParseHtmlString("#4179A3", out color); //파란색
+            textRoomName.color = color;
+            textConnectInfo.color = color;
         }
 
         textRoomName.text = roomName;

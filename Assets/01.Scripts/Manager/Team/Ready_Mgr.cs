@@ -5,7 +5,6 @@ using Photon.Realtime;
 using UnityEngine.SceneManagement;
 using System.Collections.Generic;
 using System.Collections;
-using UnityEditor.VersionControl;
 
 
 public class Ready_Mgr : MonoBehaviourPunCallbacks
@@ -630,7 +629,7 @@ public class Ready_Mgr : MonoBehaviourPunCallbacks
                         else if (a_TeamKind == "red")
                         {
                             Game_Mgr.Inst.Object_Txt.gameObject.SetActive(true);
-                            StartCoroutine(Typing("Object : 폭탄 해체 / 대테러부대 사살"));
+                            StartCoroutine(Typing("Object : 폭탄 설치 / 대테러부대 사살"));
                         }
 
                     }

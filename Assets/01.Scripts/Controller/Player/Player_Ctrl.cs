@@ -65,7 +65,10 @@ public class Player_Ctrl : Base_Ctrl
 
     void Start()
     {
-        m_CurHP = m_MaxHP;
+        if (pv.IsMine)
+        {
+            m_CurHP = m_MaxHP; // 체력 초기화
+        }
 
         Game_Mgr.Inst.UpdateHPBar(m_CurHP, m_MaxHP);
 

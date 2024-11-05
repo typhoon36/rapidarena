@@ -12,6 +12,10 @@ TagManager:
   - Knife
   - UserNode_Item
   - Area
+  - Target
+  - Fire
+  - ExplosiveBarrel
+  - Explosive
   layers:
   - Default
   - TransparentFX
