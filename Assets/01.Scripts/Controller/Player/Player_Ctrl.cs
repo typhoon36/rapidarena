@@ -89,7 +89,7 @@ public class Player_Ctrl : Base_Ctrl
         }
         else
         {
-            m_CharCtrl.enabled = false;
+            //m_CharCtrl.enabled = false;
         }
     }
 

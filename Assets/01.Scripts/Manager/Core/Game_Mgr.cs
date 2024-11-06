@@ -101,6 +101,10 @@ public class Game_Mgr : MonoBehaviour
 
         // HP 바 초기화
         m_HPBar.fillAmount = m_CurHP / m_MaxHP;
+
+        
+
+
     }
 
     void Update()
@@ -174,25 +178,9 @@ public class Game_Mgr : MonoBehaviour
         m_MaxHP = maxHP;
         m_HPBar.fillAmount = currentHP / maxHP;
     }
-
-    public void IncreaseHP(int HP)
-    {
-        m_CurHP += HP;
-
-        m_CurHP = m_CurHP + HP > m_MaxHP ? m_MaxHP : m_CurHP + HP;
-
-        UpdateHPBar(m_CurHP, m_MaxHP);
-    }
-
-    public void Death()
-    {
-        m_CurHP = 0;
-        UpdateHPBar(m_CurHP, m_MaxHP);
-        // 추가적인 사망 처리 로직
-    }
     #endregion
 
-
+    #region Message
     public void ShowMessage(float msg = 50f, bool IsMsg = false)
     {
         if (IsMsg == true)
@@ -215,5 +203,6 @@ public class Game_Mgr : MonoBehaviour
         m_Message.gameObject.SetActive(false);
         m_Message.text = "";
     }
+    #endregion
 
 }

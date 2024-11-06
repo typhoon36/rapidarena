@@ -3907,9 +3907,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: faeeadb6fa748af429a0f7b1b19843ef, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Objects:
+  - {fileID: 3959751942987666287}
+  - {fileID: 3450876487637693102}
+  - {fileID: 9068376311711208145}
+  - {fileID: 6317801050522334939}
   currHp: 200
   hudCanvas: {fileID: 8998724709336060083}
-  hpBar: {fileID: 0}
   txtKillCount: {fileID: 2946056794755135143}
   PlayerId: -1
   m_ReSetTime: 0

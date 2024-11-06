@@ -96,7 +96,7 @@ public class Team_Mgr : MonoBehaviourPunCallbacks
             {
                 Damage a_Damage = user.GetComponent<Damage>();
                 if (a_Damage != null)
-                    a_Damage.ReadyState();
+                    a_Damage.ReadyStateUser();
             }
         }
         a_ReadyMgr.m_OldState = Ready_Mgr.m_GameState;

@@ -1,5 +1,4 @@
 using Photon.Pun;
-using Photon.Pun.Demo.PunBasics;
 using Photon.Realtime;
 using System.Collections;
 using System.Collections.Generic;
@@ -8,36 +7,59 @@ using UnityEngine.UI;
 
 public class Damage : MonoBehaviourPunCallbacks, IPunObservable
 {
+    public GameObject[] Objects;
 
-    GameObject expEff;
+    GameObject expEffect = null;
 
-    int NetHP = 440;
+    #region HP
+    int initHp = 440;
+    [HideInInspector] public int currHp = 440;
+    int NetHp = 440;
+    Image hpBar;//Private인 이유는 다른 유저도 Game_Mgr의 HPBar를 사용하기 때문에
+    #endregion
 
-    public Canvas m_Canvas;
+    public Canvas hudCanvas;
 
-    PhotonView pv;
-
-    public Text m_KillTxt;
-
+    #region KillCount
+    [Header("killCount")]
+    public Text txtKillCount;
     [HideInInspector] public int PlayerId = -1;
-
-    int m_KillCount = 0;
-    int m_Cur_LAttId = -1;
-
+    int m_KillCount = 0;    
+    int m_Cur_LAttId = -1;  
     ExitGames.Client.Photon.Hashtable KillProps =
                                         new ExitGames.Client.Photon.Hashtable();
-    [HideInInspector] public float m_ReSetTime = 0.0f;   
+    #endregion
 
+    [HideInInspector] public float m_ReSetTime = 0.0f;
+
+    #region Photon
     int m_StCount = 0;
     Vector3 m_StPos = Vector3.zero;
+    PhotonView pv;
+    #endregion
+
 
     void Start()
     {
         pv = GetComponent<PhotonView>();
-
         PlayerId = pv.Owner.ActorNumber;
 
+
+        Objects = GetComponentsInChildren<GameObject>();
+
+        //HP 연결 및 초기화
+        currHp = (int)Game_Mgr.Inst.m_CurHP;
+        initHp = (int)Game_Mgr.Inst.m_MaxHP;
+        currHp = initHp;
+        hpBar = Game_Mgr.Inst.m_HPBar;
+        hpBar.color = Color.green;
+
+        //폭발 효과 로드
+        expEffect = Resources.Load<GameObject>("ExplosionMobile");
+
+        //CustomProperties 초기화
         InitCustomProperties(pv);
+
     }
 
     int m_UpdateCk = 2;
@@ -47,127 +69,123 @@ public class Damage : MonoBehaviourPunCallbacks, IPunObservable
         {
             m_UpdateCk--;
             if (m_UpdateCk <= 0)
-            {
-
-            }
+                ReadyStateUser();
+            
         }
 
+        if (0.0f < m_ReSetTime) m_ReSetTime -= Time.deltaTime;
 
+        if (PhotonNetwork.CurrentRoom == null ||PhotonNetwork.LocalPlayer == null) return;
 
-        if (0.0f < m_ReSetTime)
-            m_ReSetTime -= Time.deltaTime;
-
-        if (PhotonNetwork.CurrentRoom == null ||
-            PhotonNetwork.LocalPlayer == null)
-            return;
-
-        //--- 원격 플레이어(아바타 탱크 입장) 일 때 동기화 코드
+        //다른 유저들 정보 동기화
         if (pv.IsMine == false)
-        { //원격 플레이어(아바타 탱크 입장) 일 때 수행
+        {
             AvataUpdate();
 
-            ReceiveKillCount(); //아바타 탱크들 입장에서 KillCount 중계 방아옴
+            ReceiveKillCount();
         }
-        //--- 원격 플레이어(아바타 탱크 입장) 일때 동기화 코드
 
-        if (m_KillTxt != null)
-            m_KillTxt.text = m_KillCount.ToString(); //킬 카운트 UI 갱신
+        //킬카운트 표시
+        if (txtKillCount != null)
+            txtKillCount.text = m_KillCount.ToString();
     }
 
-    public void ReadyState()
+    public void ReadyStateUser()
     {
         if (Ready_Mgr.m_GameState != GameState.Ready) return;
 
-        StartCoroutine(WaitReady());
+        StartCoroutine(this.WaitReadyUser());
     }
 
-    IEnumerator WaitReady()
-    {
-        //HUD를 비활성화
-        m_Canvas.enabled = false;
 
-        //탱크 투명 처리
-        SetTankVisible(false);
+    IEnumerator WaitReadyUser()
+    {
+
+        hudCanvas.enabled = false;
+        Game_Mgr.Inst.m_GameObj.SetActive(false);
+
+
+        SetVisible(false);
 
         while (Ready_Mgr.m_GameState == GameState.Ready)
         {
             yield return null;
         }
 
-        //탱크 특정한 위치에 리스폰 되도록...
-        float pos = Random.Range(-100.0f, 100.0f);
+   
+        float pos = Random.Range(-20.0f, 20.0f);
         Vector3 a_SitPos = new Vector3(pos, 20.0f, pos);
 
-        string a_TeamKind = ReceiveSelTeam(pv.Owner);   //자기 소속 팀 받아오기
-        int a_SitPosInx = ReceiveSitPosInx(pv.Owner);   //자기 자리 번호 받아오기
+        string a_TeamKind = ReceiveSelTeam(pv.Owner);
+        int a_SitPosInx = ReceiveSitPosInx(pv.Owner);
+
+
         if (0 <= a_SitPosInx && a_SitPosInx < 4)
         {
+            //블루팀 위치 설정
             if (a_TeamKind == "blue")
             {
                 a_SitPos = Ready_Mgr.m_Team1Pos[a_SitPosInx];
-                this.gameObject.transform.eulerAngles =
-                                    new Vector3(0.0f, 201.0f, 0.0f);
+                this.gameObject.transform.eulerAngles = new Vector3(0.0f, 201.0f, 0.0f);
             }
+
+            //레드팀 위치 설정
             else if (a_TeamKind == "red")
             {
                 a_SitPos = Ready_Mgr.m_Team2Pos[a_SitPosInx];
-                this.gameObject.transform.eulerAngles =
-                                    new Vector3(0.0f, 19.5f, 0.0f);
+                this.gameObject.transform.eulerAngles = new Vector3(0.0f, 19.5f, 0.0f);
             }
-        }//if(0 <= a_SitPosInx && a_SitPosInx < 4)
+
+        }
 
         this.gameObject.transform.position = a_SitPos;
 
-        //탱크 특정한 위치에 리스폰 되도록...
 
-        //Filled 이미지 초기값으로 환원
-        //hpBar.fillAmount = 1.0f;
-        //HUD 활성화
-        m_Canvas.enabled = true;
+        hpBar.fillAmount = 1.0f;
+        hpBar.color = Color.green;
 
-        // if (pv != null && pv.IsMine == true)    //리스폰 시 생명 초기값 설정
-        // currHp = initHp;
+        hudCanvas.enabled = true;
+        Game_Mgr.Inst.m_GameObj.SetActive(true);
 
-        //탱크를 다시 보이게 처리
-        SetTankVisible(true);
+        if (pv != null && pv.IsMine == true)
+            currHp = initHp;
+
+        SetVisible(true);
 
         m_StPos = a_SitPos;
         m_StCount = 5;
 
-    }//IEnumerator WaitReadyTank()
+    }
 
     void OnTriggerEnter(Collider coll)
     {
         //충돌한 Collider의 태크 비교
-        //if (currHp > 0 && coll.tag == "Bullet")
-        //{
-        //    int a_Att_Id = -1;
-        //    string a_AttTeam = "blue";
-        //    Bullet_Ctrl a_RefBullet = coll.gameObject.GetComponent<Bullet_Ctrl>();
-        //    if (a_RefBullet != null)
-        //    {
-        //        a_Att_Id = a_RefBullet.AttackerId;
-        //        a_AttTeam = a_RefBullet.AttackerTeam;
-        //    }
+        if (currHp > 0 && coll.tag == "Bullet")
+        {
+            int a_Att_Id = -1;
+            string a_AttTeam = "blue";
+            Bullet_Ctrl a_RefCannon = coll.gameObject.GetComponent<Bullet_Ctrl>();
+            if (a_RefCannon != null)
+            {
+                a_Att_Id = a_RefCannon.AttackerId;
+                a_AttTeam = a_RefCannon.AttackerTeam;
+            }
 
-        //    TakeDamage(a_Att_Id, a_AttTeam);
-
-
-        //}
+            TakeDamage(a_Att_Id, a_AttTeam);
+        }
     }
+
     public void TakeDamage(int AttackerId = -1, string a_AttTeam = "blue")
     {
-        if (AttackerId == PlayerId)
+        if (AttackerId == PlayerId) return;
+
+        if (currHp <= 0.0f) return;
+
+
+        if (pv.IsMine == false) 
             return;
 
-        //if (currHp <= 0.0f)
-        //    return;
-
-        if (pv.IsMine == false)
-            return;
-
-        if (0.0f < m_ReSetTime)
-            return;
+        if (0.0f < m_ReSetTime) return;
 
         string a_DamageTeam = "blue";
         if (pv.Owner.CustomProperties.ContainsKey("MyTeam") == true)
@@ -176,151 +194,149 @@ public class Damage : MonoBehaviourPunCallbacks, IPunObservable
         if (a_AttTeam == a_DamageTeam)
             return;
 
+
         m_Cur_LAttId = AttackerId;
-        //currHp -= 20;
-        //if (currHp < 0)
-          //  currHp = 0;
 
+        currHp -= 20;
 
-//        if (currHp <= 0)
-  //      {
-            // IsMine 기준에서 죽는 처리
-    //        StartCoroutine(this.ExplosionTank());
-      //      gameMgr.Death();
-        //}
+        if (currHp < 0)
+            currHp = 0;
+
+        //현재 생명치 백분율 = (현재 생명치) / (초기 생명치)
+        hpBar.fillAmount = (float)currHp / (float)initHp;
+
+        //생명 수치에 따라 Filled 이미지의 색상을 변경
+        if (hpBar.fillAmount <= 0.4f)
+            hpBar.color = Color.red;
+        else if (hpBar.fillAmount <= 0.6f)
+            hpBar.color = Color.yellow;
+        else
+            hpBar.color = Color.green;
+
+        if (currHp <= 0)  //죽는 처리 (아바타 탱크들은 중계 받아서 처리)
+        {
+            //IsMine 기준에서 죽는 처리
+            StartCoroutine(this.ExplosionTank());
+        }
     }
 
     //폭발 효과 생성 및 리스폰 코루틴 함수
     IEnumerator ExplosionTank()
     {
         //폭발 효과 생성
-        GameObject effect = GameObject.Instantiate(expEff,
-                                            transform.position,
-                                            Quaternion.identity);
-        Destroy(effect, 3.0f);
+        GameObject effect = GameObject.Instantiate(expEffect,transform.position,Quaternion.identity);
+        
+        Destroy(effect, 3.0f);//3초후 폭발 효과 삭제
 
-        //HUD를 비활성화
-        m_Canvas.enabled = false;
+        //UI 비활성화
+        hudCanvas.enabled = false;
+        Game_Mgr.Inst.m_GameObj.SetActive(false);
 
-        //탱크 투명 처리
-        SetTankVisible(false);
+        //사망 전 안보이게 처리
+        SetVisible(false);
 
         yield return null;
-
-
     }
 
-    //MeshRenderer를 활성화/비활성화하는 함수
-    void SetTankVisible(bool isVisible)
+    //자식 오브젝트들을 모두 보이지 않게 처리하는 함수
+    void SetVisible(bool isVisible)
     {
-        //foreach (MeshRenderer _renderer in renderers)
-        //{
-        //    _renderer.enabled = isVisible;
-        //}
+        Objects = GetComponentsInChildren<GameObject>();
 
-        //Rigidbody[] a_Rigs = GetComponentsInChildren<Rigidbody>(true);
-        //foreach (Rigidbody _Rigd in a_Rigs)
-        //{
-        //    _Rigd.isKinematic = !isVisible;
-        //}
-
-        //BoxCollider[] a_BoxColls = this.GetComponentsInChildren<BoxCollider>(true);
-        //foreach (BoxCollider _BoxColl in a_BoxColls)
-        //{
-        //    _BoxColl.enabled = isVisible;
-        //}
+        //자식 오브젝트들을 모두 보이지 않게 처리
+        foreach (GameObject objs in Objects)
+        {
+            objs.SetActive(isVisible);
+        }
 
         if (isVisible == true)
-            m_ReSetTime = 10.0f;
+            m_ReSetTime = 10.0f;//10초간 딜레이 
+    }
 
-    }//void SetTankVisible(bool isVisible)
-
+    //플레이어의 정보를 송수신
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
     {
-        if (stream.IsWriting)  //IsMine쪽 정보 송신
+        if (stream.IsWriting)
         {
-            stream.SendNext(m_Cur_LAttId); //이번에 -20 깍인 게 누구 때문인지 같이 보내준다는 의도
-            //stream.SendNext(currHp);
+            stream.SendNext(m_Cur_LAttId);
+            stream.SendNext(currHp);
         }
-        else 
+        else
         {
-            m_Cur_LAttId = (int)stream.ReceiveNext(); 
-            //NetHp = (int)stream.ReceiveNext();
-            //아바타 입장에서 사망 시점을 알기 위해 NetHp 라는 변수를 따로 만들어서
-            //IsMine에서 송신해 준 Hp 값을 받았다.
+            m_Cur_LAttId = (int)stream.ReceiveNext();
+            NetHp = (int)stream.ReceiveNext();
         }
     }
 
-    void AvataUpdate()  //원격지 플레이어 Hp Update 처리 함수
+    void AvataUpdate()
     {
-        //if (0 < currHp)
-        //{
-        //    currHp = NetHp;
+        if (0 < currHp)
+        {
+            //다른 유저 HP 동기화
+            currHp = NetHp;
 
-        //    //현재 생명치 백분율 = (현재 생명치) / (초기 생명치)
-        //    hpBar.fillAmount = (float)currHp / (float)initHp;
+            //HP바 갱신
+            hpBar.fillAmount = (float)currHp / (float)initHp;
 
-        //    //생명 수치에 따라 Filled 이미지의 색상을 변경
-        //    if (hpBar.fillAmount <= 0.4f)
-        //        hpBar.color = Color.red;
-        //    else if (hpBar.fillAmount <= 0.6f)
-        //        hpBar.color = Color.yellow;
-        //    else
-        //        hpBar.color = Color.green;
+            //상태에 따른 색상변경
+            if (hpBar.fillAmount <= 0.4f)
+                hpBar.color = Color.red;
 
-        //    if (currHp <= 0) //죽는 처리 (아바타 탱크들은 중계 받아서 처리)
-        //    {
-        //        currHp = 0;
+            else if (hpBar.fillAmount <= 0.6f)
+                hpBar.color = Color.yellow;
 
-        //        if (0 <= m_Cur_LAttId)  //공격자 Id가 유효할 때
-        //        { //지금 Hp가 깎이게 해서 사망에 이르게 한 탱크가 누구인지?
-        //            // 지금 죽은 탱크 입장에서는
-        //            // 공격자의 AttackerId (<--- IsMine)을 찾으려면 
-        //            // 죽은 탱크 아바타들 중에서 AttackerId (<--- IsMine)을 찾아서
-        //            // KillCount를 증가시켜 줘야 한다.
-        //            // 자신을 파괴시킨 적 탱크의 스코어를 증가시키는 함수를 호출
-        //            SaveKillCount(m_Cur_LAttId);
-        //        }
+            else
+                hpBar.color = Color.green;
 
-        //        //IsMine 기준에서 죽는 처리
-        //        StartCoroutine(this.ExplosionTank());
-        //    }
+            if (currHp <= 0)
+            {
+                currHp = 0;
 
-        //} //if(0 < currHp)
-        //else //if(currHp <= 0) 죽어 있는 상황에서
-        //{ //죽어 있을 때 계속 NetHp는 0으로 계속 들어오게 되고
-        //    //되살려야 하는 상황 처리
-        //    currHp = NetHp;
-        //    if ((int)(initHp * 0.95f) < currHp) //이번에 들어온 Hp가 최대 에너지가 들어오면
-        //    {   //되살려야 하는 상황으로 판단하겠다는 뜻
+                if (0 <= m_Cur_LAttId)
+                {
+                    SaveKillCount(m_Cur_LAttId);
+                }
 
-        //        //Filled 이미지 초기값으로 환원
-        //        hpBar.fillAmount = 1.0f;
-        //        //Filled 이미지 색상을 녹색으로 설정
-        //        hpBar.color = Color.green;
-        //        //HUD 활성화
-        //        hudCanvas.enabled = true;
+                StartCoroutine(this.ExplosionTank());
+            }
 
-        //        //리스폰 시 새 생명 초기값 설정
-        //        currHp = initHp;
-        //        //탱크를 다시 보이게 처리
-        //        SetTankVisible(true);
+        }
+        else
+        {
+            currHp = NetHp;
+            if ((int)(initHp * 0.95f) < currHp)
+            {
 
-        //    }//if ((int)(initHp * 0.95f) < currHp) //이번에 들어온 Hp가 최대 에너지가 들어오면
-        //}//else //if(currHp <= 0) 죽어 있는 상황에서
+                hpBar.fillAmount = 1.0f;
+
+                hpBar.color = Color.green;
+
+                //UI활성화
+                hudCanvas.enabled = true;
+                Game_Mgr.Inst.m_GameObj.SetActive(true);
+
+                //리스폰 시 HP 초기화
+                currHp = initHp;
+
+                //다시 보이게 처리
+                SetVisible(true);
+
+            }
+        }
 
     }
 
-    //자신을 파괴시킨 적 탱크를 검색해 스코어를 증가시키는 함수
-    void SaveKillCount(int AttacketId)
+
+    void SaveKillCount(int AttackerId)
     {
-        //TANL 테크로 지정된 모든 탱크를 가져와 배열에 저장
+
         GameObject[] users = GameObject.FindGameObjectsWithTag("Player");
         foreach (GameObject user in users)
         {
             var a_Damage = user.GetComponent<Damage>();
-            if (a_Damage != null && a_Damage.PlayerId == AttacketId)
-            { 
+            if (a_Damage != null && a_Damage.PlayerId == AttackerId)
+            {
+
                 if (a_Damage.IncKillCount() == true)
                 {
                     return;
@@ -329,24 +345,27 @@ public class Damage : MonoBehaviourPunCallbacks, IPunObservable
         }
     }
 
-    public bool IncKillCount() 
+    //킬 카운트 증가 함수
+    public bool IncKillCount()
     {
+        //pv.IsMine 일 때만 증가
         if (pv != null && pv.IsMine == true)
         {
             m_KillCount++;
 
+            //KillCount를 원격지 유저들에게 전송
             SendKillCount(m_KillCount);
 
             return true;
         }
 
-        return false;
+        return false;//원격지 유저들은 증가하지 않음(중계만 받음)
     }
 
     void InitCustomProperties(PhotonView pv)
-    {  
+    {
         if (pv != null && pv.IsMine == true)
-        { 
+        {
             KillProps.Clear();
             KillProps.Add("KillCount", 0);
             pv.Owner.SetCustomProperties(KillProps);
@@ -355,11 +374,9 @@ public class Damage : MonoBehaviourPunCallbacks, IPunObservable
 
     void SendKillCount(int a_KillCount = 0)
     {
-        if (pv == null)
-            return;
+        if (pv == null) return;
 
-        if (pv.IsMine == false) 
-            return;
+        if (pv.IsMine == false) return;
 
         if (KillProps == null)
         {
@@ -376,24 +393,25 @@ public class Damage : MonoBehaviourPunCallbacks, IPunObservable
 
     }
 
-    void ReceiveKillCount() 
+    //킬 카운트 수신
+    void ReceiveKillCount()
     {
-        if (pv == null)
-            return;
+        if (pv == null) return; //PhotonView 컴포넌트가 없으면 리턴
 
-        if (pv.IsMine == true)   
-            return;
+        //원격지 탱크(아바타)일 때 수신받는거라 걸리지않아야함.
+        if (pv.IsMine == true) return;
 
-        if (pv.Owner == null)
-            return;
+        if (pv.Owner == null) return;
 
+        //killCount를 수신받아서 m_KillCount 변수에 저장
         if (pv.Owner.CustomProperties.ContainsKey("KillCount") == true)
         {
             m_KillCount = (int)pv.Owner.CustomProperties["KillCount"];
         }
     }
 
-    string ReceiveSelTeam(Player a_Player) 
+    //팀 선택 정보 수신
+    string ReceiveSelTeam(Player a_Player)
     {
         string a_TeamKind = "blue";
 
@@ -406,12 +424,12 @@ public class Damage : MonoBehaviourPunCallbacks, IPunObservable
         return a_TeamKind;
     }
 
+    //팀 위치 정보 수신
     int ReceiveSitPosInx(Player a_Player)
     {
         int a_SitIdx = -1;
 
-        if (a_Player == null)
-            return a_SitIdx;
+        if (a_Player == null) return a_SitIdx;
 
         if (a_Player.CustomProperties.ContainsKey("SitPosInx") == true)
             a_SitIdx = (int)a_Player.CustomProperties["SitPosInx"];
