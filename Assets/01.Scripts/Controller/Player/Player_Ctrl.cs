@@ -271,11 +271,11 @@ public class Player_Ctrl : Base_Ctrl
     {
         if (Input.GetMouseButtonDown(0))
         {
-            currentWeapon.StartWAtt();
+            currentWeapon.StartWAtt(0, pv.Owner.ActorNumber);
         }
         else if (Input.GetMouseButton(0) && currentWeapon.WeaponSetting.IsAutoAttack)
         {
-            currentWeapon.StartWAtt();
+            currentWeapon.StartWAtt(0, pv.Owner.ActorNumber);
         }
         else if (Input.GetMouseButtonUp(0))
         {
@@ -283,7 +283,7 @@ public class Player_Ctrl : Base_Ctrl
         }
         else if (Input.GetMouseButtonDown(1))
         {
-            currentWeapon.StartWAtt(1);
+            currentWeapon.StartWAtt(1, pv.Owner.ActorNumber);
         }
         else if (Input.GetMouseButtonUp(1))
         {

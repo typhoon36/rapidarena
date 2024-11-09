@@ -41,7 +41,7 @@ public class Knife_Ctrl : Weapon_Base
     }
 
     #region Knife Action
-    public override void StartWAtt(int type = 0)
+    public override void StartWAtt(int type = 0, int a_AttackerId = -1)
     {
         if (IsAttack == true) return;
 

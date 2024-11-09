@@ -108,7 +108,7 @@ public class Team_Mgr : MonoBehaviourPunCallbacks
         int a_Tm2Count = 0;
         int rowTm1 = 0;
         int rowTm2 = 0;
-        string a_PlrTeam = "blue";  //Player Team
+        string a_PlrTeam = "blue";  
 
         GameObject[] Players = GameObject.FindGameObjectsWithTag("Player");
 
@@ -134,14 +134,16 @@ public class Team_Mgr : MonoBehaviourPunCallbacks
 
             if (a_PlrTeam == "blue")
             {
-                if (a_Damage != null && 0 < Game_Mgr.Inst.m_CurHP)
+                if (a_Damage != null && 0 < a_Damage.m_CurHP)
                     rowTm1 = 1;
+
                 a_Tm1Count++;
             }
             else if (a_PlrTeam == "red")
             {
-                if (a_Damage != null && 0 < Game_Mgr.Inst.m_CurHP)
+                if (a_Damage != null && 0 < a_Damage.m_CurHP)
                     rowTm2 = 1;
+
                 a_Tm2Count++;
             }
         }

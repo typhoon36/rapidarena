@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.IO;
+using System.Collections.Generic;
 
 
 
@@ -22,13 +23,28 @@ public class Data_Mgr
     #endregion
 
     public TextAsset m_ItemData;
-
     AllItemData Itemdatas;
-    UserData userData = new UserData();
+    public UserData userData = new UserData();
+    public List<ItemData> inventoryItems = new List<ItemData>();
+
+    public void SaveInventoryItems()
+    {
+        string json = JsonUtility.ToJson(new Serialization<ItemData>(inventoryItems));
+        File.WriteAllText(Application.persistentDataPath + "/InventoryItems.json", json);
+    }
+
+    public void LoadInventoryItems()
+    {
+        string path = Application.persistentDataPath + "/InventoryItems.json";
+        if (File.Exists(path))
+        {
+            string json = File.ReadAllText(path);
+            inventoryItems = JsonUtility.FromJson<Serialization<ItemData>>(json).ToList();
+        }
+    }
 
     private Data_Mgr()
     {
-        // Load Data from Json
         LoadItemData();
         LoadUserDataFromJson();
     }
@@ -37,10 +53,8 @@ public class Data_Mgr
     {
         if (m_ItemData == null)
         {
-            // 리소스에서 m_ItemData 로드
             m_ItemData = Resources.Load<TextAsset>("ItemData");
         }
-
         Itemdatas = JsonUtility.FromJson<AllItemData>(m_ItemData.text);
     }
 
@@ -77,6 +91,7 @@ public class Data_Mgr
             string json = File.ReadAllText(path);
             userData = JsonUtility.FromJson<UserData>(json);
         }
+        userData.Points = 99999;
     }
 }
 
@@ -110,5 +125,21 @@ public class UserData
     public string UserID;
     public int Points;
 }
+
+[System.Serializable]
+public class Serialization<T>
+{
+    public List<T> target;
+    public Serialization(List<T> target)
+    {
+        this.target = target;
+    }
+
+    public List<T> ToList()
+    {
+        return target;
+    }
+}
+
 #endregion
 

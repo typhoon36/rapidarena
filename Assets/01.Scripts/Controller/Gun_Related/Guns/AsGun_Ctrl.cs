@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Photon.Pun;
 
 
 public class AsGun_Ctrl : Weapon_Base
@@ -26,6 +27,7 @@ public class AsGun_Ctrl : Weapon_Base
     #region AssultRifle`s Bullet
     [Header("Bullet")]
     [SerializeField] private GameObject m_BulletPrefab;
+    [SerializeField] private GameObject m_BulletSpawnPoint;
     #endregion
 
     #region Aim
@@ -35,6 +37,8 @@ public class AsGun_Ctrl : Weapon_Base
     #endregion
 
     Base_Ctrl m_Base;
+    int m_AttackerId = -1;
+    string AttackerTeam = "blue";
 
     protected override void Awake()
     {
@@ -42,6 +46,7 @@ public class AsGun_Ctrl : Weapon_Base
         base.Setup();
         m_Base = GetComponentInParent<Player_Ctrl>();
         m_CasingPool = GetComponentInChildren<Casing_Pool>();
+
     }
 
     protected override void LateUpdate()
@@ -81,9 +86,11 @@ public class AsGun_Ctrl : Weapon_Base
     }
 
     #region Rifle Action
-    public override void StartWAtt(int type = 0)
+    public override void StartWAtt(int type = 0, int a_AttackerId = -1)
     {
         if (IsModeChange) return;
+
+        m_AttackerId = a_AttackerId;
 
         if (type == 0)
         {
@@ -153,12 +160,24 @@ public class AsGun_Ctrl : Weapon_Base
 
     void FireBullet()
     {
-        if (m_BulletPrefab != null && m_SpawnPoint != null)
+        if (m_BulletPrefab != null && m_BulletSpawnPoint != null)
         {
-            Instantiate(m_BulletPrefab, m_SpawnPoint.position, m_SpawnPoint.rotation);
+            GameObject bullet = Instantiate(m_BulletPrefab, m_BulletSpawnPoint.transform.position, m_BulletSpawnPoint.transform.rotation);
+            Bullet_Ctrl bulletCtrl = bullet.GetComponent<Bullet_Ctrl>();
+            if (bulletCtrl != null)
+            {
+                bulletCtrl.AttackerId = m_AttackerId;
+                if (PhotonNetwork.LocalPlayer.CustomProperties.ContainsKey("MyTeam"))
+                {
+                    bulletCtrl.AttackerTeam = (string)PhotonNetwork.LocalPlayer.CustomProperties["MyTeam"];
+                }
+
+                Debug.Log($"FireBullet: AttackerId: {bulletCtrl.AttackerId}, AttackerTeam: {bulletCtrl.AttackerTeam}");
+            }
         }
     }
     #endregion
+
 
     #region Reload & Inspect
     public override void Reload()

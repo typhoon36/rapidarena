@@ -1,8 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
-
+using Photon.Pun;
 
 // ±ÇÃÑ 
 public class HandGun_Ctrl : Weapon_Base
@@ -25,9 +24,10 @@ public class HandGun_Ctrl : Weapon_Base
     private Casing_Pool m_CasingPool;
     #endregion
 
-    #region AssultRifle`s Bullet
+    #region Hangund`s Bullet
     [Header("Bullet")]
     [SerializeField] private GameObject m_BulletPrefab;
+    [SerializeField] private GameObject m_BulletSpawnPoint;
     #endregion
 
     #region Aim
@@ -37,6 +37,11 @@ public class HandGun_Ctrl : Weapon_Base
     #endregion
 
     Base_Ctrl m_Base;
+
+
+    int m_AttackerId = -1;
+    string AttackerTeam = "blue";
+
 
     protected override void Awake()//Init
     {
@@ -77,7 +82,7 @@ public class HandGun_Ctrl : Weapon_Base
     }
 
     #region Handgun Action
-    public override void StartWAtt(int type = 0)
+    public override void StartWAtt(int type = 0, int a_AttackerId = -1)
     {
         if (IsModeChange) return;
 
@@ -130,9 +135,20 @@ public class HandGun_Ctrl : Weapon_Base
 
     void FireBullet()
     {
-        if (m_BulletPrefab != null && m_SpawnPoint != null)
+        if (m_BulletPrefab != null && m_BulletSpawnPoint != null)
         {
-            Instantiate(m_BulletPrefab, m_SpawnPoint.position, m_SpawnPoint.rotation);
+            GameObject bullet = Instantiate(m_BulletPrefab, m_BulletSpawnPoint.transform.position, m_BulletSpawnPoint.transform.rotation);
+            Bullet_Ctrl bulletCtrl = bullet.GetComponent<Bullet_Ctrl>();
+            if (bulletCtrl != null)
+            {
+                bulletCtrl.AttackerId = m_AttackerId;
+                if (PhotonNetwork.LocalPlayer.CustomProperties.ContainsKey("MyTeam"))
+                {
+                    bulletCtrl.AttackerTeam = (string)PhotonNetwork.LocalPlayer.CustomProperties["MyTeam"];
+                }
+
+                Debug.Log($"FireBullet: AttackerId: {bulletCtrl.AttackerId}, AttackerTeam: {bulletCtrl.AttackerTeam}");
+            }
         }
     }
     #endregion

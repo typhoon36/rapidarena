@@ -40,6 +40,7 @@ public class Shop_Mgr : MonoBehaviour
     Inven_Mgr m_Inven;//인벤토리와 연동(인벤토리에 있는 아이템을 Inven_View에 표시)
     public Transform InvenParent;//인벤토리 부모
     public GameObject SlotObj;//슬롯 오브젝트 
+    public Text m_PointTxt;//포인트 표시
     #endregion
 
     void Start()
@@ -82,6 +83,11 @@ public class Shop_Mgr : MonoBehaviour
             });
         #endregion
 
+        // 포인트를 99999로 설정
+        Data_Mgr.Inst.userData.Points = 99999;
+        // 포인트 표시
+        m_PointTxt.text = Data_Mgr.Inst.userData.Points.ToString();
+
         // 아이템 스폰
         SpawnProducts();
     }
@@ -115,20 +121,28 @@ public class Shop_Mgr : MonoBehaviour
 
     void SpawnProducts()
     {
-
         AllItemData itemData = Data_Mgr.Inst.GetItemData();
 
         foreach (var item in itemData.Sheet1)
         {
             GameObject product = Instantiate(ProductObj, productParent);
-            Product_Nd productNd = product.GetComponent<Product_Nd>();
+            Product_Nd productNd = product.GetComponentInChildren<Product_Nd>();
             productNd.SetItemData(item);
 
-            // 아이템 클릭 이벤트 핸들러 설정
-            Button a_Click = product.GetComponent<Button>();
-            if (a_Click != null)
-                a_Click.onClick.AddListener(() => productNd.OnItemClick(item));
-
         }
+    }
+
+    // 빈 슬롯을 찾는 메서드 추가
+    public Slot FindEmptySlot()
+    {
+        Slot[] slots = InvenParent.GetComponentsInChildren<Slot>();
+        foreach (Slot slot in slots)
+        {
+            if (!slot.m_ItemImg.gameObject.activeSelf)
+            {
+                return slot;
+            }
+        }
+        return null;
     }
 }

@@ -1,4 +1,5 @@
 using Photon.Pun;
+using Photon.Pun.Demo.Asteroids;
 using Photon.Realtime;
 using System.Collections;
 using System.Collections.Generic;
@@ -7,59 +8,56 @@ using UnityEngine.UI;
 
 public class Damage : MonoBehaviourPunCallbacks, IPunObservable
 {
-    public GameObject[] Objects;
 
-    GameObject expEffect = null;
+    GameObject _Effect;
 
-    #region HP
-    int initHp = 440;
-    [HideInInspector] public int currHp = 440;
-    int NetHp = 440;
-    Image hpBar;//Private인 이유는 다른 유저도 Game_Mgr의 HPBar를 사용하기 때문에
+    int InitHp = 440;
+    [HideInInspector] public int m_CurHP = 440;
+    int NetHP = 440;
+
+    #region 킬카운트 
+    [Header("KillCount")]
+    public Canvas m_Canvas;//killtext를 띄우기 위한 캔버스
+    public Text m_KillText;//킬카운트를 띄우기 위한 텍스트
+    [HideInInspector] public int PlayerId = -1;
     #endregion
 
-    public Canvas hudCanvas;
+    Image m_HPBar;
+    //Private인 이유는 Game_Mgr에서 가져와 유저들이 사용해주기 위함.
 
-    #region KillCount
-    [Header("killCount")]
-    public Text txtKillCount;
-    [HideInInspector] public int PlayerId = -1;
-    int m_KillCount = 0;    
-    int m_Cur_LAttId = -1;  
+    #region Photon
+    PhotonView pv;
+    int m_KillCount = 0;
+    int m_Cur_LAttId = -1;
     ExitGames.Client.Photon.Hashtable KillProps =
                                         new ExitGames.Client.Photon.Hashtable();
-    #endregion
 
     [HideInInspector] public float m_ReSetTime = 0.0f;
 
-    #region Photon
     int m_StCount = 0;
     Vector3 m_StPos = Vector3.zero;
-    PhotonView pv;
     #endregion
-
 
     void Start()
     {
         pv = GetComponent<PhotonView>();
-        PlayerId = pv.Owner.ActorNumber;
+        PlayerId = pv.Owner.ActorNumber;//Owner: 해당 오브젝트를 소유한 플레이어
 
+        m_CurHP = (int)Game_Mgr.Inst.m_CurHP;
+        InitHp = (int)Game_Mgr.Inst.m_MaxHP;
+        InitHp = m_CurHP;//초기화
 
-        Objects = GetComponentsInChildren<GameObject>();
+        if (pv.IsMine == true)
+        {
+            m_HPBar = Game_Mgr.Inst.m_HPBar;
+            m_HPBar.fillAmount = 1.0f;
+            m_HPBar.color = Color.green;
+        }
 
-        //HP 연결 및 초기화
-        currHp = (int)Game_Mgr.Inst.m_CurHP;
-        initHp = (int)Game_Mgr.Inst.m_MaxHP;
-        currHp = initHp;
-        hpBar = Game_Mgr.Inst.m_HPBar;
-        hpBar.color = Color.green;
+        _Effect = Resources.Load<GameObject>("ExplosionMobile");
 
-        //폭발 효과 로드
-        expEffect = Resources.Load<GameObject>("ExplosionMobile");
-
-        //CustomProperties 초기화
+        //custom property
         InitCustomProperties(pv);
-
     }
 
     int m_UpdateCk = 2;
@@ -70,297 +68,219 @@ public class Damage : MonoBehaviourPunCallbacks, IPunObservable
             m_UpdateCk--;
             if (m_UpdateCk <= 0)
                 ReadyStateUser();
-            
         }
 
-        if (0.0f < m_ReSetTime) m_ReSetTime -= Time.deltaTime;
+        if (0.0f < m_ReSetTime)
+            m_ReSetTime -= Time.deltaTime;
 
-        if (PhotonNetwork.CurrentRoom == null ||PhotonNetwork.LocalPlayer == null) return;
+        if (PhotonNetwork.CurrentRoom == null || PhotonNetwork.LocalPlayer == null) return;
 
-        //다른 유저들 정보 동기화
-        if (pv.IsMine == false)
-        {
-            AvataUpdate();
+        if (m_KillText != null)
+            m_KillText.text = m_KillCount.ToString();
 
-            ReceiveKillCount();
-        }
-
-        //킬카운트 표시
-        if (txtKillCount != null)
-            txtKillCount.text = m_KillCount.ToString();
     }
-
     public void ReadyStateUser()
     {
-        if (Ready_Mgr.m_GameState != GameState.Ready) return;
+        if (Ready_Mgr.m_GameState != GameState.Ready)
+            return;
 
         StartCoroutine(this.WaitReadyUser());
     }
-
-
     IEnumerator WaitReadyUser()
     {
-
-        hudCanvas.enabled = false;
+        m_Canvas.enabled = false;
         Game_Mgr.Inst.m_GameObj.SetActive(false);
 
-
-        SetVisible(false);
-
+        //게임 시작 전까지 대기
         while (Ready_Mgr.m_GameState == GameState.Ready)
         {
             yield return null;
         }
 
-   
-        float pos = Random.Range(-20.0f, 20.0f);
-        Vector3 a_SitPos = new Vector3(pos, 20.0f, pos);
+        float pos = Random.Range(-10.0f, 10.0f);
+        Vector3 a_SitPos = new Vector3(pos, 4.0f, pos);
 
         string a_TeamKind = ReceiveSelTeam(pv.Owner);
-        int a_SitPosInx = ReceiveSitPosInx(pv.Owner);
+        int a_SitPosIdx = ReceiveSitPosIdx(pv.Owner);
 
-
-        if (0 <= a_SitPosInx && a_SitPosInx < 4)
+        //팀에 따라 다른 위치에 앉게 하기
+        if (0 <= a_SitPosIdx && a_SitPosIdx < 4)
         {
-            //블루팀 위치 설정
+            //블루팀
             if (a_TeamKind == "blue")
             {
-                a_SitPos = Ready_Mgr.m_Team1Pos[a_SitPosInx];
-                this.gameObject.transform.eulerAngles = new Vector3(0.0f, 201.0f, 0.0f);
-            }
+                a_SitPos = Ready_Mgr.m_Team1Pos[a_SitPosIdx];
 
-            //레드팀 위치 설정
+            }
+            //레드팀
             else if (a_TeamKind == "red")
             {
-                a_SitPos = Ready_Mgr.m_Team2Pos[a_SitPosInx];
-                this.gameObject.transform.eulerAngles = new Vector3(0.0f, 19.5f, 0.0f);
+                a_SitPos = Ready_Mgr.m_Team2Pos[a_SitPosIdx];
+
+
             }
 
         }
 
+        //플레이어의 위치를 변경
         this.gameObject.transform.position = a_SitPos;
 
+        if (m_HPBar != null)
+        {
+            m_HPBar.fillAmount = 1.0f;
+            m_HPBar.color = Color.green;
+        }
 
-        hpBar.fillAmount = 1.0f;
-        hpBar.color = Color.green;
-
-        hudCanvas.enabled = true;
+        m_Canvas.enabled = true;
         Game_Mgr.Inst.m_GameObj.SetActive(true);
 
         if (pv != null && pv.IsMine == true)
-            currHp = initHp;
-
-        SetVisible(true);
+            m_CurHP = InitHp;
 
         m_StPos = a_SitPos;
         m_StCount = 5;
-
     }
 
     void OnTriggerEnter(Collider coll)
     {
-        //충돌한 Collider의 태크 비교
-        if (currHp > 0 && coll.tag == "Bullet")
+        if (coll.tag == "Bullet" && m_CurHP > 0)
         {
-            int a_Att_Id = -1;
-            string a_AttTeam = "blue";
-            Bullet_Ctrl a_RefCannon = coll.gameObject.GetComponent<Bullet_Ctrl>();
-            if (a_RefCannon != null)
+            int a_Att_Id = -1;//공격자 아이디
+            string a_Att_Team = "blue";//공격자 팀
+            int a_Dmg = 10;//데미지
+            Bullet_Ctrl BulletSc = coll.gameObject.GetComponent<Bullet_Ctrl>();
+
+            if (BulletSc != null)
             {
-                a_Att_Id = a_RefCannon.AttackerId;
-                a_AttTeam = a_RefCannon.AttackerTeam;
+                a_Att_Id = BulletSc.AttackerId;
+                a_Att_Team = BulletSc.AttackerTeam;
+                a_Dmg = BulletSc.damage;
             }
 
-            TakeDamage(a_Att_Id, a_AttTeam);
+
+            TakeDamage(a_Att_Id, a_Att_Team);
         }
+
     }
 
-    public void TakeDamage(int AttackerId = -1, string a_AttTeam = "blue")
+    public void TakeDamage(int AttackerId = -1, string a_AttTeam = "blue", int a_Dmg = 10)
     {
+        // 본인이 공격한 경우 데미지를 주지 않는다.
         if (AttackerId == PlayerId) return;
 
-        if (currHp <= 0.0f) return;
+        // 0이 더 크면 데미지 제외
+        if (m_CurHP <= 0) return;
 
+        // 타이머 작동 중일 경우
+        if (0 < m_ReSetTime) return;
 
-        if (pv.IsMine == false) 
-            return;
-
-        if (0.0f < m_ReSetTime) return;
-
-        string a_DamageTeam = "blue";
-        if (pv.Owner.CustomProperties.ContainsKey("MyTeam") == true)
+        // 팀 판별
+        string a_DamageTeam = "blue"; // 초기화
+        if (pv.Owner.CustomProperties.ContainsKey("MyTeam"))
             a_DamageTeam = (string)pv.Owner.CustomProperties["MyTeam"];
 
-        if (a_AttTeam == a_DamageTeam)
-            return;
 
+        // 디버그 로그 추가
+        Debug.Log($"Attacker Team: {a_AttTeam}, Damage Team: {a_DamageTeam}");
+
+        // 팀이 같은 경우 데미지 제외
+        if (a_AttTeam == a_DamageTeam) return;
 
         m_Cur_LAttId = AttackerId;
 
-        currHp -= 20;
+        m_CurHP -= a_Dmg;
 
-        if (currHp < 0)
-            currHp = 0;
+        Debug.Log("TakeDamage : " + a_Dmg + " Team: " + a_AttTeam);
 
-        //현재 생명치 백분율 = (현재 생명치) / (초기 생명치)
-        hpBar.fillAmount = (float)currHp / (float)initHp;
+        if (m_CurHP < 0)
+            m_CurHP = 0;
 
-        //생명 수치에 따라 Filled 이미지의 색상을 변경
-        if (hpBar.fillAmount <= 0.4f)
-            hpBar.color = Color.red;
-        else if (hpBar.fillAmount <= 0.6f)
-            hpBar.color = Color.yellow;
-        else
-            hpBar.color = Color.green;
+        UpdateHPBar();
 
-        if (currHp <= 0)  //죽는 처리 (아바타 탱크들은 중계 받아서 처리)
+        if (m_CurHP <= 0)
         {
-            //IsMine 기준에서 죽는 처리
-            StartCoroutine(this.ExplosionTank());
+            StartCoroutine(this.ExplosionUser());
+        }
+
+        // 로컬 플레이어의 HP를 동기화합니다.
+        pv.RPC("SyncDamage", RpcTarget.All, m_CurHP, a_DamageTeam);
+    }
+
+    [PunRPC]
+    void SyncDamage(int newHp, string a_DamageTeam)
+    {
+        m_CurHP = newHp;
+        UpdateHPBar();
+
+        if (m_CurHP <= 0)
+        {
+            StartCoroutine(this.ExplosionUser());
         }
     }
 
-    //폭발 효과 생성 및 리스폰 코루틴 함수
-    IEnumerator ExplosionTank()
+    void UpdateHPBar()
     {
-        //폭발 효과 생성
-        GameObject effect = GameObject.Instantiate(expEffect,transform.position,Quaternion.identity);
-        
-        Destroy(effect, 3.0f);//3초후 폭발 효과 삭제
-
-        //UI 비활성화
-        hudCanvas.enabled = false;
-        Game_Mgr.Inst.m_GameObj.SetActive(false);
-
-        //사망 전 안보이게 처리
-        SetVisible(false);
-
-        yield return null;
-    }
-
-    //자식 오브젝트들을 모두 보이지 않게 처리하는 함수
-    void SetVisible(bool isVisible)
-    {
-        Objects = GetComponentsInChildren<GameObject>();
-
-        //자식 오브젝트들을 모두 보이지 않게 처리
-        foreach (GameObject objs in Objects)
+        if (pv.IsMine && m_HPBar != null)
         {
-            objs.SetActive(isVisible);
-        }
+            m_HPBar.fillAmount = (float)m_CurHP / (float)InitHp;
 
-        if (isVisible == true)
-            m_ReSetTime = 10.0f;//10초간 딜레이 
+            if (m_HPBar.fillAmount <= 0.4f)
+                m_HPBar.color = Color.red;
+            else if (m_HPBar.fillAmount <= 0.7f)
+                m_HPBar.color = Color.yellow;
+            else
+                m_HPBar.color = Color.green;
+        }
     }
 
-    //플레이어의 정보를 송수신
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
     {
         if (stream.IsWriting)
         {
+            // 로컬 플레이어의 현재 HP를 전송합니다.
+            stream.SendNext(m_CurHP);
             stream.SendNext(m_Cur_LAttId);
-            stream.SendNext(currHp);
         }
         else
         {
+            // 원격 플레이어의 현재 HP를 수신합니다.
+            NetHP = (int)stream.ReceiveNext();
             m_Cur_LAttId = (int)stream.ReceiveNext();
-            NetHp = (int)stream.ReceiveNext();
-        }
-    }
 
-    void AvataUpdate()
-    {
-        if (0 < currHp)
-        {
-            //다른 유저 HP 동기화
-            currHp = NetHp;
-
-            //HP바 갱신
-            hpBar.fillAmount = (float)currHp / (float)initHp;
-
-            //상태에 따른 색상변경
-            if (hpBar.fillAmount <= 0.4f)
-                hpBar.color = Color.red;
-
-            else if (hpBar.fillAmount <= 0.6f)
-                hpBar.color = Color.yellow;
-
-            else
-                hpBar.color = Color.green;
-
-            if (currHp <= 0)
+            // 로컬 플레이어의 HP를 업데이트합니다.
+            if (!pv.IsMine)
             {
-                currHp = 0;
-
-                if (0 <= m_Cur_LAttId)
-                {
-                    SaveKillCount(m_Cur_LAttId);
-                }
-
-                StartCoroutine(this.ExplosionTank());
-            }
-
-        }
-        else
-        {
-            currHp = NetHp;
-            if ((int)(initHp * 0.95f) < currHp)
-            {
-
-                hpBar.fillAmount = 1.0f;
-
-                hpBar.color = Color.green;
-
-                //UI활성화
-                hudCanvas.enabled = true;
-                Game_Mgr.Inst.m_GameObj.SetActive(true);
-
-                //리스폰 시 HP 초기화
-                currHp = initHp;
-
-                //다시 보이게 처리
-                SetVisible(true);
-
-            }
-        }
-
-    }
-
-
-    void SaveKillCount(int AttackerId)
-    {
-
-        GameObject[] users = GameObject.FindGameObjectsWithTag("Player");
-        foreach (GameObject user in users)
-        {
-            var a_Damage = user.GetComponent<Damage>();
-            if (a_Damage != null && a_Damage.PlayerId == AttackerId)
-            {
-
-                if (a_Damage.IncKillCount() == true)
-                {
-                    return;
-                }
+                m_CurHP = NetHP;
+                UpdateHPBar();
             }
         }
     }
 
-    //킬 카운트 증가 함수
-    public bool IncKillCount()
+    IEnumerator ExplosionUser()
     {
-        //pv.IsMine 일 때만 증가
-        if (pv != null && pv.IsMine == true)
-        {
-            m_KillCount++;
+        GameObject _Eff = GameObject.Instantiate(_Effect, transform.position, Quaternion.identity);
 
-            //KillCount를 원격지 유저들에게 전송
-            SendKillCount(m_KillCount);
+        Destroy(_Eff, 2.0f);
 
-            return true;
-        }
+        m_Canvas.enabled = false;
 
-        return false;//원격지 유저들은 증가하지 않음(중계만 받음)
+        //hp바 숨기기
+        Game_Mgr.Inst.m_GameObj.SetActive(false);
+
+        yield return null;
+
     }
+
+    //void SetVisible(bool a_IsVisible)
+    //{
+    //    if (pv.IsMine == true && a_IsVisible == true)
+    //    {
+
+    //    }
+    //}
+
+
+    #region Photon Custom Properties Set
 
     void InitCustomProperties(PhotonView pv)
     {
@@ -371,46 +291,6 @@ public class Damage : MonoBehaviourPunCallbacks, IPunObservable
             pv.Owner.SetCustomProperties(KillProps);
         }
     }
-
-    void SendKillCount(int a_KillCount = 0)
-    {
-        if (pv == null) return;
-
-        if (pv.IsMine == false) return;
-
-        if (KillProps == null)
-        {
-            KillProps = new ExitGames.Client.Photon.Hashtable();
-            KillProps.Clear();
-        }
-
-        if (KillProps.ContainsKey("KillCount") == true)
-            KillProps["KillCount"] = a_KillCount;
-        else
-            KillProps.Add("KillCount", a_KillCount);
-
-        pv.Owner.SetCustomProperties(KillProps);
-
-    }
-
-    //킬 카운트 수신
-    void ReceiveKillCount()
-    {
-        if (pv == null) return; //PhotonView 컴포넌트가 없으면 리턴
-
-        //원격지 탱크(아바타)일 때 수신받는거라 걸리지않아야함.
-        if (pv.IsMine == true) return;
-
-        if (pv.Owner == null) return;
-
-        //killCount를 수신받아서 m_KillCount 변수에 저장
-        if (pv.Owner.CustomProperties.ContainsKey("KillCount") == true)
-        {
-            m_KillCount = (int)pv.Owner.CustomProperties["KillCount"];
-        }
-    }
-
-    //팀 선택 정보 수신
     string ReceiveSelTeam(Player a_Player)
     {
         string a_TeamKind = "blue";
@@ -419,13 +299,14 @@ public class Damage : MonoBehaviourPunCallbacks, IPunObservable
             return a_TeamKind;
 
         if (a_Player.CustomProperties.ContainsKey("MyTeam") == true)
+        {
             a_TeamKind = (string)a_Player.CustomProperties["MyTeam"];
+        }
 
         return a_TeamKind;
     }
 
-    //팀 위치 정보 수신
-    int ReceiveSitPosInx(Player a_Player)
+    int ReceiveSitPosIdx(Player a_Player)
     {
         int a_SitIdx = -1;
 
@@ -436,4 +317,6 @@ public class Damage : MonoBehaviourPunCallbacks, IPunObservable
 
         return a_SitIdx;
     }
+    #endregion
+
 }

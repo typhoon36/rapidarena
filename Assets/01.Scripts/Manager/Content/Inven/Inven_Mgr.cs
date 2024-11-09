@@ -13,7 +13,6 @@ public class Inven_Mgr : MonoBehaviour
     public Button m_ShopBtn;
     public Button m_ExitBtn;
     public Button m_HomeBtn;
-
     [Header("Setting")]
     public Button m_SettingBtn;
     public Transform Canvas_Parent;
@@ -23,18 +22,14 @@ public class Inven_Mgr : MonoBehaviour
     #region Inventory 
     [Header("Inventory")]
     public GameObject m_Inventory;
-    public GameObject m_Slot;//인벤토리 슬롯
+    public GameObject m_Slot;
     #endregion
 
     void Start()
     {
         #region Top_Panel Init
-        //LoadOut버튼 text색상 변경
         m_LoadOutBtn.GetComponentInChildren<Text>().color = Color.gray;
-
-        //LoadOut버튼 비활성화 
         m_LoadOutBtn.interactable = false;
-
 
         if (m_PlayBtn != null)
             m_PlayBtn.onClick.AddListener(() =>
@@ -67,5 +62,37 @@ public class Inven_Mgr : MonoBehaviour
             });
         #endregion
 
+        #region Inventory Init
+        for (int i = 0; i < 20; i++)
+        {
+            GameObject slot = Instantiate(m_Slot, m_Inventory.transform);
+            slot.name = "Slot_" + i;
+        }
+        #endregion
+
+        Data_Mgr.Inst.LoadInventoryItems();
+        LoadInventoryItemsToSlots();
+    }
+
+    void OnEnable()
+    {
+        Data_Mgr.Inst.LoadInventoryItems();
+        LoadInventoryItemsToSlots();
+    }
+
+    void LoadInventoryItemsToSlots()
+    {
+        Slot[] slots = m_Inventory.GetComponentsInChildren<Slot>();
+        List<ItemData> inventoryItems = Data_Mgr.Inst.inventoryItems;
+
+        for (int i = 0; i < inventoryItems.Count; i++)
+        {
+            if (i < slots.Length)
+            {
+                slots[i].AddItem(inventoryItems[i]);
+                slots[i].m_ItemImg.gameObject.SetActive(true);
+                slots[i].m_ItemCount.gameObject.SetActive(true);
+            }
+        }
     }
 }

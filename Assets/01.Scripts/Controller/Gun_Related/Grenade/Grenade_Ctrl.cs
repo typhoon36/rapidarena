@@ -41,7 +41,7 @@ public class Grenade_Ctrl : Weapon_Base
         base.LateUpdate();
     }
 
-    public override void StartWAtt(int type = 0)
+    public override void StartWAtt(int type = 0, int a_AttackerId = -1)
     {
         if (type == 0 && IsAttack == false && m_AmmoInClip > 0)
         {

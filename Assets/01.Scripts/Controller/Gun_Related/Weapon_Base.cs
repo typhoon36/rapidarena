@@ -35,7 +35,7 @@ public abstract class Weapon_Base : MonoBehaviour
     public WeaponSetting WeaponSetting => m_WeaponSetting;
     public WeaponType WeaponType => m_WeaponType;
 
-    public abstract void StartWAtt(int type = 0);
+    public abstract void StartWAtt(int type = 0, int a_AttackerId = -1);
     public abstract void StopWeaponAction(int type = 0);
     public abstract void OnAttack();
     public abstract void Reload();
