@@ -50,5 +50,9 @@ public class Menu_Mgr : MonoBehaviour
         {
             openMain();
         }
+        else if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            closeAll();
+        }
     }
 }

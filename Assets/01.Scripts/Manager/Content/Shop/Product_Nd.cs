@@ -10,6 +10,7 @@ public class Product_Nd : MonoBehaviour
     public Text m_AmountTxt;
     public Text m_ItemPriceTxt;
     public Button buyBtn;
+
     public Image m_ItemImg;
     #endregion
 
@@ -19,6 +20,7 @@ public class Product_Nd : MonoBehaviour
     private Shop_Mgr m_ShopMgr;
     private ItemData m_CurData;
     #endregion
+
 
     void Awake()
     {
@@ -33,13 +35,29 @@ public class Product_Nd : MonoBehaviour
             buyBtn.onClick.AddListener(() => Buy());
     }
 
+    //상품 정보 설정
     public void SetItemData(ItemData itemData)
     {
         m_ItemNameTxt.text = itemData.ItemName;
+        // 글자 크기 조정
+        if (itemData.ItemName == "SkinnedBox")
+        {
+            m_ItemNameTxt.fontSize = 17;
+        }
+        else if (itemData.ItemName == "Weapon_Kit")
+        {
+            m_ItemNameTxt.fontSize = 17;
+        }
+        else
+        {
+            m_ItemNameTxt.fontSize = 19;
+        }
+ 
         m_AmountTxt.text = itemData.Amount.ToString();
         m_ItemPriceTxt.text = itemData.ItemPrice.ToString();
         m_CurData = itemData;
 
+        // 이미지 로드
         if (!string.IsNullOrEmpty(itemData.ImagePath))
         {
             Sprite sprite = LoadSprite(itemData.ImagePath);
@@ -56,6 +74,7 @@ public class Product_Nd : MonoBehaviour
             m_DescNd.SetItemData(itemData);
     }
 
+    // 구매
     void Buy()
     {
         if (m_DataMgr != null && m_ShopMgr != null)
@@ -63,18 +82,7 @@ public class Product_Nd : MonoBehaviour
             if (m_DataMgr.CanAfford(m_CurData.ItemPrice))
             {
                 m_DataMgr.DeductPoints(m_CurData.ItemPrice);
-                Slot emptySlot = m_ShopMgr.FindEmptySlot();
-                if (emptySlot != null)
-                {
-                    emptySlot.AddItem(m_CurData);
-                    m_DataMgr.inventoryItems.Add(m_CurData);
-                    m_DataMgr.SaveInventoryItems();
-                    m_ShopMgr.ShowMsg("구매 성공!");
-                }
-                else
-                {
-                    m_ShopMgr.ShowMsg("빈 슬롯이 없습니다.");
-                }
+                m_ShopMgr.ShowMsg("구매 성공!");
             }
             else
             {
@@ -83,6 +91,7 @@ public class Product_Nd : MonoBehaviour
         }
     }
 
+    // LoadSprite 메서드 추가
     private Sprite LoadSprite(string path)
     {
         Texture2D texture = Resources.Load<Texture2D>(path);

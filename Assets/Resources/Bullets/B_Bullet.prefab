@@ -98,7 +98,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a26417895c8f0c747957aefc5d25e612, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 6000
+  speed: 8000
   damage: 40
   hiteff: {fileID: 100006, guid: 0438351a6e6422d43a09930e9be00ee9, type: 3}
   AttackerId: -1

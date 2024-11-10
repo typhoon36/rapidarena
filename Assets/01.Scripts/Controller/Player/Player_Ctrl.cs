@@ -47,10 +47,6 @@ public class Player_Ctrl : Base_Ctrl
     #endregion
 
 
-    #region HP
-    float m_MaxHP = 440;
-    float m_CurHP = 440;
-    #endregion
 
     void Awake()
     {
@@ -65,12 +61,6 @@ public class Player_Ctrl : Base_Ctrl
 
     void Start()
     {
-        if (pv.IsMine)
-        {
-            m_CurHP = m_MaxHP; // 체력 초기화
-        }
-
-        Game_Mgr.Inst.UpdateHPBar(m_CurHP, m_MaxHP);
 
         foreach (var weapon in m_weapons)
             weapon.gameObject.SetActive(false);
@@ -87,10 +77,7 @@ public class Player_Ctrl : Base_Ctrl
             Camera.main.GetComponent<SmoothFollow>().target = m_CamPos;
             Camera.main.GetComponent<Cam_Ctrl>().Init(gameObject);
         }
-        else
-        {
-            //m_CharCtrl.enabled = false;
-        }
+
     }
 
     void Update()

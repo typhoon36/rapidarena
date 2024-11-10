@@ -93,10 +93,26 @@ public class Data_Mgr
         }
         userData.Points = 99999;
     }
+    public void SaveSlotStates(List<SlotState> slotStates)
+    {
+        string json = JsonUtility.ToJson(new Serialization<SlotState>(slotStates));
+        File.WriteAllText(Application.persistentDataPath + "/SlotStates.json", json);
+    }
+
+    public List<SlotState> LoadSlotStates()
+    {
+        string path = Application.persistentDataPath + "/SlotStates.json";
+        if (File.Exists(path))
+        {
+            string json = File.ReadAllText(path);
+            return JsonUtility.FromJson<Serialization<SlotState>>(json).ToList();
+        }
+        return new List<SlotState>();
+    }
 }
 
 
-// Json Data Structure
+//Jsons Data
 #region Data Structure
 [System.Serializable]
 public class AllItemData
@@ -141,5 +157,11 @@ public class Serialization<T>
     }
 }
 
+[System.Serializable]
+public class SlotState
+{
+    public int SlotIndex;
+    public ItemData ItemData;
+}
 #endregion
 

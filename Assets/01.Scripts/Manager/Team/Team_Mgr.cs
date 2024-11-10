@@ -16,9 +16,9 @@ public class Team_Mgr : MonoBehaviourPunCallbacks
     [HideInInspector] public int m_Team2Win = 0;
 
     #region Custom Properties
-    ExitGames.Client.Photon.Hashtable m_Team1WinProps = 
+    ExitGames.Client.Photon.Hashtable m_Team1WinProps =
         new ExitGames.Client.Photon.Hashtable();
-    ExitGames.Client.Photon.Hashtable m_Team2WinProps = 
+    ExitGames.Client.Photon.Hashtable m_Team2WinProps =
         new ExitGames.Client.Photon.Hashtable();
     #endregion
 
@@ -63,23 +63,26 @@ public class Team_Mgr : MonoBehaviourPunCallbacks
 
         if (5 <= (m_Team1Win + m_Team2Win))
         {
+            //°ÔÀÓ Á¾·á
             if (PhotonNetwork.IsMasterClient == true)
-                a_ReadyMgr.SendGState(GameState.End);
+                a_ReadyMgr.SendState(GameState.End);
 
+            //°ÔÀÓ Á¾·á ÅØ½ºÆ® Ãâ·Â
             if (Game_Mgr.Inst.m_GameEndText != null)
             {
                 Game_Mgr.Inst.m_GameEndText.gameObject.SetActive(true);
+
+                //·¹µåÆÀ ½Â¸®
                 if (m_Team1Win < m_Team2Win)
                 {
                     Game_Mgr.Inst.m_GameEndText.text = "<color=#DC626D>" + "·¹µåÆÀ ½Â¸®" + "</color>";
                     Cursor.lockState = CursorLockMode.None;
-                    Cursor.visible = true;
                 }
+                //ºí·çÆÀ ½Â¸®
                 else
                 {
                     Game_Mgr.Inst.m_GameEndText.text = "<color=#4179A3>" + "ºí·çÆÀ ½Â¸®" + "</color>";
                     Cursor.lockState = CursorLockMode.None;
-                    Cursor.visible = true;
                 }
             }
 
@@ -95,11 +98,16 @@ public class Team_Mgr : MonoBehaviourPunCallbacks
             foreach (GameObject user in users)
             {
                 Damage a_Damage = user.GetComponent<Damage>();
+
                 if (a_Damage != null)
-                    a_Damage.ReadyStateUser();
+                { 
+                    a_Damage.ReadyStateUser(); 
+                }
+
             }
         }
         a_ReadyMgr.m_OldState = Ready_Mgr.m_GameState;
+
     }
 
     void CheckAliveTeam(Ready_Mgr a_ReadyMgr)
@@ -108,7 +116,7 @@ public class Team_Mgr : MonoBehaviourPunCallbacks
         int a_Tm2Count = 0;
         int rowTm1 = 0;
         int rowTm2 = 0;
-        string a_PlrTeam = "blue";  
+        string a_PlrTeam = "blue";
 
         GameObject[] Players = GameObject.FindGameObjectsWithTag("Player");
 
@@ -150,17 +158,15 @@ public class Team_Mgr : MonoBehaviourPunCallbacks
 
         a_ReadyMgr.m_GoWaitGame = 4.0f;
 
-        if (0 < rowTm1 && 0 < rowTm2)
-            return;
+        if (0 < rowTm1 && 0 < rowTm2) return;
 
-        if (5 <= (m_Team1Win + m_Team2Win))
-            return;
+        if (5 <= (m_Team1Win + m_Team2Win)) return;
 
-        if (PhotonNetwork.IsMasterClient == false)
-            return;
+        if (PhotonNetwork.IsMasterClient == false) return;
 
-        a_ReadyMgr.SendGState(GameState.Ready);
+        a_ReadyMgr.SendState(GameState.Ready);
 
+        //ÆÀ 1 Àü¸ê
         if (rowTm1 == 0)
         {
             if (-99999.0f < m_CheckWinTime)
@@ -174,7 +180,9 @@ public class Team_Mgr : MonoBehaviourPunCallbacks
                 m_CheckWinTime = -150000.0f;
             }
             SendTeam2Win(IsRoomBuf_Team2Win);
+
         }
+        //ÆÀ 2 Àü¸ê
         else if (rowTm2 == 0)
         {
             if (-99999.0f < m_CheckWinTime)
@@ -188,6 +196,7 @@ public class Team_Mgr : MonoBehaviourPunCallbacks
                 m_CheckWinTime = -150000.0f;
             }
             SendTeam1Win(IsRoomBuf_Team1Win);
+           
         }
     }
 
@@ -246,4 +255,7 @@ public class Team_Mgr : MonoBehaviourPunCallbacks
         PhotonNetwork.CurrentRoom.SetCustomProperties(m_Team2WinProps);
     }
     #endregion
+
+   
+
 }

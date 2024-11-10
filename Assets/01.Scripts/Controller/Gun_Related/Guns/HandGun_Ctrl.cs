@@ -40,7 +40,7 @@ public class HandGun_Ctrl : Weapon_Base
 
 
     int m_AttackerId = -1;
-    string AttackerTeam = "blue";
+    [HideInInspector] public string AttackerTeam = "blue";
 
 
     protected override void Awake()//Init
@@ -146,8 +146,6 @@ public class HandGun_Ctrl : Weapon_Base
                 {
                     bulletCtrl.AttackerTeam = (string)PhotonNetwork.LocalPlayer.CustomProperties["MyTeam"];
                 }
-
-                Debug.Log($"FireBullet: AttackerId: {bulletCtrl.AttackerId}, AttackerTeam: {bulletCtrl.AttackerTeam}");
             }
         }
     }

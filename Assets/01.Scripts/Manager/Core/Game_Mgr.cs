@@ -1,17 +1,13 @@
 using Photon.Pun;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-public enum GameState
-{
-    Ready,
-    Play,
-    End
-}
+
 
 public class Game_Mgr : MonoBehaviour
 {
@@ -41,8 +37,6 @@ public class Game_Mgr : MonoBehaviour
     [Header("HP")]
     public GameObject m_DmgPanel;
     public Image m_HPBar;
-    [HideInInspector] public float m_MaxHP = 440;
-    [HideInInspector] public float m_CurHP = 440;
     #endregion
 
     #region Gun
@@ -55,36 +49,41 @@ public class Game_Mgr : MonoBehaviour
     private Weapon_Base m_Weapon;
     #endregion
 
-    #region  Message(Only Message)
+
     [Header("Message")]
     public Text m_Message;
-    #endregion
 
-    #region Timer
+    [Header("Timer")]
     public Text m_Timer;
     [HideInInspector] public float m_LimitTime = 240f;
     [HideInInspector] public float m_CurTime;
-    #endregion
 
-    #region WinLose
     [Header("WinLose")]
     public Text m_WinLoseTxt;
-    [HideInInspector] public int m_RoundCnt = 0;
-    #endregion
 
-    #region End
+
     [Header("End")]
     public Text m_GameEndText;
-    #endregion
 
+    [Header("KillBoard")]
+    public GameObject m_KillBoard;
+    public Text m_Player1Kill;
+    public Text m_Player2Kill;
+    public Text m_Player3Kill;
+    public Text m_Player4Kill;
+    Dictionary<int, int> playerKillCounts = new Dictionary<int, int>();
+
+
+
+    [Header("Object")]
     public Text Object_Txt;
+
 
     void Start()
     {
         m_GameEndText.gameObject.SetActive(false);
         m_GameObj.SetActive(false);
-        //HP초기화
-        m_CurHP = m_MaxHP;
+   
 
         //타이머
         m_LimitTime = 240f;
@@ -99,16 +98,24 @@ public class Game_Mgr : MonoBehaviour
 
         Object_Txt.gameObject.SetActive(false);
 
-        // HP 바 초기화
-        m_HPBar.fillAmount = m_CurHP / m_MaxHP;
 
-        
+        #region KillBoard 초기화
+        m_KillBoard.SetActive(false);
+        m_Player1Kill.text = pv.OwnerActorNr.ToString() + " : 0";
+        m_Player2Kill.text = pv.OwnerActorNr.ToString() + " : 0";
+        m_Player3Kill.text = pv.OwnerActorNr.ToString() + " : 0";
+        m_Player4Kill.text = pv.OwnerActorNr.ToString() + " : 0";
+
+        playerKillCounts.Clear();
+        #endregion
 
 
     }
 
     void Update()
     {
+
+
         //타이머
         if (m_GameState == GameState.Play)
         {
@@ -123,7 +130,26 @@ public class Game_Mgr : MonoBehaviour
             }
         }
 
+        if (m_GameState == GameState.Play)
+        {
+            if (Input.GetKeyDown(KeyCode.Tab))
+            {
+                m_KillBoard.SetActive(true);
+            }
+            else if (Input.GetKeyUp(KeyCode.Tab))
+            {
+                m_KillBoard.SetActive(false);
+            }
+        }
+
+
+        if (m_GameState == GameState.End)
+        {
+            KillRank();
+        }
+
     }
+
 
     #region Weapon
     public void SetWeapon(Weapon_Base weapon)
@@ -171,13 +197,6 @@ public class Game_Mgr : MonoBehaviour
         yield return new WaitForSeconds(delay);
         m_DmgPanel.SetActive(false);
     }
-
-    public void UpdateHPBar(float currentHP, float maxHP)
-    {
-        m_CurHP = currentHP;
-        m_MaxHP = maxHP;
-        m_HPBar.fillAmount = currentHP / maxHP;
-    }
     #endregion
 
     #region Message
@@ -204,5 +223,43 @@ public class Game_Mgr : MonoBehaviour
         m_Message.text = "";
     }
     #endregion
+
+    #region KillBoard
+    public void UpdateKillCount(int playerId, int killCount)
+    {
+        if (playerKillCounts.ContainsKey(playerId))
+        {
+            playerKillCounts[playerId] = killCount;
+        }
+        else
+        {
+            playerKillCounts.Add(playerId, killCount);
+        }
+    }
+    void KillRank()
+    {
+        var sortedKills = playerKillCounts.OrderByDescending(x => x.Value).ToList();
+
+        for (int i = 0; i < sortedKills.Count; i++)
+        {
+            switch (i)
+            {
+                case 0:
+                    m_Player1Kill.text = $"Player {sortedKills[i].Key} : {sortedKills[i].Value}";
+                    break;
+                case 1:
+                    m_Player2Kill.text = $"Player {sortedKills[i].Key} : {sortedKills[i].Value}";
+                    break;
+                case 2:
+                    m_Player3Kill.text = $"Player {sortedKills[i].Key} : {sortedKills[i].Value}";
+                    break;
+                case 3:
+                    m_Player4Kill.text = $"Player {sortedKills[i].Key} : {sortedKills[i].Value}";
+                    break;
+            }
+        }
+    }
+    #endregion
+
 
 }

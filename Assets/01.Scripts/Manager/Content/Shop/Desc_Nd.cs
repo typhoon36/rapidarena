@@ -32,6 +32,7 @@ public class Desc_Nd : MonoBehaviour
             }
             else
             {
+                Debug.LogWarning("이미지를 로드할 수 없습니다: " + itemData.ImagePath);
                 itemImage.gameObject.SetActive(false);
             }
         }

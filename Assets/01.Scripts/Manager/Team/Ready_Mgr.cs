@@ -5,8 +5,14 @@ using Photon.Realtime;
 using UnityEngine.SceneManagement;
 using System.Collections.Generic;
 using System.Collections;
+using UnityEngine.EventSystems;
 
-
+public enum GameState
+{
+    Ready = 0,
+    Play,
+    End
+}
 public class Ready_Mgr : MonoBehaviourPunCallbacks
 {
     public static bool IsFocus = true;
@@ -19,6 +25,8 @@ public class Ready_Mgr : MonoBehaviourPunCallbacks
     #endregion
 
     PhotonView pv;
+
+    [HideInInspector] public int m_RoundCnt = 0;
 
     #region Chatting
     public InputField InputFdChat;
@@ -103,7 +111,7 @@ public class Ready_Mgr : MonoBehaviourPunCallbacks
 
 
         #region Custom Properties Init
-        InitGStateProps();
+        InitStateProps();
         InitSelTeamProps();
         InitReadyProps();
         #endregion
@@ -151,18 +159,17 @@ public class Ready_Mgr : MonoBehaviourPunCallbacks
         pv.RPC("LogMsg", RpcTarget.AllBuffered, msg, false);
 
     }
+
     void Update()
     {
-        if (IsGamePossible() == false)
-        {
-            return;
-        }
+        if (IsGamePossible() == false) return;
+
 
         if (m_GameState == GameState.Ready)
         {
             if (IsDifferentList() == true)
             {
-                RefreshPhotonTeam();
+                RefreshPhotonTeam();//리스트 갱신
             }
         }
 
@@ -171,14 +178,18 @@ public class Ready_Mgr : MonoBehaviourPunCallbacks
         {
             IsEnter = !IsEnter;
 
-            if (InputFdChat.gameObject.activeSelf)
+            if (IsEnter == true)
             {
-                InputFdChat.gameObject.SetActive(false);
-                BroadcastingChat();
+                InputFdChat.gameObject.SetActive(true);
+                InputFdChat.ActivateInputField();//인풋필드의 메서드로 인풋필드로 가게 만들어준다.
             }
             else
             {
-                InputFdChat.gameObject.SetActive(true);
+                InputFdChat.gameObject.SetActive(false);
+                if (string.IsNullOrEmpty(InputFdChat.text.Trim()) == false)
+                {
+                    BroadcastingChat();
+                }
             }
         }
         #endregion
@@ -187,15 +198,18 @@ public class Ready_Mgr : MonoBehaviourPunCallbacks
 
         if (m_GameState == GameState.Play)
         {
+            //게임이 시작되었음에도 제대로 Active가 안꺼지는경우
             Team1Panel.SetActive(false);
             Team2Panel.SetActive(false);
             m_WaitTmText.gameObject.SetActive(false);
         }
 
+        //팀 전멸 & 승패 판정
         Team_Mgr.Inst.WinLossObserver(this);
 
     }
 
+    //채팅 중계
     void BroadcastingChat()
     {
         string msg = "\n<color=#ffffff>[" +
@@ -208,6 +222,7 @@ public class Ready_Mgr : MonoBehaviourPunCallbacks
 
     }
 
+    //플레이어 생성
     void CreatePlayer()
     {
         string team = ReceiveSelTeam(PhotonNetwork.LocalPlayer);
@@ -218,7 +233,7 @@ public class Ready_Mgr : MonoBehaviourPunCallbacks
             int index = PhotonNetwork.LocalPlayer.ActorNumber % m_Team1Pos.Length;
             spawnPos = m_Team1Pos[index];
         }
-        else
+        else //(team == "red")
         {
             int index = PhotonNetwork.LocalPlayer.ActorNumber % m_Team2Pos.Length;
             spawnPos = m_Team2Pos[index];
@@ -282,6 +297,7 @@ public class Ready_Mgr : MonoBehaviourPunCallbacks
         SceneManager.LoadScene("Pt_LobbyScene");
     }
 
+    //게임 시작시 콜백
     bool IsGamePossible()
     {
         if (PhotonNetwork.CurrentRoom == null ||
@@ -325,7 +341,7 @@ public class Ready_Mgr : MonoBehaviourPunCallbacks
 
     #region ---------- 게임 상태 동기화 처리
 
-    void InitGStateProps()
+    void InitStateProps()
     {
         if (PhotonNetwork.CurrentRoom == null)
             return;
@@ -335,7 +351,7 @@ public class Ready_Mgr : MonoBehaviourPunCallbacks
         PhotonNetwork.CurrentRoom.SetCustomProperties(m_StateProps);
     }
 
-    public void SendGState(GameState a_GState)
+    public void SendState(GameState a_State)
     {
         if (m_StateProps == null)
         {
@@ -344,13 +360,13 @@ public class Ready_Mgr : MonoBehaviourPunCallbacks
         }
 
         if (m_StateProps.ContainsKey("GameState") == true)
-            m_StateProps["GameState"] = (int)a_GState;
+            m_StateProps["GameState"] = (int)a_State;
         else
-            m_StateProps.Add("GameState", (int)a_GState);
+            m_StateProps.Add("GameState", (int)a_State);
 
         PhotonNetwork.CurrentRoom.SetCustomProperties(m_StateProps);
 
-        m_GameState = a_GState;
+        m_GameState = a_State;
     }
 
     GameState ReceiveGState()
@@ -373,6 +389,7 @@ public class Ready_Mgr : MonoBehaviourPunCallbacks
         PhotonNetwork.LocalPlayer.SetCustomProperties(m_SelTeamProps);
     }
 
+    //팀 선택 정보 보내기
     void SendSelTeam(string a_Team)
     {
         if (string.IsNullOrEmpty(a_Team) == true)
@@ -393,6 +410,7 @@ public class Ready_Mgr : MonoBehaviourPunCallbacks
 
     }
 
+    //팀 선택 정보 받기
     public string ReceiveSelTeam(Player a_Player)
     {
         string a_TeamKind = "blue";
@@ -406,6 +424,7 @@ public class Ready_Mgr : MonoBehaviourPunCallbacks
         return a_TeamKind;
     }
 
+    //팀 선택 리스트가 다른지 확인
     bool IsDifferentList()
     {
         GameObject[] a_UserNodeItems = GameObject.FindGameObjectsWithTag("UserNode_Item");
@@ -448,6 +467,7 @@ public class Ready_Mgr : MonoBehaviourPunCallbacks
 
     }
 
+    //팀원 리스트 갱신
     void RefreshPhotonTeam()
     {
 
@@ -558,6 +578,7 @@ public class Ready_Mgr : MonoBehaviourPunCallbacks
         int a_OldGoWait = (int)m_GoWaitGame;
 
         bool a_AllReady = true;
+
         foreach (Player a_RefPlayer in PhotonNetwork.PlayerList)
         {
             if (ReceiveReady(a_RefPlayer) == false)
@@ -569,7 +590,7 @@ public class Ready_Mgr : MonoBehaviourPunCallbacks
 
         if (a_AllReady == true)
         {
-            if (Game_Mgr.Inst.m_RoundCnt == 0 && PhotonNetwork.CurrentRoom.IsOpen == true)
+            if (m_RoundCnt == 0 && PhotonNetwork.CurrentRoom.IsOpen == true)
                 PhotonNetwork.CurrentRoom.IsOpen = false;
 
             if (0.0f < m_GoWaitGame)
@@ -582,26 +603,22 @@ public class Ready_Mgr : MonoBehaviourPunCallbacks
                 }
 
                 if (PhotonNetwork.IsMasterClient == true)
-                {
                     if (0.0f < m_GoWaitGame && a_OldGoWait != (int)m_GoWaitGame)
                     {
                         SitPosInxMasterCtrl();
                     }
-                }
+
 
                 if (m_GoWaitGame <= 0.0f)
                 {
-                    Game_Mgr.Inst.m_RoundCnt++;
+                    m_RoundCnt++;
 
                     Team1Panel.SetActive(false);
                     Team2Panel.SetActive(false);
                     m_WaitTmText.gameObject.SetActive(false);
-                    InputFdChat.gameObject.SetActive(false);
-                    m_ChatPanel.SetActive(false);
 
+                    Team_Mgr.Inst.m_CheckWinTime = 2.0f;
                     m_GoWaitGame = 0.0f;
-
-                    Game_Mgr.Inst.m_GameObj.SetActive(true);
                 }
             }
 
@@ -609,30 +626,8 @@ public class Ready_Mgr : MonoBehaviourPunCallbacks
             {
                 if (m_GoWaitGame <= 0.0f)
                 {
-                    SendGState(GameState.Play);
+                    SendState(GameState.Play);
                     Cursor.lockState = CursorLockMode.Locked;
-                    Cursor.visible = false;
-                    Game_Mgr.Inst.m_GameState = GameState.Play;
-                    Game_Mgr.Inst.m_LimitTime = 240f; // 4분
-
-                    string a_TeamKind = "blue";
-                    foreach (Player _player in PhotonNetwork.PlayerList)
-                    {
-                        if (_player.CustomProperties.ContainsKey("MyTeam") == true)
-                            a_TeamKind = (string)_player.CustomProperties["MyTeam"];
-
-                        if (a_TeamKind == "blue")
-                        {
-                            Game_Mgr.Inst.Object_Txt.gameObject.SetActive(true);
-                            StartCoroutine(Typing("Object : 폭탄 해체 / 테러리스트 사살"));
-                        }
-                        else if (a_TeamKind == "red")
-                        {
-                            Game_Mgr.Inst.Object_Txt.gameObject.SetActive(true);
-                            StartCoroutine(Typing("Object : 폭탄 설치 / 대테러부대 사살"));
-                        }
-
-                    }
                 }
             }
         }
@@ -670,6 +665,30 @@ public class Ready_Mgr : MonoBehaviourPunCallbacks
     #endregion
 
     #region 연출
+    public static bool IsPointerOverUIObject() //UGUI의 UI들이 먼저 피킹되는지 확인하는 함수
+    {
+        PointerEventData a_EDCurPos = new PointerEventData(EventSystem.current);
+
+#if !UNITY_EDITOR && (UNITY_IPHONE || UNITY_ANDROID)
+
+			List<RaycastResult> results = new List<RaycastResult>();
+			for (int i = 0; i < Input.touchCount; ++i)
+			{
+				a_EDCurPos.position = Input.GetTouch(i).position;  
+				results.Clear();
+				EventSystem.current.RaycastAll(a_EDCurPos, results);
+                if (0 < results.Count)
+                    return true;
+			}
+
+			return false;
+#else
+        a_EDCurPos.position = Input.mousePosition;
+        List<RaycastResult> results = new List<RaycastResult>();
+        EventSystem.current.RaycastAll(a_EDCurPos, results);
+        return (0 < results.Count);
+#endif
+    }
     IEnumerator WaitText(float delay = 10)
     {
         string currentText = Game_Mgr.Inst.Object_Txt.text;
