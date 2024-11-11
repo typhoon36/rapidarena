@@ -22,6 +22,11 @@ public class WeaponSetting
 // 모든 컨트롤러의 부모 클래스
 public class Base_Ctrl : MonoBehaviourPunCallbacks
 {
+
+    public WeaponSetting weaponSetting;
+    protected int m_CurrentAmmo;
+    protected int m_AmmoInClip;
+
     public enum DefState
     {
         Idle,
@@ -153,4 +158,23 @@ public class Base_Ctrl : MonoBehaviourPunCallbacks
         }
     }
     #endregion -- 기본 상태처리
+
+
+    #region 플레이어의 탄창 회복
+    public void IncreaseMag(int mag)
+    {
+        Weapon_Base[] weapons = GetComponentsInChildren<Weapon_Base>();
+        foreach (var weapon in weapons)
+        {
+            weapon.IncreaseAmmo(mag);
+        }
+    }
+    #endregion
+
+
+   
+
+
+
+
 }

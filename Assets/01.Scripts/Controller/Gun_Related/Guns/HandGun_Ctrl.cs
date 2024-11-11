@@ -24,7 +24,7 @@ public class HandGun_Ctrl : Weapon_Base
     private Casing_Pool m_CasingPool;
     #endregion
 
-    #region Hangund`s Bullet
+    #region Handgun`s Bullet
     [Header("Bullet")]
     [SerializeField] private GameObject m_BulletPrefab;
     [SerializeField] private GameObject m_BulletSpawnPoint;
@@ -37,8 +37,6 @@ public class HandGun_Ctrl : Weapon_Base
     #endregion
 
     Base_Ctrl m_Base;
-
-
     int m_AttackerId = -1;
     [HideInInspector] public string AttackerTeam = "blue";
 
@@ -59,7 +57,7 @@ public class HandGun_Ctrl : Weapon_Base
     //Init 함수
     void ResetVar()
     {
-        IsAttack = false;
+           IsAttack = false;
         IsModeChange = false;
         if (m_Base != null)
         {
@@ -69,12 +67,19 @@ public class HandGun_Ctrl : Weapon_Base
 
     void OnEnable()
     {
-        PlaySound(m_TakeOutSound);
-        m_FireEffect.SetActive(false);
+        if (m_TakeOutSound != null)
+        {
+            PlaySound(m_TakeOutSound);
+        }
+
+        if (m_FireEffect != null)
+        {
+            m_FireEffect.SetActive(false);
+        }
+
         Game_Mgr.Inst.UpdateAmmoText(m_AmmoInClip, m_CurrentAmmo);
         ResetVar();
 
-        // 무기 교체 시 애니메이터 다시 설정
         if (m_Base != null)
         {
             m_Base.m_Anim = GetComponentInChildren<Animator>();
@@ -119,10 +124,8 @@ public class HandGun_Ctrl : Weapon_Base
                 Game_Mgr.Inst.UpdateAmmoText(m_AmmoInClip, m_CurrentAmmo);
 
                 string Anim = m_Base.Aim ? "AimFire" : "Fire";
-                if (m_Base.m_Anim != null && m_Base.m_Anim.gameObject.activeInHierarchy)
-                {
-                    m_Base.SetAnimation(Anim);
-                }
+                m_Base.SetAnimation(Anim);
+
 
                 if (!m_Base.Aim)
                 {
@@ -146,6 +149,7 @@ public class HandGun_Ctrl : Weapon_Base
                 {
                     bulletCtrl.AttackerTeam = (string)PhotonNetwork.LocalPlayer.CustomProperties["MyTeam"];
                 }
+
             }
         }
     }

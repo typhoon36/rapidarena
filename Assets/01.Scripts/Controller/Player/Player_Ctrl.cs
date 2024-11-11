@@ -87,8 +87,7 @@ public class Player_Ctrl : Base_Ctrl
         if (PhotonNetwork.CurrentRoom == null || PhotonNetwork.LocalPlayer == null)
             return;
 
-        if (!pv.IsMine)
-            return;
+        if (!pv.IsMine) return;
 
         if (pv.IsMine)
         {
@@ -116,32 +115,9 @@ public class Player_Ctrl : Base_Ctrl
                 PlayerState = DefState.Idle;
                 PlaySound(null, false);
             }
-
-            if (Input.GetKeyDown(KeyCode.G) && isInArea)
-            {
-                m_Sbomb.SpawnBomb();
-                Game_Mgr.Inst.ShowMessage(5f, true);
-            }
         }
     }
 
-    bool isInArea = false;
-
-    void OnTriggerEnter(Collider other)
-    {
-        if (other.CompareTag("Area"))
-        {
-            isInArea = true;
-        }
-    }
-
-    void OnTriggerExit(Collider other)
-    {
-        if (other.CompareTag("Area"))
-        {
-            isInArea = false;
-        }
-    }
 
     void KeyMovement()
     {
@@ -229,6 +205,7 @@ public class Player_Ctrl : Base_Ctrl
 
         UpdateAnimationState();
     }
+
 
     void IsChange()
     {

@@ -21,35 +21,37 @@ public class Shop_Mgr : MonoBehaviour
     public Button m_ShopBtn;
     public Button m_ExitBtn;
     public Button m_HomeBtn;
+
+    #endregion
+
     [Header("Setting")]
     public Button m_SettingBtn;
     public Transform Canvas_Parent;
     public GameObject m_ConfigObj;
-    #endregion
 
+    [Header("Message")]
     public Text m_MsgTxt;
-    float ShowMsgTimer = 0.0f;
+    float ShowMsgTime;
 
-    #region Products
     [Header("Products")]
     public GameObject ProductObj;
     public Transform productParent;
-    #endregion
 
-    #region Inventory
-    Inven_Mgr m_Inven;//인벤토리와 연동(인벤토리에 있는 아이템을 Inven_View에 표시)
-    public Transform InvenParent;//인벤토리 부모
-    public GameObject SlotObj;//슬롯 오브젝트 
-    public Text m_PointTxt;//포인트 표시
-    #endregion
+
+    [Header("Inventory")]
+    public Transform InvenParent;
+    public GameObject SlotObj;
+    public Text m_PointTxt;//info
+    Inven_Mgr m_Inven;//인벤토리 매니저 참조
+
 
     void Start()
     {
         #region Top_Panel
-        //상점 버튼 text색상 변경
+        // 상점 버튼 text 색상 변경
         m_ShopBtn.GetComponentInChildren<Text>().color = Color.gray;
 
-        //상점 버튼 비활성화 
+        // 상점 버튼 비활성화 
         m_ShopBtn.interactable = false;
 
         if (m_PlayBtn != null)
@@ -83,66 +85,75 @@ public class Shop_Mgr : MonoBehaviour
             });
         #endregion
 
-        // 포인트를 99999로 설정
-        Data_Mgr.Inst.userData.Points = 99999;
-        // 포인트 표시
-        m_PointTxt.text = Data_Mgr.Inst.userData.Points.ToString();
+        //Info
+        m_PointTxt.text = "보유 포인트 : " 
+            + Data_Mgr.Inst.userData.Points.ToString();
 
-        // 아이템 스폰
+        //상품 로드
         SpawnProducts();
-    }
 
+        //인벤 슬롯 생성
+        for (int i = 0; i < 20; i++)
+        {
+            Slot a_Slot = Instantiate(SlotObj, InvenParent).GetComponent<Slot>();
+            a_Slot.m_ItemImg.gameObject.SetActive(false);
+        }
+
+    }
     void Update()
     {
-        if (ShowMsgTimer > 0.0f)
+        if (ShowMsgTime > 0.0f)
         {
-            ShowMsgTimer -= Time.deltaTime;
-            if (ShowMsgTimer <= 0.0f)
+            ShowMsgTime -= Time.deltaTime;
+            if (ShowMsgTime <= 0.0f)
             {
                 m_MsgTxt.text = "";
             }
         }
+
+        RefreshPoint(); //계속 포인트가 갱신이 되어야함.
+
+
+
     }
 
-    public void ShowMsg(string a_Msg = "", bool IsTrigger = true)
+    //상품 생성
+    void SpawnProducts()
     {
-        if (IsTrigger == true)
+        //아이템 데이터 가져오기
+        AllItemData itemData = Data_Mgr.Inst.GetItemData();
+
+        //아이템 데이터를 이용하여 상품 생성
+        foreach (var item in itemData.Sheet1)
         {
-            m_MsgTxt.text = a_Msg;
+            GameObject a_Products = Instantiate(ProductObj, productParent);
+            Product_Nd productNd = a_Products.GetComponent<Product_Nd>();
+            productNd.SetItemData(item);
+        }
+    }
+
+    //메시지 표시 -- 구매/판매했을때 호출
+    public void ShowMsg(string msg = "", bool IsShow = true)
+    {
+        if (IsShow == true)
+        {
+            m_MsgTxt.text = msg;
             m_MsgTxt.gameObject.SetActive(true);
-            ShowMsgTimer = 2.0f;
+            ShowMsgTime = 2.0f;
         }
         else
         {
             m_MsgTxt.text = "";
             m_MsgTxt.gameObject.SetActive(false);
         }
+
     }
 
-    void SpawnProducts()
+    //포인트 갱신
+    public void RefreshPoint()
     {
-        AllItemData itemData = Data_Mgr.Inst.GetItemData();
-
-        foreach (var item in itemData.Sheet1)
-        {
-            GameObject product = Instantiate(ProductObj, productParent);
-            Product_Nd productNd = product.GetComponentInChildren<Product_Nd>();
-            productNd.SetItemData(item);
-
-        }
+        m_PointTxt.text = "보유 포인트 : " +
+            Data_Mgr.Inst.userData.Points.ToString();
     }
 
-    // 빈 슬롯을 찾는 메서드 추가
-    public Slot FindEmptySlot()
-    {
-        Slot[] slots = InvenParent.GetComponentsInChildren<Slot>();
-        foreach (Slot slot in slots)
-        {
-            if (!slot.m_ItemImg.gameObject.activeSelf)
-            {
-                return slot;
-            }
-        }
-        return null;
-    }
 }

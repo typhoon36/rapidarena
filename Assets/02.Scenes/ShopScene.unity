@@ -1141,8 +1141,10 @@ MonoBehaviour:
   m_MsgTxt: {fileID: 1042708866}
   ProductObj: {fileID: 542729712687731269, guid: 5b90759d6a0792143a444c055845d02f, type: 3}
   productParent: {fileID: 726203263}
+  m_Inven: {fileID: 0}
   InvenParent: {fileID: 742802747}
   SlotObj: {fileID: 5932128041330552859, guid: 0140ccf56349ea24baad48db1beef00d, type: 3}
+  m_PointTxt: {fileID: 1539532958}
 --- !u!1 &965391855
 GameObject:
   m_ObjectHideFlags: 0

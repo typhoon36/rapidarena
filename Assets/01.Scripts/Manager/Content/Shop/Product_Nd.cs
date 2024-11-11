@@ -52,7 +52,7 @@ public class Product_Nd : MonoBehaviour
         {
             m_ItemNameTxt.fontSize = 19;
         }
- 
+
         m_AmountTxt.text = itemData.Amount.ToString();
         m_ItemPriceTxt.text = itemData.ItemPrice.ToString();
         m_CurData = itemData;
@@ -81,6 +81,7 @@ public class Product_Nd : MonoBehaviour
         {
             if (m_DataMgr.CanAfford(m_CurData.ItemPrice))
             {
+                m_DataMgr.userData.Points -= m_CurData.ItemPrice;
                 m_DataMgr.DeductPoints(m_CurData.ItemPrice);
                 m_ShopMgr.ShowMsg("구매 성공!");
             }

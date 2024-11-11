@@ -628,6 +628,23 @@ public class Ready_Mgr : MonoBehaviourPunCallbacks
                 {
                     SendState(GameState.Play);
                     Cursor.lockState = CursorLockMode.Locked;
+                    m_ChatPanel.SetActive(false);//채팅창 비활성화 -- 게임중에는 채팅을 못하게
+
+                    //팀별 목표텍스트 출력
+                    string a_TeamKind = "blue";
+
+                    if (Game_Mgr.Inst.Object_Txt != null)
+                    {
+                        Game_Mgr.Inst.Object_Txt.gameObject.SetActive(true);
+                        if (a_TeamKind == "blue")
+                        {
+                            StartCoroutine(Typing("테러리스트 저지"));
+                        }
+                        else if (a_TeamKind == "red")
+                        {
+                            StartCoroutine(Typing("대테러부대 저지"));
+                        }
+                    }
                 }
             }
         }
@@ -665,30 +682,7 @@ public class Ready_Mgr : MonoBehaviourPunCallbacks
     #endregion
 
     #region 연출
-    public static bool IsPointerOverUIObject() //UGUI의 UI들이 먼저 피킹되는지 확인하는 함수
-    {
-        PointerEventData a_EDCurPos = new PointerEventData(EventSystem.current);
-
-#if !UNITY_EDITOR && (UNITY_IPHONE || UNITY_ANDROID)
-
-			List<RaycastResult> results = new List<RaycastResult>();
-			for (int i = 0; i < Input.touchCount; ++i)
-			{
-				a_EDCurPos.position = Input.GetTouch(i).position;  
-				results.Clear();
-				EventSystem.current.RaycastAll(a_EDCurPos, results);
-                if (0 < results.Count)
-                    return true;
-			}
-
-			return false;
-#else
-        a_EDCurPos.position = Input.mousePosition;
-        List<RaycastResult> results = new List<RaycastResult>();
-        EventSystem.current.RaycastAll(a_EDCurPos, results);
-        return (0 < results.Count);
-#endif
-    }
+   
     IEnumerator WaitText(float delay = 10)
     {
         string currentText = Game_Mgr.Inst.Object_Txt.text;

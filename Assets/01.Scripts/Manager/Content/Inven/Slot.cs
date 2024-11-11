@@ -17,7 +17,6 @@ public class Slot : MonoBehaviour
     }
     #endregion
 
-
     public void AddItem(ItemData _itemData)
     {
         m_ItemData = _itemData;
@@ -34,11 +33,21 @@ public class Slot : MonoBehaviour
             Debug.LogError("이미지를 로드할 수 없습니다: " + m_ItemData.ImagePath);
         }
     }
+
     public void ClearSlot()
     {
         m_ItemImg.sprite = null;
         m_ItemImg.gameObject.SetActive(false);
         m_ItemCount.text = "";
         m_ItemCount.gameObject.SetActive(false);
+    }
+
+    public void SortSlot(int Idx)
+    {
+        Data_Mgr.Inst.SortItems();
+        // 정렬된 아이템을 슬롯에 다시 추가
+        for (int i = 0; i < Data_Mgr.Inst.m_Items.Count; i++)
+            AddItem(Data_Mgr.Inst.m_Items[i]);
+
     }
 }

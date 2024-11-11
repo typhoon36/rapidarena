@@ -2,9 +2,7 @@ using UnityEngine;
 using System.IO;
 using System.Collections.Generic;
 
-
-
-// Data Manager
+// 게임 내 데이터 관리
 public class Data_Mgr
 {
     #region Singleton
@@ -23,27 +21,12 @@ public class Data_Mgr
     #endregion
 
     public TextAsset m_ItemData;
-    AllItemData Itemdatas;
+    AllItemData Itemdata;
     public UserData userData = new UserData();
-    public List<ItemData> inventoryItems = new List<ItemData>();
+    public List<ItemData> m_Items = new List<ItemData>();
 
-    public void SaveInventoryItems()
-    {
-        string json = JsonUtility.ToJson(new Serialization<ItemData>(inventoryItems));
-        File.WriteAllText(Application.persistentDataPath + "/InventoryItems.json", json);
-    }
 
-    public void LoadInventoryItems()
-    {
-        string path = Application.persistentDataPath + "/InventoryItems.json";
-        if (File.Exists(path))
-        {
-            string json = File.ReadAllText(path);
-            inventoryItems = JsonUtility.FromJson<Serialization<ItemData>>(json).ToList();
-        }
-    }
-
-    private Data_Mgr()
+    Data_Mgr()
     {
         LoadItemData();
         LoadUserDataFromJson();
@@ -52,15 +35,14 @@ public class Data_Mgr
     public void LoadItemData()
     {
         if (m_ItemData == null)
-        {
             m_ItemData = Resources.Load<TextAsset>("ItemData");
-        }
-        Itemdatas = JsonUtility.FromJson<AllItemData>(m_ItemData.text);
+
+        Itemdata = JsonUtility.FromJson<AllItemData>(m_ItemData.text);
     }
 
     public AllItemData GetItemData()
     {
-        return Itemdatas;
+        return Itemdata;
     }
 
     public bool CanAfford(int price)
@@ -77,6 +59,7 @@ public class Data_Mgr
         }
     }
 
+    #region User Data to Json
     void SaveUserDataToJson()
     {
         string json = JsonUtility.ToJson(userData);
@@ -93,21 +76,11 @@ public class Data_Mgr
         }
         userData.Points = 99999;
     }
-    public void SaveSlotStates(List<SlotState> slotStates)
-    {
-        string json = JsonUtility.ToJson(new Serialization<SlotState>(slotStates));
-        File.WriteAllText(Application.persistentDataPath + "/SlotStates.json", json);
-    }
+    #endregion
 
-    public List<SlotState> LoadSlotStates()
+    public void SortItems()
     {
-        string path = Application.persistentDataPath + "/SlotStates.json";
-        if (File.Exists(path))
-        {
-            string json = File.ReadAllText(path);
-            return JsonUtility.FromJson<Serialization<SlotState>>(json).ToList();
-        }
-        return new List<SlotState>();
+        m_Items.Sort((x, y) => x.ItemID.CompareTo(y.ItemID));
     }
 }
 

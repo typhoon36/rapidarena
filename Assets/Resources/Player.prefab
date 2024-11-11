@@ -1191,7 +1191,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &6459510428932222869
 Transform:
   m_ObjectHideFlags: 0
@@ -1270,7 +1270,7 @@ Transform:
   m_GameObject: {fileID: 1138647684738697466}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.018, y: 0.133, z: 0.141}
+  m_LocalPosition: {x: 0, y: 0.177, z: 0.226}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1724,7 +1724,7 @@ GameObject:
   - component: {fileID: 8670616981902692603}
   m_Layer: 6
   m_Name: KnifeCollider
-  m_TagString: Untagged
+  m_TagString: Knife
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2638,7 +2638,7 @@ Transform:
   m_GameObject: {fileID: 3450876487637693102}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.1, z: 0.1}
+  m_LocalPosition: {x: 0, y: 0.4, z: 0.1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -2682,7 +2682,7 @@ MonoBehaviour:
   m_WeaponType: 1
   m_GrenadeType: 0
   m_WeaponSetting:
-    name: 3
+    name: 1
     Throwname: 0
     m_Damage: 40
     m_AttackRate: 0.5
@@ -2697,7 +2697,7 @@ MonoBehaviour:
   m_ReloadSound: {fileID: 8300000, guid: fee3a21f251a4914cabce25b13e7d2a8, type: 3}
   m_FireEffect: {fileID: 1014951882203589693}
   m_SpawnPoint: {fileID: 4806241190933497604}
-  m_BulletPrefab: {fileID: 8525365472715594718, guid: 63c14fd8a6f49f649ada350d9c52443f, type: 3}
+  m_BulletPrefab: {fileID: 1605347844602274788, guid: f6ec8a35ee1a8f34a92bc2b77871aa58, type: 3}
   m_BulletSpawnPoint: {fileID: 1138647684738697466}
   AttackerTeam: blue
 --- !u!114 &1844240994773203092
@@ -2725,6 +2725,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e3f77030d0cd09947a805b7de3b5ffa7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  weaponSetting:
+    name: 0
+    Throwname: 0
+    m_Damage: 0
+    m_AttackRate: 0
+    m_AttackDist: 0
+    IsAutoAttack: 0
+    m_ClipSize: 0
+    m_MaxAmmo: 0
   m_Anim: {fileID: 0}
   m_PlayerState: 0
 --- !u!82 &3479330319241355576
@@ -3295,7 +3304,7 @@ Transform:
   m_GameObject: {fileID: 3959751942987666287}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.1, z: 0.1}
+  m_LocalPosition: {x: 0, y: 0.4, z: 0.1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -3478,6 +3487,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e3f77030d0cd09947a805b7de3b5ffa7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  weaponSetting:
+    name: 0
+    Throwname: 0
+    m_Damage: 0
+    m_AttackRate: 0
+    m_AttackDist: 0
+    IsAutoAttack: 0
+    m_ClipSize: 0
+    m_MaxAmmo: 0
   m_Anim: {fileID: 0}
   m_PlayerState: 0
 --- !u!114 &3764494820331956527
@@ -3713,13 +3731,13 @@ CharacterController:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Height: 2
+  m_Height: 3
   m_Radius: 0.5
   m_SlopeLimit: 45
   m_StepOffset: 0.3
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Center: {x: 0, y: 0.3, z: 0}
 --- !u!82 &5468680271786155571
 AudioSource:
   m_ObjectHideFlags: 0
@@ -3828,6 +3846,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2d24cc4ce27234c4dae66037be82f522, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  weaponSetting:
+    name: 0
+    Throwname: 0
+    m_Damage: 0
+    m_AttackRate: 0
+    m_AttackDist: 0
+    IsAutoAttack: 0
+    m_ClipSize: 0
+    m_MaxAmmo: 0
   m_Anim: {fileID: 0}
   m_PlayerState: 0
   pv: {fileID: 0}
@@ -3851,6 +3878,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e3f77030d0cd09947a805b7de3b5ffa7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  weaponSetting:
+    name: 0
+    Throwname: 0
+    m_Damage: 0
+    m_AttackRate: 0
+    m_AttackDist: 0
+    IsAutoAttack: 0
+    m_ClipSize: 0
+    m_MaxAmmo: 0
   m_Anim: {fileID: 0}
   m_PlayerState: 0
 --- !u!114 &4960764040976952548
@@ -4400,7 +4436,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &4503540350239890003
 Transform:
   m_ObjectHideFlags: 0
@@ -6670,7 +6706,7 @@ Transform:
   m_GameObject: {fileID: 6317801050522334939}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.1, z: 0.1}
+  m_LocalPosition: {x: 0, y: 0.4, z: 0.1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -6741,6 +6777,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e3f77030d0cd09947a805b7de3b5ffa7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  weaponSetting:
+    name: 0
+    Throwname: 0
+    m_Damage: 0
+    m_AttackRate: 0
+    m_AttackDist: 0
+    IsAutoAttack: 0
+    m_ClipSize: 0
+    m_MaxAmmo: 0
   m_Anim: {fileID: 0}
   m_PlayerState: 0
 --- !u!82 &4250186560583431799
@@ -7797,13 +7842,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7547359685885571673}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.28401548, y: -0, z: -0, w: -0.95881975}
-  m_LocalPosition: {x: 0, y: 0.12, z: 0.13}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.091, y: -0.001, z: -0.055}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 4923205766012033267}
-  m_LocalEulerAnglesHint: {x: 327, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &7629373005262734710
 GameObject:
   m_ObjectHideFlags: 0
@@ -7956,7 +8001,7 @@ Transform:
   m_GameObject: {fileID: 7884453001045134742}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -1.5, z: 0.02}
+  m_LocalPosition: {x: 0, y: -1, z: 0.02}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -9116,7 +9161,7 @@ Transform:
   m_GameObject: {fileID: 9068376311711208145}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.1, z: 0.1}
+  m_LocalPosition: {x: 0, y: 0.4, z: 0.1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -9185,6 +9230,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e3f77030d0cd09947a805b7de3b5ffa7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  weaponSetting:
+    name: 0
+    Throwname: 0
+    m_Damage: 0
+    m_AttackRate: 0
+    m_AttackDist: 0
+    IsAutoAttack: 0
+    m_ClipSize: 0
+    m_MaxAmmo: 0
   m_Anim: {fileID: 0}
   m_PlayerState: 0
 --- !u!114 &2829991641062151665

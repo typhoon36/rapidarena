@@ -74,6 +74,13 @@ public abstract class Weapon_Base : MonoBehaviour
     }
     #endregion
 
-  
+
+    public void IncreaseAmmo(int mag)
+    {
+        m_CurrentAmmo = Mathf.Min(m_CurrentAmmo + mag, m_WeaponSetting.m_MaxAmmo);
+        Game_Mgr.Inst.UpdateAmmoText(m_AmmoInClip, m_CurrentAmmo);
+    }
+
+
 }
 

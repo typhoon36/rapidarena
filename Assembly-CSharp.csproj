@@ -92,6 +92,7 @@
     <Compile Include="Assets\08.Utilty\Photon\PhotonChat\Demos\Common\EventSystemSpawner.cs" />
     <Compile Include="Assets\08.Utilty\Standard Assets\ParticleSystems\Scripts\WaterHoseParticles.cs" />
     <Compile Include="Assets\08.Utilty\Standard Assets\Utility\AlphaButtonClickMask.cs" />
+    <Compile Include="Assets\01.Scripts\Controller\FeildItem\Item_Mag.cs" />
     <Compile Include="Assets\01.Scripts\Utilty\Produce\Fade_Mgr.cs" />
     <Compile Include="Assets\08.Utilty\Photon\PhotonChat\Demos\Common\OnStartDelete.cs" />
     <Compile Include="Assets\08.Utilty\Standard Assets\Utility\SmoothFollow.cs" />
@@ -139,6 +140,7 @@
     <Compile Include="Assets\01.Scripts\Controller\Gun_Related\Grenade\Grenade_Projectile.cs" />
     <Compile Include="Assets\01.Scripts\Controller\Gun_Related\Guns\HandGun_Ctrl.cs" />
     <Compile Include="Assets\08.Utilty\Standard Assets\ParticleSystems\Scripts\FireLight.cs" />
+    <Compile Include="Assets\01.Scripts\Utilty\Produce\ParticleAutoDestroyerByTime.cs" />
     <Compile Include="Assets\08.Utilty\Standard Assets\Utility\SimpleMouseRotator.cs" />
     <Compile Include="Assets\08.Utilty\Standard Assets\Utility\DragRigidbody.cs" />
     <Compile Include="Assets\08.Utilty\Photon\PhotonLibs\WebSocket\WebSocket.cs" />
@@ -159,6 +161,7 @@
     <Compile Include="Assets\08.Utilty\Standard Assets\Utility\CurveControlledBob.cs" />
     <Compile Include="Assets\01.Scripts\Controller\Gun_Related\Shell\Casing_Pool.cs" />
     <Compile Include="Assets\01.Scripts\Utilty\ConfigBox.cs" />
+    <Compile Include="Assets\01.Scripts\Controller\FeildItem\ItemBase.cs" />
     <Compile Include="Assets\08.Utilty\Standard Assets\CrossPlatformInput\Scripts\TouchPad.cs" />
     <Compile Include="Assets\08.Utilty\Standard Assets\Utility\SimpleActivatorMenu.cs" />
     <Compile Include="Assets\01.Scripts\Controller\Player\Damage.cs" />

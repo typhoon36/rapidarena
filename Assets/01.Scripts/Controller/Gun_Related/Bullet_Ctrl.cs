@@ -35,11 +35,10 @@ public class Bullet_Ctrl : MonoBehaviour
     void OnTriggerEnter(Collider coll)
     {
         if (coll.tag == "Bullet") return;
-        if (coll.tag == "Wall") return;
+        else if (coll.tag == "Wall") return;
+        else if (coll.tag == "Item") return;
 
-
-        StartCoroutine(this.Spark(0.0f));
-
+        StartCoroutine(this.Spark(0.1f));
     }
 
     IEnumerator Spark(float tm)

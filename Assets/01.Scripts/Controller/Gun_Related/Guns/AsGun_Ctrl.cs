@@ -210,6 +210,7 @@ public class AsGun_Ctrl : Weapon_Base
     }
     #endregion
 
+ 
     #region Coroutines
     IEnumerator ShowFireEffect()
     {
