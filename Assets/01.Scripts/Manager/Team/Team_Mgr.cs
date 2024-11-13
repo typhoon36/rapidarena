@@ -15,6 +15,9 @@ public class Team_Mgr : MonoBehaviourPunCallbacks
     int IsRoomBuf_Team2Win = 0;//위와 같은 의미.
     [HideInInspector] public int m_Team2Win = 0;
 
+    bool IsAward = false;//포인트 증가 여부
+
+
     #region Custom Properties
     ExitGames.Client.Photon.Hashtable m_Team1WinProps =
         new ExitGames.Client.Photon.Hashtable();
@@ -45,7 +48,6 @@ public class Team_Mgr : MonoBehaviourPunCallbacks
         if (a_ReadyMgr == null)
             return;
 
-
         if (Ready_Mgr.m_GameState == GameState.Play)
         {
             m_CheckWinTime -= Time.deltaTime;
@@ -63,26 +65,28 @@ public class Team_Mgr : MonoBehaviourPunCallbacks
 
         if (5 <= (m_Team1Win + m_Team2Win))
         {
-            //게임 종료
             if (PhotonNetwork.IsMasterClient == true)
                 a_ReadyMgr.SendState(GameState.End);
 
-            //게임 종료 텍스트 출력
             if (Game_Mgr.Inst.m_GameEndText != null)
             {
                 Game_Mgr.Inst.m_GameEndText.gameObject.SetActive(true);
 
-                //레드팀 승리
-                if (m_Team1Win < m_Team2Win)
+                if (!IsAward) // 포인트가 아직 증가하지 않았다면 먼저 승리팀 체크
                 {
-                    Game_Mgr.Inst.m_GameEndText.text = "<color=#DC626D>" + "레드팀 승리" + "</color>";
-                    Cursor.lockState = CursorLockMode.None;
-                }
-                //블루팀 승리
-                else
-                {
-                    Game_Mgr.Inst.m_GameEndText.text = "<color=#4179A3>" + "블루팀 승리" + "</color>";
-                    Cursor.lockState = CursorLockMode.None;
+                    if (m_Team1Win < m_Team2Win)
+                    {
+                        Game_Mgr.Inst.m_GameEndText.text = "<color=#DC626D>" + "레드팀 승리" + "</color>";
+                        Cursor.lockState = CursorLockMode.None;
+                        Data_Mgr.m_UserData.Points += 500;//포인트 증가(라운드 총합 포인트)
+                    }
+                    else
+                    {
+                        Game_Mgr.Inst.m_GameEndText.text = "<color=#4179A3>" + "블루팀 승리" + "</color>";
+                        Cursor.lockState = CursorLockMode.None;
+                        Data_Mgr.m_UserData.Points += 500;//포인트 증가(라운드 총합 포인트)
+                    }
+                    IsAward = true; //포인트 증가함
                 }
             }
 
@@ -100,14 +104,12 @@ public class Team_Mgr : MonoBehaviourPunCallbacks
                 Damage a_Damage = user.GetComponent<Damage>();
 
                 if (a_Damage != null)
-                { 
-                    a_Damage.ReadyStateUser(); 
+                {
+                    a_Damage.ReadyStateUser();
                 }
-
             }
         }
         a_ReadyMgr.m_OldState = Ready_Mgr.m_GameState;
-
     }
 
     void CheckAliveTeam(Ready_Mgr a_ReadyMgr)

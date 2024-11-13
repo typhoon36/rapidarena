@@ -36,6 +36,12 @@ public class AsGun_Ctrl : Weapon_Base
     float AimFov = 30;
     #endregion
 
+    //Equip SkinItem
+    Material[] m_Rends;//스킨 변경을 위한 머티리얼 배열
+    //스킨 적용 위치
+    SkinnedMeshRenderer[] m_SkinMesh;
+
+
     Base_Ctrl m_Base;
     int m_AttackerId = -1;
     [HideInInspector] public string AttackerTeam = "blue";
@@ -243,4 +249,13 @@ public class AsGun_Ctrl : Weapon_Base
         IsModeChange = false;
     }
     #endregion
+
+
+    //스킨 변경
+    public void ChangeSkin()
+    {
+
+    }
+
+
 }

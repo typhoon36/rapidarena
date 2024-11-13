@@ -5,40 +5,45 @@ using UnityEngine.UI;
 
 public class Desc_Nd : MonoBehaviour
 {
-    public Text itemNameText;
-    public Text itemDescpText;
-    public Image itemImage;
+    public Text m_NameText;
+    public Text m_DescText;
+    public Image m_ItemImg;
 
     void Start()
     {
         // 초기화
-        itemNameText.text = "";
-        itemDescpText.text = "";
-        itemImage.gameObject.SetActive(false);
+        m_NameText.text = "";
+        m_DescText.text = "";
+        m_ItemImg.gameObject.SetActive(false);
     }
 
-    public void SetItemData(ItemData itemData)
+    //아이템 정보 설정(상품 클릭시 호출)
+    public void SetItem(ItemData a_Data)
     {
-        itemNameText.text = "<" + itemData.ItemName + ">";
-        itemDescpText.text = itemData.ItemDescription;
+        m_NameText.text = "<" + a_Data.ItemName + ">";
+        m_DescText.text = a_Data.ItemDescription;
 
-        if (!string.IsNullOrEmpty(itemData.ImagePath))
+        if (string.IsNullOrEmpty(a_Data.ImagePath) == true)
         {
-            Sprite sprite = Resources.Load<Sprite>(itemData.ImagePath);
-            if (sprite != null)
-            {
-                itemImage.sprite = sprite;
-                itemImage.gameObject.SetActive(true);
-            }
-            else
-            {
-                Debug.LogWarning("이미지를 로드할 수 없습니다: " + itemData.ImagePath);
-                itemImage.gameObject.SetActive(false);
-            }
+            m_ItemImg.gameObject.SetActive(false);
         }
         else
         {
-            itemImage.gameObject.SetActive(false);
+            Sprite a_Sprite = Resources.Load<Sprite>(a_Data.ImagePath);
+            if (a_Sprite != null)
+            {
+                m_ItemImg.sprite = a_Sprite;
+                m_ItemImg.gameObject.SetActive(true);
+            }
+            else
+            {
+                m_ItemImg.gameObject.SetActive(false);
+                Debug.LogError("Image Load Fail : " + a_Data.ImagePath);
+            }
+
         }
+
+
     }
+
 }

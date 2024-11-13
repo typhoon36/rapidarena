@@ -1141,9 +1141,9 @@ MonoBehaviour:
   m_MsgTxt: {fileID: 1042708866}
   ProductObj: {fileID: 542729712687731269, guid: 5b90759d6a0792143a444c055845d02f, type: 3}
   productParent: {fileID: 726203263}
-  m_Inven: {fileID: 0}
-  InvenParent: {fileID: 742802747}
   SlotObj: {fileID: 5932128041330552859, guid: 0140ccf56349ea24baad48db1beef00d, type: 3}
+  InvenParent: {fileID: 742802747}
+  m_SellBtn: {fileID: 749691658}
   m_PointTxt: {fileID: 1539532958}
 --- !u!1 &965391855
 GameObject:
@@ -2761,7 +2761,7 @@ GameObject:
   - component: {fileID: 1841743615}
   - component: {fileID: 1841743614}
   m_Layer: 5
-  m_Name: Msg_Txt (1)
+  m_Name: Shop_Label
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3014,9 +3014,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 73eefd2f9e34fb942a3e0df3e1b2baba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  itemNameText: {fileID: 453035573}
-  itemDescpText: {fileID: 1628079176}
-  itemImage: {fileID: 514596373}
+  m_NameText: {fileID: 453035573}
+  m_DescText: {fileID: 1628079176}
+  m_ItemImg: {fileID: 514596373}
 --- !u!1 &1971009722
 GameObject:
   m_ObjectHideFlags: 0
@@ -3301,8 +3301,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -270, y: 205}
-  m_SizeDelta: {x: 560, y: 60}
+  m_AnchoredPosition: {x: -269.5, y: 205}
+  m_SizeDelta: {x: 561, y: 60}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2088768516
 MonoBehaviour:

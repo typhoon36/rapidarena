@@ -3732,7 +3732,7 @@ CharacterController:
   m_Enabled: 1
   serializedVersion: 3
   m_Height: 3
-  m_Radius: 0.5
+  m_Radius: 0.8
   m_SlopeLimit: 45
   m_StepOffset: 0.3
   m_SkinWidth: 0.08
@@ -4430,6 +4430,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4503540350239890003}
+  - component: {fileID: 549680086799896285}
   m_Layer: 10
   m_Name: Soldier_demo
   m_TagString: Untagged
@@ -4454,6 +4455,27 @@ Transform:
   - {fileID: 4503540350239890001}
   m_Father: {fileID: 7752419502018581838}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!95 &549680086799896285
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4503540350239393331}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 173d5ac6d92c8d64a8190e1ffc368731, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &4503540350239393333
 GameObject:
   m_ObjectHideFlags: 0

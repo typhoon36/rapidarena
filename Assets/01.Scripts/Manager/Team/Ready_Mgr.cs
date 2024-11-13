@@ -95,9 +95,6 @@ public class Ready_Mgr : MonoBehaviourPunCallbacks
         m_Team2Pos[3] = new Vector3(102.3f, 4f, -83.42f);
 
 
-
-
-
         IsEnter = false;
 
         pv = GetComponent<PhotonView>();
@@ -241,10 +238,12 @@ public class Ready_Mgr : MonoBehaviourPunCallbacks
 
         PhotonNetwork.Instantiate("Player", spawnPos, Quaternion.identity, 0);
     }
+
     void OnApplicationFocus(bool a_Focus)
     {
         IsFocus = a_Focus;
     }
+
     void GetConnectPlayerCount()
     {
         Room currRoom = PhotonNetwork.CurrentRoom;
@@ -265,18 +264,24 @@ public class Ready_Mgr : MonoBehaviourPunCallbacks
     public override void OnPlayerLeftRoom(Player otherPlayer)
     {
         GetConnectPlayerCount();
+        Destroy(GameObject.Find("Player_" + otherPlayer.ActorNumber));
     }
 
     //현재 방 나가기 함수(버튼에 연결되어 있음)
     public void OnClickExitRoom()
     {
+        // Cam_Ctrl 스크립트 비활성화
+        Cam_Ctrl camCtrl = FindObjectOfType<Cam_Ctrl>();
+        if (camCtrl != null)
+            camCtrl.enabled = false;
+        
+
         string msg = "\n<color=#ff0000>["
                       + PhotonNetwork.LocalPlayer.NickName
                       + "] Disconnected</color>";
 
         //RPC 함수 호출
         pv.RPC("LogMsg", RpcTarget.AllBuffered, msg, false);
-
 
         if (PhotonNetwork.PlayerList != null && PhotonNetwork.PlayerList.Length <= 1)
         {
@@ -645,6 +650,9 @@ public class Ready_Mgr : MonoBehaviourPunCallbacks
                             StartCoroutine(Typing("대테러부대 저지"));
                         }
                     }
+
+
+
                 }
             }
         }

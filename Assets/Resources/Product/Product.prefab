@@ -156,7 +156,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -330,11 +330,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b3eb0a6b0df03ec4db3be40b45d1b63e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_ItemNameTxt: {fileID: 3603192818399252021}
-  m_AmountTxt: {fileID: 6583902423210312928}
-  m_ItemPriceTxt: {fileID: 4513715062622013216}
-  buyBtn: {fileID: 1992801951228068847}
+  m_ItemData:
+    ItemID: 0
+    ItemName: 
+    ItemType: 
+    AmmoType: 
+    Amount: 0
+    ItemPrice: 0
+    ItemDescription: 
+    ImagePath: 
   m_ItemImg: {fileID: 8332813152396993015}
+  m_ItemNameTxt: {fileID: 3603192818399252021}
+  m_CountTxt: {fileID: 6583902423210312928}
+  m_PriceTxt: {fileID: 4513715062622013216}
+  m_Buy_Btn: {fileID: 1992801951228068847}
 --- !u!114 &4182223222987609721
 MonoBehaviour:
   m_ObjectHideFlags: 0

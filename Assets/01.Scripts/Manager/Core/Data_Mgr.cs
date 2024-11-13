@@ -2,96 +2,15 @@ using UnityEngine;
 using System.IO;
 using System.Collections.Generic;
 
-// 게임 내 데이터 관리
-public class Data_Mgr
-{
-    #region Singleton
-    private static Data_Mgr _Inst;
-    public static Data_Mgr Inst
-    {
-        get
-        {
-            if (_Inst == null)
-            {
-                _Inst = new Data_Mgr();
-            }
-            return _Inst;
-        }
-    }
-    #endregion
-
-    public TextAsset m_ItemData;
-    AllItemData Itemdata;
-    public UserData userData = new UserData();
-    public List<ItemData> m_Items = new List<ItemData>();
-
-
-    Data_Mgr()
-    {
-        LoadItemData();
-        LoadUserDataFromJson();
-    }
-
-    public void LoadItemData()
-    {
-        if (m_ItemData == null)
-            m_ItemData = Resources.Load<TextAsset>("ItemData");
-
-        Itemdata = JsonUtility.FromJson<AllItemData>(m_ItemData.text);
-    }
-
-    public AllItemData GetItemData()
-    {
-        return Itemdata;
-    }
-
-    public bool CanAfford(int price)
-    {
-        return userData.Points >= price;
-    }
-
-    public void DeductPoints(int price)
-    {
-        if (CanAfford(price))
-        {
-            userData.Points -= price;
-            SaveUserDataToJson();
-        }
-    }
-
-    #region User Data to Json
-    void SaveUserDataToJson()
-    {
-        string json = JsonUtility.ToJson(userData);
-        File.WriteAllText(Application.persistentDataPath + "/UserData.json", json);
-    }
-
-    void LoadUserDataFromJson()
-    {
-        string path = Application.persistentDataPath + "/UserData.json";
-        if (File.Exists(path))
-        {
-            string json = File.ReadAllText(path);
-            userData = JsonUtility.FromJson<UserData>(json);
-        }
-        userData.Points = 99999;
-    }
-    #endregion
-
-    public void SortItems()
-    {
-        m_Items.Sort((x, y) => x.ItemID.CompareTo(y.ItemID));
-    }
-}
-
 
 //Jsons Data
 #region Data Structure
 [System.Serializable]
-public class AllItemData
+public class AllData
 {
     public ItemData[] Sheet1;
     public UserData[] User;
+    public InvenSlot[] InvenSlots;
 }
 
 [System.Serializable]
@@ -112,29 +31,68 @@ public class UserData
 {
     public string UserName;
     public string UserID;
-    public int Points;
+    public int Points = 99999;
 }
 
 [System.Serializable]
-public class Serialization<T>
+public class InvenSlot //인벤토리 슬롯을 저장하기위한 클래스
 {
-    public List<T> target;
-    public Serialization(List<T> target)
-    {
-        this.target = target;
-    }
-
-    public List<T> ToList()
-    {
-        return target;
-    }
-}
-
-[System.Serializable]
-public class SlotState
-{
-    public int SlotIndex;
-    public ItemData ItemData;
+    public int SlotID;
+    public int ItemID;
+    public int ItemCount;
+    public string ImagePath;
 }
 #endregion
+
+// 게임 내 데이터 관리
+public class Data_Mgr
+{
+    public TextAsset m_ItemData; //Json 파일 변수
+    public static UserData m_UserData = new UserData(); //유저 데이터
+    public static List<ItemData> ItemOrder = new List<ItemData>(); //아이템 리스트
+    public static List<InvenSlot> InvenSlots = new List<InvenSlot>(); // 인벤토리 슬롯 리스트
+
+    public static void LoadData()
+    {
+        //데이터 로드
+        string filePath = Application.dataPath + "/Resources/ItemData.json";
+        if (File.Exists(filePath))
+        {
+            string FromJsonData = File.ReadAllText(filePath);//Json 파일 읽기
+            AllData allData = JsonUtility.FromJson<AllData>(FromJsonData);//Json 파일을 배열인 AllData로 변환
+            ItemOrder = new List<ItemData>(allData.Sheet1); // 아이템 데이터 로드{Sheet1은 Json파일과 맞춘 이름}
+            // 인벤토리 슬롯 데이터 로드
+            InvenSlots = allData.InvenSlots != null ? new List<InvenSlot>(allData.InvenSlots) : new List<InvenSlot>();
+            //삼항 연산자로 null 체크후 로드하는 방식
+        }
+
+        UserData a_UserData = new UserData();
+        a_UserData.UserName = PlayerPrefs.GetString("UserName");
+        a_UserData.UserID = PlayerPrefs.GetString("UserID");
+        a_UserData.Points = PlayerPrefs.GetInt("Points");
+    }
+
+    public static void SaveData()
+    {
+        // 아이템 데이터 저장
+        string filePath = Application.dataPath + "/Resources/ItemData.json";
+        //모든 데이터 초기화 
+        AllData allData = new AllData();
+        //유저 데이터 골라 저장
+        allData.User = new UserData[] { m_UserData };
+        //아이템 데이터 저장
+        allData.Sheet1 = ItemOrder.ToArray();
+        // 인벤토리 슬롯 데이터 저장
+        allData.InvenSlots = InvenSlots.ToArray();
+
+        string ToJsonData = JsonUtility.ToJson(allData, true);
+        File.WriteAllText(filePath, ToJsonData);
+        Debug.Log("Data Save Success");
+    }
+
+    public static List<ItemData> GetItemData()
+    {
+        return ItemOrder;
+    }
+}
 

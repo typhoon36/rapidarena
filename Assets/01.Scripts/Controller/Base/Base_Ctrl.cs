@@ -49,7 +49,7 @@ public class Base_Ctrl : MonoBehaviourPunCallbacks
         m_Anim = GetComponentInChildren<Animator>();
     }
 
-    #region 플레이어 상태에 따른 애니메이션
+    #region 플레이어 상태에 따른 애니메이션 -- 1인칭
     public virtual DefState PlayerState
     {
         get { return m_PlayerState; }
@@ -172,7 +172,9 @@ public class Base_Ctrl : MonoBehaviourPunCallbacks
     #endregion
 
 
-   
+    #region TPS Animation -- 남들이 보는 애니메이션
+
+    #endregion
 
 
 

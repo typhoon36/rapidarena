@@ -26,7 +26,7 @@ public class Sound_Mgr : G_Singleton<Sound_Mgr>
         LoadChildGameObj();
     }
 
-    // Start is called before the first frame update
+  
     void Start()
     {
       

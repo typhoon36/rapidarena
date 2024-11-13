@@ -126,8 +126,6 @@ public class Damage : MonoBehaviourPunCallbacks, IPunObservable
 
             m_CurHP = InitHp;
 
-            Debug.Log("HP" + InitHp + m_CurHP);
-
             m_Canvas.enabled = true;
             Game_Mgr.Inst.m_GameObj.SetActive(true);
 
