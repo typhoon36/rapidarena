@@ -315,7 +315,7 @@ GameObject:
   m_Component:
   - component: {fileID: 162995626}
   m_Layer: 0
-  m_Name: --->Invne
+  m_Name: --->Inven
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1371,7 +1371,7 @@ MonoBehaviour:
   AllDel_Btn: {fileID: 1714246170}
   AddSlot_Btn: {fileID: 215799734}
   m_SortDropdown: {fileID: 616328268}
-  EquipSlotObj: {fileID: 5294452920795098520, guid: 4ecd235d72f50ef43bdc54b317364e58, type: 3}
+  EquipSlotObj: {fileID: 8084829932720817879, guid: b208232265c5f734db07e1479cab470a, type: 3}
   EquipParent: {fileID: 1746354488}
 --- !u!4 &834566593
 Transform:
@@ -1689,7 +1689,7 @@ Canvas:
   m_AdditionalShaderChannelsFlag: 0
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
-  m_SortingOrder: -1
+  m_SortingOrder: 0
   m_TargetDisplay: 0
 --- !u!224 &978413633
 RectTransform:
@@ -3253,15 +3253,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Padding:
-    m_Left: 20
-    m_Right: 20
-    m_Top: 20
-    m_Bottom: 20
+    m_Left: 50
+    m_Right: 50
+    m_Top: 50
+    m_Bottom: 50
   m_ChildAlignment: 0
   m_StartCorner: 0
   m_StartAxis: 0
   m_CellSize: {x: 120, y: 120}
-  m_Spacing: {x: 10, y: 10}
+  m_Spacing: {x: 50, y: 50}
   m_Constraint: 2
   m_ConstraintCount: 3
 --- !u!1 &1793765767
@@ -3650,8 +3650,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -190, y: -30}
-  m_SizeDelta: {x: 250, y: 450}
+  m_AnchoredPosition: {x: -190, y: 2.0009}
+  m_SizeDelta: {x: 250, y: 571.77}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1966547570
 MonoBehaviour:
@@ -3942,8 +3942,8 @@ SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
   - {fileID: 687317565}
-  - {fileID: 626297485}
   - {fileID: 1657393372}
+  - {fileID: 626297485}
   - {fileID: 162995626}
   - {fileID: 978413633}
   - {fileID: 834566593}

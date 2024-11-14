@@ -148,7 +148,7 @@ public class Damage : MonoBehaviourPunCallbacks, IPunObservable
 
     void OnTriggerEnter(Collider coll)
     {
-        if (coll.tag == "Bullet" && m_CurHP > 0 && coll.tag == "Explosive")
+        if (coll.tag == "Bullet" && m_CurHP > 0)
         {
             int a_Att_Id = -1;//공격자 아이디
             string a_Att_Team = "blue";//공격자 팀
@@ -190,8 +190,6 @@ public class Damage : MonoBehaviourPunCallbacks, IPunObservable
 
         m_CurHP -= a_Dmg;
 
-        Game_Mgr.Inst.ShowDamagePanel();
-
         if (m_CurHP < 0)
             m_CurHP = 0;
 
@@ -211,6 +209,7 @@ public class Damage : MonoBehaviourPunCallbacks, IPunObservable
     {
         m_CurHP = newHp;
         UpdateHPBar();
+
 
         if (m_CurHP <= 0)
         {

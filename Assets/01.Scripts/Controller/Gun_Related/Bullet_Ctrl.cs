@@ -65,11 +65,6 @@ public class Bullet_Ctrl : MonoBehaviour
 
         Destroy(obj, 1.0f);
 
-        //Trail Renderer가 소멸되기까지 잠시 대기 후 삭제 처리
-        Destroy(this.gameObject, 1.0f);
-
-
-
     }
 
 

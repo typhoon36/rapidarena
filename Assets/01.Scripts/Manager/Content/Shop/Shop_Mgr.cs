@@ -33,7 +33,7 @@ public class Shop_Mgr : MonoBehaviour
     public GameObject SlotObj;
     public Transform InvenParent;
     public Button m_SellBtn;
-    public Text m_PointTxt;//info
+    public Text m_PointTxt;
 
     #region Ref
     Product_Nd m_Products;
@@ -41,66 +41,78 @@ public class Shop_Mgr : MonoBehaviour
     Slot m_Slot;
     #endregion
 
-    //포인트
-    int m_SvPoint;
+    [HideInInspector] public int m_SvPoint;
 
     #region Singleton
     public static Shop_Mgr Inst;
     void Awake()
     {
+
         Inst = this;
+        DontDestroyOnLoad(gameObject);
     }
     #endregion
+
 
     void Start()
     {
         Data_Mgr.LoadData();
 
         #region Top_Panel
-        // 상점 버튼 text 색상 변경
         m_ShopBtn.GetComponentInChildren<Text>().color = Color.gray;
-
-        // 상점 버튼 비활성화 
         m_ShopBtn.interactable = false;
 
         if (m_PlayBtn != null)
+        {
+            m_PlayBtn.onClick.RemoveAllListeners();
             m_PlayBtn.onClick.AddListener(() =>
             {
                 SceneManager.LoadScene("Pt_LobbyScene");
             });
+        }
 
         if (m_LoadOutBtn != null)
+        {
+            m_LoadOutBtn.onClick.RemoveAllListeners();
             m_LoadOutBtn.onClick.AddListener(() =>
             {
                 SceneManager.LoadScene("Inven_Scene");
             });
+        }
 
         if (m_SettingBtn != null)
+        {
+            m_SettingBtn.onClick.RemoveAllListeners();
             m_SettingBtn.onClick.AddListener(() =>
             {
                 Instantiate(m_ConfigObj, Canvas_Parent);
             });
+        }
 
         if (m_ExitBtn != null)
+        {
+            m_ExitBtn.onClick.RemoveAllListeners();
             m_ExitBtn.onClick.AddListener(() =>
             {
                 Application.Quit();
             });
+        }
 
         if (m_HomeBtn != null)
+        {
+            m_HomeBtn.onClick.RemoveAllListeners();
             m_HomeBtn.onClick.AddListener(() =>
             {
                 SceneManager.LoadScene("Pt_LobbyScene");
             });
+        }
         #endregion
 
         if (m_PointTxt != null)
             m_PointTxt.text = "보유 포인트 :" + Data_Mgr.m_UserData.Points.ToString();
 
-        //아이템 데이터 가져오기
         List<ItemData> a_Data = Data_Mgr.GetItemData();
 
-        //아이템 데이터를 이용하여 상품 생성
         foreach (var Data in a_Data)
         {
             GameObject a_Products = Instantiate(ProductObj, productParent);
@@ -113,129 +125,99 @@ public class Shop_Mgr : MonoBehaviour
             GameObject a_Slot = Instantiate(SlotObj, InvenParent);
             a_Slot.name = "Slot_" + i;
             Slot slotComponent = a_Slot.GetComponent<Slot>();
-            slotComponent.m_SlotID = i; // 슬롯 ID 설정
+            slotComponent.m_SlotID = i;
 
-            // 슬롯 클릭 이벤트 추가
-            Button slotButton = a_Slot.GetComponent<Button>();
-            if (slotButton != null)
-            {
-                slotButton.onClick.AddListener(() => OnSlotClick(slotComponent));
-            }
-
-            // 인벤토리 슬롯에 구매했던 아이템 추가
             if (Data_Mgr.InvenSlots.Count > i)
             {
                 ItemData a_ItemData = Data_Mgr.ItemOrder.Find(x => x.ItemID == Data_Mgr.InvenSlots[i].ItemID);
                 if (a_ItemData != null)
-                {
                     slotComponent.AddItem(a_ItemData);
-                }
             }
         }
 
-        //동기화
         RefreshItemList();
-        RefreshInvenSlots(); // 슬롯 동기화
+        RefreshInvenSlots();
 
-        //판매 버튼
+        m_SellBtn.onClick.RemoveAllListeners();
         m_SellBtn.onClick.AddListener(() =>
         {
-            if (m_Slot != null)
-            {
-                // 선택된 슬롯만 판매
-                SellSlot(m_Slot);
-                m_Slot = null; // 선택 초기화
-            }
-            else
-            {
-                // 전체 슬롯 판매
-                Slot[] a_Slots = InvenParent.GetComponentsInChildren<Slot>();
-                foreach (var slot in a_Slots)
-                {
-                    SellSlot(slot);
-                }
-                ShowMsg("전체 판매 완료.");
-            }
-
-            // 로컬에 저장
-            Data_Mgr.SaveData();
-
-            RefreshInvenSlots();
+            AllSellItem();
         });
     }
 
     void Update()
     {
-        //메시지 표시 타이머
         if (ShowMsgTime > 0)
         {
             ShowMsgTime -= Time.deltaTime;
-            if (ShowMsgTime <= 0)
+            if (ShowMsgTime <= 0 && m_MsgTxt != null)
                 m_MsgTxt.text = "";
         }
 
-        Refresh_Slot(Slot.Inst);
+        if (Slot.Inst != null)
+        {
+            Refresh_Slot(Slot.Inst);
+        }
     }
 
-
     #region Item Buy / Sell
-    public void BuyItem(ItemData a_ItemData)
+    public void BuyItem(ItemData a_Data)
     {
-        if (Data_Mgr.m_UserData.Points < a_ItemData.ItemPrice)
+        if (Data_Mgr.m_UserData.Points < a_Data.ItemPrice)
         {
             ShowMsg("포인트가 부족합니다.");
         }
         else
         {
-            Data_Mgr.m_UserData.Points -= a_ItemData.ItemPrice;
+            Data_Mgr.m_UserData.Points -= a_Data.ItemPrice;
             m_SvPoint = Data_Mgr.m_UserData.Points;
             ShowMsg("구매 완료.");
 
-            // 인벤토리 슬롯에 아이템 추가
             InvenSlot newSlot = new InvenSlot
             {
                 SlotID = Data_Mgr.InvenSlots.Count,
-                ItemID = a_ItemData.ItemID,
+                ItemID = a_Data.ItemID,
                 ItemCount = 1,
-                ImagePath = a_ItemData.ImagePath
+                ImagePath = a_Data.ImagePath
             };
             Data_Mgr.InvenSlots.Add(newSlot);
 
             RefreshItemList();
-            RefreshInvenSlots(); // 슬롯 동기화
+            RefreshInvenSlots();
 
-            m_PointTxt.text = "보유 포인트 :" + Data_Mgr.m_UserData.Points.ToString();
+            if (m_PointTxt != null)
+                m_PointTxt.text = "보유 포인트 :" + Data_Mgr.m_UserData.Points.ToString();
 
-            // 로컬에 저장
             Data_Mgr.SaveData();
         }
     }
 
-
-    void SellSlot(Slot a_Slot)
+    public void AllSellItem()
     {
-        if (a_Slot.HasItem())
+        Slot[] slots = InvenParent.GetComponentsInChildren<Slot>();
+        foreach (var slot in slots)
         {
-            UserData userData = Data_Mgr.m_UserData;
-            userData.Points += a_Slot.GetItem().ItemPrice;
-            a_Slot.ClearSlot();
-            Data_Mgr.InvenSlots.RemoveAll(x => x.SlotID == a_Slot.m_SlotID);
-
-            m_PointTxt.text = "보유 포인트 :" + Data_Mgr.m_UserData.Points.ToString();
-
-            // 로컬에 저장
-            Data_Mgr.SaveData();
-
-            // 슬롯 선택 해제
-            a_Slot.DeselectSlot();
+            if (slot.HasItem())
+            {
+                ItemData itemData = slot.m_ItemData;
+                Data_Mgr.m_UserData.Points += itemData.ItemPrice;
+                slot.ClearSlot();
+            }
         }
+
+        Data_Mgr.InvenSlots.Clear();
+
+        m_SvPoint = Data_Mgr.m_UserData.Points;
+        if (m_PointTxt != null)
+            m_PointTxt.text = "보유 포인트 :" + Data_Mgr.m_UserData.Points.ToString();
+        ShowMsg("모든 아이템 판매 완료.");
+        Data_Mgr.SaveData();
     }
     #endregion
 
     #region Refresh
     public void Refresh_Slot(Slot a_Slot)
     {
-        // 인벤토리 슬롯에 구매했던 아이템 추가
         if (Data_Mgr.InvenSlots.Count > a_Slot.m_SlotID)
         {
             ItemData a_ItemData = Data_Mgr.ItemOrder.Find(x => x.ItemID == Data_Mgr.InvenSlots[a_Slot.m_SlotID].ItemID);
@@ -263,41 +245,24 @@ public class Shop_Mgr : MonoBehaviour
 
             foreach (var Proudct in a_Products)
                 Proudct.RefreshState();
-
         }
     }
     #endregion
 
-
-    #region 메시지 표시 -- 구매했을때 호출
+    #region 메시지 표시
     public void ShowMsg(string msg = "", bool IsShow = true)
     {
-        if (IsShow == true)
+        if (IsShow == true && m_MsgTxt != null)
         {
             m_MsgTxt.text = msg;
             m_MsgTxt.gameObject.SetActive(true);
             ShowMsgTime = 2.0f;
         }
-        else
+        else if (m_MsgTxt != null)
         {
             m_MsgTxt.text = "";
             m_MsgTxt.gameObject.SetActive(false);
         }
     }
     #endregion
-
-    // 슬롯 클릭 이벤트
-    void OnSlotClick(Slot slot)
-    {
-        if (m_Slot != null)
-        {
-            m_Slot.DeselectSlot();
-        }
-
-        m_Slot = slot;
-        m_Slot.SelectSlot();
-    }
-
-
-
 }

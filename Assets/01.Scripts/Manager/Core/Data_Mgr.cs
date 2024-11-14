@@ -31,11 +31,11 @@ public class UserData
 {
     public string UserName;
     public string UserID;
-    public int Points = 99999;
+    public int Points = 999;
 }
 
 [System.Serializable]
-public class InvenSlot //인벤토리 슬롯을 저장하기위한 클래스
+public class InvenSlot
 {
     public int SlotID;
     public int ItemID;
@@ -44,50 +44,44 @@ public class InvenSlot //인벤토리 슬롯을 저장하기위한 클래스
 }
 #endregion
 
-// 게임 내 데이터 관리
 public class Data_Mgr
 {
-    public TextAsset m_ItemData; //Json 파일 변수
-    public static UserData m_UserData = new UserData(); //유저 데이터
-    public static List<ItemData> ItemOrder = new List<ItemData>(); //아이템 리스트
-    public static List<InvenSlot> InvenSlots = new List<InvenSlot>(); // 인벤토리 슬롯 리스트
+    public TextAsset m_ItemData;
+    public static UserData m_UserData = new UserData();
+    public static List<ItemData> ItemOrder = new List<ItemData>();
+    public static List<InvenSlot> InvenSlots = new List<InvenSlot>();
 
     public static void LoadData()
     {
-        //데이터 로드
-        string filePath = Application.dataPath + "/Resources/ItemData.json";
-        if (File.Exists(filePath))
+        TextAsset jsonData = Resources.Load<TextAsset>("ItemData");
+        if (jsonData != null)
         {
-            string FromJsonData = File.ReadAllText(filePath);//Json 파일 읽기
-            AllData allData = JsonUtility.FromJson<AllData>(FromJsonData);//Json 파일을 배열인 AllData로 변환
-            ItemOrder = new List<ItemData>(allData.Sheet1); // 아이템 데이터 로드{Sheet1은 Json파일과 맞춘 이름}
-            // 인벤토리 슬롯 데이터 로드
+            string FromJsonData = jsonData.text;
+            AllData allData = JsonUtility.FromJson<AllData>(FromJsonData);
+            ItemOrder = new List<ItemData>(allData.Sheet1);
             InvenSlots = allData.InvenSlots != null ? new List<InvenSlot>(allData.InvenSlots) : new List<InvenSlot>();
-            //삼항 연산자로 null 체크후 로드하는 방식
         }
 
-        UserData a_UserData = new UserData();
-        a_UserData.UserName = PlayerPrefs.GetString("UserName");
-        a_UserData.UserID = PlayerPrefs.GetString("UserID");
-        a_UserData.Points = PlayerPrefs.GetInt("Points");
+        m_UserData.UserName = PlayerPrefs.GetString("UserName", "DefaultUserName");
+        m_UserData.UserID = PlayerPrefs.GetString("UserID", "DefaultUserID");
+        m_UserData.Points = PlayerPrefs.GetInt("Points", 999);
     }
 
     public static void SaveData()
     {
-        // 아이템 데이터 저장
-        string filePath = Application.dataPath + "/Resources/ItemData.json";
-        //모든 데이터 초기화 
         AllData allData = new AllData();
-        //유저 데이터 골라 저장
         allData.User = new UserData[] { m_UserData };
-        //아이템 데이터 저장
         allData.Sheet1 = ItemOrder.ToArray();
-        // 인벤토리 슬롯 데이터 저장
         allData.InvenSlots = InvenSlots.ToArray();
 
         string ToJsonData = JsonUtility.ToJson(allData, true);
+        string filePath = Application.dataPath + "/Resources/ItemData.json";
         File.WriteAllText(filePath, ToJsonData);
-        Debug.Log("Data Save Success");
+
+        PlayerPrefs.SetString("UserName", m_UserData.UserName);
+        PlayerPrefs.SetString("UserID", m_UserData.UserID);
+        PlayerPrefs.SetInt("Points", m_UserData.Points);
+        PlayerPrefs.Save();
     }
 
     public static List<ItemData> GetItemData()

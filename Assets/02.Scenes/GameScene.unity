@@ -13872,7 +13872,7 @@ Camera:
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 1015
+    m_Bits: 2039
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
@@ -17932,7 +17932,7 @@ GameObject:
   - component: {fileID: 677088658}
   m_Layer: 0
   m_Name: ItemPoint (6)
-  m_TagString: Untagged
+  m_TagString: Item
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -30495,7 +30495,7 @@ GameObject:
   - component: {fileID: 1183716381}
   m_Layer: 0
   m_Name: ItemPoint
-  m_TagString: Untagged
+  m_TagString: Item
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -33695,7 +33695,7 @@ GameObject:
   - component: {fileID: 1292639345}
   m_Layer: 0
   m_Name: ItemPoint (7)
-  m_TagString: Untagged
+  m_TagString: Item
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -35389,7 +35389,7 @@ GameObject:
   - component: {fileID: 1353659227}
   m_Layer: 0
   m_Name: ItemPoint (2)
-  m_TagString: Untagged
+  m_TagString: Item
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -45736,7 +45736,7 @@ GameObject:
   - component: {fileID: 1715727792}
   m_Layer: 0
   m_Name: ItemPoint (4)
-  m_TagString: Untagged
+  m_TagString: Item
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -51331,7 +51331,7 @@ GameObject:
   - component: {fileID: 1917727184}
   m_Layer: 0
   m_Name: ItemPoint (3)
-  m_TagString: Untagged
+  m_TagString: Item
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -52008,7 +52008,7 @@ GameObject:
   - component: {fileID: 1930579063}
   m_Layer: 0
   m_Name: ItemPoint (1)
-  m_TagString: Untagged
+  m_TagString: Item
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -55072,7 +55072,7 @@ GameObject:
   - component: {fileID: 2026540205}
   m_Layer: 0
   m_Name: ItemPoint (5)
-  m_TagString: Untagged
+  m_TagString: Item
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

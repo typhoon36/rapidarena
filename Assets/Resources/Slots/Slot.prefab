@@ -289,6 +289,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d04bcc3396dad324e88092c19bcf2ecc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_SlotID: 0
   m_ItemImg: {fileID: 2838573544501241311}
   m_ItemCount: {fileID: 8515764970813467744}
-  m_SlotBtn: {fileID: 7003946186220539579}
+  IsSelected: 0
+  IsEquipSlot: 0

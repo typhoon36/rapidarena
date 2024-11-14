@@ -122,6 +122,7 @@ public class Ready_Mgr : MonoBehaviourPunCallbacks
             m_Team1ToTeam2.onClick.AddListener(() =>
             {
                 SendSelTeam("red");
+
             });
 
         if (m_Team1Ready != null)
@@ -134,6 +135,7 @@ public class Ready_Mgr : MonoBehaviourPunCallbacks
             m_Team2ToTeam1.onClick.AddListener(() =>
             {
                 SendSelTeam("blue");
+
             });
 
         if (m_Team2Ready != null)
@@ -264,7 +266,7 @@ public class Ready_Mgr : MonoBehaviourPunCallbacks
     public override void OnPlayerLeftRoom(Player otherPlayer)
     {
         GetConnectPlayerCount();
-        Destroy(GameObject.Find("Player_" + otherPlayer.ActorNumber));
+
     }
 
     //현재 방 나가기 함수(버튼에 연결되어 있음)
@@ -274,7 +276,7 @@ public class Ready_Mgr : MonoBehaviourPunCallbacks
         Cam_Ctrl camCtrl = FindObjectOfType<Cam_Ctrl>();
         if (camCtrl != null)
             camCtrl.enabled = false;
-        
+
 
         string msg = "\n<color=#ff0000>["
                       + PhotonNetwork.LocalPlayer.NickName
@@ -635,6 +637,8 @@ public class Ready_Mgr : MonoBehaviourPunCallbacks
                     Cursor.lockState = CursorLockMode.Locked;
                     m_ChatPanel.SetActive(false);//채팅창 비활성화 -- 게임중에는 채팅을 못하게
 
+                    Game_Mgr.Inst.m_LimitTime = 240f;
+
                     //팀별 목표텍스트 출력
                     string a_TeamKind = "blue";
 
@@ -651,6 +655,8 @@ public class Ready_Mgr : MonoBehaviourPunCallbacks
                         }
                     }
 
+                    // 게임 시작 시 타이머 시작
+                    Game_Mgr.Inst.pv.RPC("UpdateGameState", RpcTarget.All, GameState.Play);
 
 
                 }
@@ -690,7 +696,7 @@ public class Ready_Mgr : MonoBehaviourPunCallbacks
     #endregion
 
     #region 연출
-   
+
     IEnumerator WaitText(float delay = 10)
     {
         string currentText = Game_Mgr.Inst.Object_Txt.text;

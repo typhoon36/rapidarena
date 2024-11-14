@@ -23,7 +23,7 @@ public class Game_Mgr : MonoBehaviour
     public GameObject m_GameObj;
     public GameState m_GameState = GameState.Ready;
 
-    PhotonView pv;
+    [HideInInspector]public PhotonView pv;
 
     Player_Ctrl m_RefPlayer;
 
@@ -110,27 +110,19 @@ public class Game_Mgr : MonoBehaviour
         #endregion
 
 
+        if (PhotonNetwork.IsMasterClient)
+        {
+            StartCoroutine(StartGameTimer());
+        }
+
     }
 
     void Update()
     {
 
 
-        //타이머
-        if (m_GameState == GameState.Play)
-        {
-            m_LimitTime -= Time.deltaTime;
-            System.TimeSpan time = System.TimeSpan.FromSeconds(m_LimitTime);
-            m_Timer.text = time.ToString(@"mm\:ss");
-
-            if (m_LimitTime <= 0)
-            {
-                m_LimitTime = 0;
-                m_GameState = GameState.End;
-            }
-        }
-
-        if (m_GameState == GameState.Play)
+        //타이머 && 킬로그
+        if (m_GameState == GameState.Play && pv.IsMine)
         {
             if (Input.GetKeyDown(KeyCode.Tab))
             {
@@ -142,7 +134,6 @@ public class Game_Mgr : MonoBehaviour
             }
         }
 
-
         if (m_GameState == GameState.End)
         {
             KillRank();
@@ -150,6 +141,32 @@ public class Game_Mgr : MonoBehaviour
 
     }
 
+    [PunRPC]
+    void UpdateTimer(float time)
+    {
+        m_LimitTime = time;
+        System.TimeSpan timeSpan = System.TimeSpan.FromSeconds(m_LimitTime);
+        m_Timer.text = timeSpan.ToString(@"mm\:ss");
+    }
+
+    IEnumerator StartGameTimer()
+    {
+        while (m_LimitTime > 0)
+        {
+            yield return new WaitForSeconds(1f);
+            m_LimitTime -= 1f;
+            pv.RPC("UpdateTimer", RpcTarget.All, m_LimitTime);
+        }
+
+        m_GameState = GameState.End;
+        pv.RPC("UpdateGameState", RpcTarget.All, GameState.End);
+    }
+
+    [PunRPC]
+    void UpdateGameState(GameState state)
+    {
+        m_GameState = state;
+    }
 
     #region Weapon
     public void SetWeapon(Weapon_Base weapon)

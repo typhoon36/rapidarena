@@ -1,19 +1,18 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
+using System;
 
-//인벤토리 슬롯
-public class Slot : MonoBehaviour
+// 인벤토리 슬롯
+public class Slot : MonoBehaviour, IPointerClickHandler
 {
     [HideInInspector] public int m_SlotID; // 슬롯 ID 추가
     public Image m_ItemImg; // 아이템 이미지
     public Text m_ItemCount; // 아이템 갯수
-    ItemData m_ItemData;
+    [HideInInspector]public ItemData m_ItemData;
 
-    public bool IsSelected { get; set; } // 슬롯 선택 여부
-
-    public bool IsEquipSlot { get; set; } //마우스 우측클릭으로 장착했는지 여부
+    public bool IsEquipSlot = false; // 마우스 우측클릭으로 장착했는지 여부
 
     #region Singleton
     public static Slot Inst;
@@ -22,14 +21,6 @@ public class Slot : MonoBehaviour
         Inst = this;
     }
     #endregion
-
-    void Update()
-    {
-        if (Input.GetMouseButtonDown(1))
-        {
-            EquipSlot();
-        }
-    }
 
     public void AddItem(ItemData a_Data)
     {
@@ -48,30 +39,15 @@ public class Slot : MonoBehaviour
         }
     }
 
+    //슬롯 초기화
     public void ClearSlot()
     {
-        m_ItemData = null;
         m_ItemImg.sprite = null;
         m_ItemImg.gameObject.SetActive(false);
         m_ItemCount.text = "";
         m_ItemCount.gameObject.SetActive(false);
-        IsSelected = false; // 슬롯 선택 해제
+        m_ItemData = null; // 아이템 데이터 초기화
     }
-
-    #region 슬롯 선택/해제
-    public void SelectSlot()
-    {
-        IsSelected = true;
-        //선택되었는지를 위한 색상 변경
-        m_ItemImg.color = Color.green;
-    }
-
-    public void DeselectSlot()
-    {
-        IsSelected = false;
-        m_ItemImg.color = Color.white;
-    }
-    #endregion
 
     // 아이템이 있는지 확인
     public bool HasItem()
@@ -79,27 +55,45 @@ public class Slot : MonoBehaviour
         return m_ItemData != null;
     }
 
-    // 아이템 데이터 가져오기
-    public ItemData GetItem()
+    // 마우스 클릭 이벤트
+    public void OnPointerClick(PointerEventData eventData)
     {
-        return m_ItemData;
-    }
-
-    #region 슬롯 장착
-    public void EquipSlot()
-    {
-        //우클릭시 아이템을 장착
-        if (IsEquipSlot)
+        // 마우스 왼쪽 클릭
+        if (eventData.button == PointerEventData.InputButton.Left)
         {
-            IsEquipSlot = true;
-
-            //장착된 아이템을 EquipSlot으로 이동
-            Equip_Slot.Inst.AddEItem(m_ItemData);
-            ClearSlot();
+            // 장착 슬롯에 아이템이 있을 경우
+            if (IsEquipSlot)
+            {
+                Equip_Slot.Inst.ClearSlot();
+                if (m_ItemData != null)
+                {
+                    Equip_Slot.Inst.AddItem(m_ItemData, this); // 원래 슬롯을 전달
+                    ClearSlot();
+                }
+                else
+                {
+                    Debug.LogError("아이템 데이터가 null입니다.");
+                }
+            }
         }
-       
+        // 마우스 우측 클릭
+        else if (eventData.button == PointerEventData.InputButton.Right)
+        {
+            if (HasItem())
+            {
+                List<Equip_Slot> equipSlots = new List<Equip_Slot>(FindObjectsOfType<Equip_Slot>());
+                Equip_Slot emptySlot = Equip_Slot.FindEmptySlot(equipSlots);
+                if (emptySlot != null)
+                {
+                    emptySlot.AddItem(m_ItemData, this); // 원래 슬롯을 전달
+                    IsEquipSlot = true;
+                    ClearSlot();
+                }
+                else
+                {
+                    Debug.Log("모든 장착 슬롯이 가득 찼습니다.");
+                }
+            }
+        }
     }
-    #endregion
-
-
 }

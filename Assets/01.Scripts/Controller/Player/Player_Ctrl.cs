@@ -38,7 +38,6 @@ public class Player_Ctrl : Base_Ctrl
     Weapon_Base m_GunBase;
     GameState m_GameState;
     Cam_Ctrl m_CamCtrl;
-    StickyBomb m_Sbomb;
     #endregion
 
     #region ChangeWeapon
@@ -46,7 +45,12 @@ public class Player_Ctrl : Base_Ctrl
     private Weapon_Base currentWeapon;
     #endregion
 
+    #region ChangeTPSColor
+    public Material[] m_TeamMaterial;
+    public MeshRenderer m_DefMesh;
+    #endregion
 
+    public static Player_Ctrl Inst;
 
     void Awake()
     {
@@ -56,7 +60,14 @@ public class Player_Ctrl : Base_Ctrl
         m_ASource = GetComponent<AudioSource>();
         m_GunBase = GetComponentInChildren<Weapon_Base>();
         m_CamCtrl = GetComponent<Cam_Ctrl>();
-        m_Sbomb = GetComponentInChildren<StickyBomb>();
+
+        // 자식 객체 중 이름이 "Capsule"인 객체를 찾아 m_DefMesh를 설정
+        Transform m_Capsule = transform.Find("Capsule");
+        if (m_Capsule != null)
+        {
+            m_DefMesh = m_Capsule.GetComponent<MeshRenderer>();
+        }
+        Inst = this;
     }
 
     void Start()
@@ -78,6 +89,8 @@ public class Player_Ctrl : Base_Ctrl
             Camera.main.GetComponent<Cam_Ctrl>().Init(gameObject);
         }
 
+
+
     }
 
     void Update()
@@ -86,6 +99,7 @@ public class Player_Ctrl : Base_Ctrl
 
         if (PhotonNetwork.CurrentRoom == null || PhotonNetwork.LocalPlayer == null)
             return;
+
 
         if (!pv.IsMine) return;
 
@@ -116,6 +130,9 @@ public class Player_Ctrl : Base_Ctrl
                 PlaySound(null, false);
             }
         }
+
+        ChangeTeamMaterial();
+
     }
 
 
@@ -267,5 +284,22 @@ public class Player_Ctrl : Base_Ctrl
             ToggleIsAttackMode();
         }
     }
+
+    public void ChangeTeamMaterial()
+    {
+        if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue("MyTeam", out object team))
+        {
+            if (team.ToString() == "blue")
+            {
+                m_DefMesh.material = m_TeamMaterial[0];
+            }
+            else if (team.ToString() == "red")
+            {
+                m_DefMesh.material = m_TeamMaterial[1];
+            }
+        }
+    }
+
+
 }
 

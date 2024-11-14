@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -28,12 +27,10 @@ public class Inven_Mgr : MonoBehaviour
     [Header("OtherUIs")]
     public Button AllDel_Btn;
     public Button AddSlot_Btn;
-    public Dropdown m_SortDropdown;
 
     [Header("Equip")]
     public GameObject EquipSlotObj;
     public Transform EquipParent;
-
 
     void Start()
     {
@@ -93,20 +90,15 @@ public class Inven_Mgr : MonoBehaviour
             }
         }
 
-        //장착 슬롯 생성
         for (int i = 0; i < 3; i++)
         {
-            GameObject a_EqSlotObj = Instantiate(EquipSlotObj, EquipParent);
-            a_EqSlotObj.name = "EquipSlot_" + i;
-            Equip_Slot a_EquipSlot = a_EqSlotObj.GetComponent<Equip_Slot>();
-            a_EquipSlot.m_ESlotID = i; // 슬롯 ID 설정
-
+            GameObject a_SlotObj = Instantiate(EquipSlotObj, EquipParent);
+            a_SlotObj.name = "EquipSlot_" + i;
+            Equip_Slot a_Slot = a_SlotObj.GetComponent<Equip_Slot>();
+            a_Slot.m_ESlotID = i; // 슬롯 ID 설정
         }
 
 
-
-
-        #region 버튼 및 드롭다운 이벤트 등록
 
         //1.전체 삭제 버튼
         AllDel_Btn.onClick.AddListener(() =>
@@ -124,30 +116,17 @@ public class Inven_Mgr : MonoBehaviour
             //추가버튼을 누르면 스폰되어있는 슬롯을 확인후 이어 스폰
             AddSlot();
         });
-
-        //3.드롭다운 
-        m_SortDropdown.onValueChanged.AddListener((int Idx) =>
-        {
-            // 최신순이냐 오래된순이냐에 따라 정렬
-            SortSlot(Idx);
-        });
-        #endregion
-
+ 
     }
 
-    public void SortSlot(int sortOrder)
-    {
-
-    }
-
+    // 슬롯 추가
     public void AddSlot()
     {
-        GameObject a_Slot = Instantiate(SlotObj, InvenParent);
-        a_Slot.name = "Slot_" + InvenParent.childCount;
-        Slot slotComponent = a_Slot.GetComponent<Slot>();
-        slotComponent.m_SlotID = InvenParent.childCount - 1; // 슬롯 ID 설정
+        GameObject a_Slot = Instantiate(SlotObj, InvenParent);//슬롯 이어 생성
+        a_Slot.name = "Slot_" + InvenParent.childCount;//슬롯 이름 설정
+        Slot a_Slotsc = a_Slot.GetComponent<Slot>();//슬롯 컴포넌트 가져오기
+        a_Slotsc.m_SlotID = InvenParent.childCount - 1;//슬롯 ID 설정
     }
 
-
-
+    
 }
