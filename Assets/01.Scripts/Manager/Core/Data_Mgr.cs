@@ -64,7 +64,7 @@ public class Data_Mgr
 
         m_UserData.UserName = PlayerPrefs.GetString("UserName", "DefaultUserName");
         m_UserData.UserID = PlayerPrefs.GetString("UserID", "DefaultUserID");
-        m_UserData.Points = PlayerPrefs.GetInt("Points", 999);
+        m_UserData.Points = PlayerPrefs.GetInt("Points", 1000);
     }
 
     public static void SaveData()

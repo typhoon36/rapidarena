@@ -72,8 +72,11 @@ public class Lobby_Mgr : MonoBehaviourPunCallbacks
             {
 #if UNITY_EDITOR
                 UnityEditor.EditorApplication.isPlaying = false;
+                Data_Mgr.SaveData();
 #else
                         Application.Quit();
+                        Data_Mgr.SaveData();
+      
 #endif
             });
 

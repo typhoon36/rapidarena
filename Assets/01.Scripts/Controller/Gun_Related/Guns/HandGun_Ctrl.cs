@@ -57,7 +57,7 @@ public class HandGun_Ctrl : Weapon_Base
     //Init ÇÔ¼ö
     void ResetVar()
     {
-           IsAttack = false;
+        IsAttack = false;
         IsModeChange = false;
         if (m_Base != null)
         {
@@ -65,8 +65,9 @@ public class HandGun_Ctrl : Weapon_Base
         }
     }
 
-    void OnEnable()
+    protected override void OnEnable()
     {
+
         if (m_TakeOutSound != null)
         {
             PlaySound(m_TakeOutSound);
@@ -140,7 +141,8 @@ public class HandGun_Ctrl : Weapon_Base
     {
         if (m_BulletPrefab != null && m_BulletSpawnPoint != null)
         {
-            GameObject bullet = Instantiate(m_BulletPrefab, m_BulletSpawnPoint.transform.position, m_BulletSpawnPoint.transform.rotation);
+            GameObject bullet = Instantiate(m_BulletPrefab, m_BulletSpawnPoint.transform.position, Quaternion.identity);
+            bullet.transform.forward = m_BulletSpawnPoint.transform.forward;
             Bullet_Ctrl bulletCtrl = bullet.GetComponent<Bullet_Ctrl>();
             if (bulletCtrl != null)
             {
@@ -149,7 +151,6 @@ public class HandGun_Ctrl : Weapon_Base
                 {
                     bulletCtrl.AttackerTeam = (string)PhotonNetwork.LocalPlayer.CustomProperties["MyTeam"];
                 }
-
             }
         }
     }

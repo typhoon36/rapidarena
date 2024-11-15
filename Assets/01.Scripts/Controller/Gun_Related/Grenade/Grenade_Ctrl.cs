@@ -1,3 +1,4 @@
+using Photon.Pun;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -14,7 +15,8 @@ public class Grenade_Ctrl : Weapon_Base
 
     Base_Ctrl m_Base;
 
-    private void OnEnable()
+
+    protected override void OnEnable()
     {
         IsAttack = false;
         Game_Mgr.Inst.UpdateAmmoText(m_AmmoInClip, m_CurrentAmmo);
@@ -81,7 +83,7 @@ public class Grenade_Ctrl : Weapon_Base
 
             Game_Mgr.Inst.UpdateAmmoText(m_AmmoInClip, m_CurrentAmmo);
         }
-    }   
+    }
 
     public override void OnAttack() { }
 

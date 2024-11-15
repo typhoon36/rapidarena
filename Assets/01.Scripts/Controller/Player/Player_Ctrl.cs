@@ -221,6 +221,13 @@ public class Player_Ctrl : Base_Ctrl
         Game_Mgr.Inst.SetWeapon(currentWeapon);
 
         UpdateAnimationState();
+
+        if (pv.IsMine)
+        {
+            Game_Mgr.Inst.UpdateGunModeText(currentWeapon.WeaponType, currentWeapon.WeaponSetting.IsAutoAttack);
+            photonView.RPC("RPC_UpdateAnimationState", RpcTarget.All, m_PlayerState);
+        }
+      
     }
 
 

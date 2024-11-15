@@ -22,7 +22,6 @@ public class WeaponSetting
 // 모든 컨트롤러의 부모 클래스
 public class Base_Ctrl : MonoBehaviourPunCallbacks
 {
-
     public WeaponSetting weaponSetting;
     protected int m_CurrentAmmo;
     protected int m_AmmoInClip;
@@ -101,7 +100,7 @@ public class Base_Ctrl : MonoBehaviourPunCallbacks
         }
 
         // 애니메이션 상태를 네트워크에 동기화
-        if (photonView.IsMine)
+        if (photonView.IsMine == true)
         {
             photonView.RPC("RPC_UpdateAnimationState", RpcTarget.Others, m_PlayerState);
         }
@@ -134,7 +133,6 @@ public class Base_Ctrl : MonoBehaviourPunCallbacks
 
         // 리로드 상태로 전환
         PlayerState = DefState.Reload;
-        SetTrigger("Reload"); // 애니메이션 트리거 설정
     }
 
     public virtual void Inspect()
@@ -159,7 +157,6 @@ public class Base_Ctrl : MonoBehaviourPunCallbacks
     }
     #endregion -- 기본 상태처리
 
-
     #region 플레이어의 탄창 회복
     public void IncreaseMag(int mag)
     {
@@ -171,12 +168,9 @@ public class Base_Ctrl : MonoBehaviourPunCallbacks
     }
     #endregion
 
-
-    #region TPS Animation -- 남들이 보는 애니메이션
-
-    #endregion
-
-
-
-
+    [PunRPC]
+    public void RPC_SetTrigger(string paramName)
+    {
+        m_Anim.SetTrigger(paramName);
+    }
 }

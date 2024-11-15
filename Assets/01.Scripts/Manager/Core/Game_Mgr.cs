@@ -23,7 +23,7 @@ public class Game_Mgr : MonoBehaviour
     public GameObject m_GameObj;
     public GameState m_GameState = GameState.Ready;
 
-    [HideInInspector]public PhotonView pv;
+    [HideInInspector] public PhotonView pv;
 
     Player_Ctrl m_RefPlayer;
 
@@ -83,7 +83,7 @@ public class Game_Mgr : MonoBehaviour
     {
         m_GameEndText.gameObject.SetActive(false);
         m_GameObj.SetActive(false);
-   
+
 
         //타이머
         m_LimitTime = 240f;
@@ -132,6 +132,22 @@ public class Game_Mgr : MonoBehaviour
             {
                 m_KillBoard.SetActive(false);
             }
+            //팀별 목표텍스트 출력
+            string a_TeamKind = "blue";
+
+            if (Object_Txt != null && pv.IsMine)
+            {
+                Object_Txt.gameObject.SetActive(true);
+                if (a_TeamKind == "blue")
+                {
+                    StartCoroutine(Typing("테러리스트 저지"));
+                }
+                else if (a_TeamKind == "red")
+                {
+                    StartCoroutine(Typing("대테러부대 저지"));
+                }
+            }
+
         }
 
         if (m_GameState == GameState.End)
@@ -147,6 +163,11 @@ public class Game_Mgr : MonoBehaviour
         m_LimitTime = time;
         System.TimeSpan timeSpan = System.TimeSpan.FromSeconds(m_LimitTime);
         m_Timer.text = timeSpan.ToString(@"mm\:ss");
+    }
+    [PunRPC]
+    void UpdateObjectTxt(string objectTxt)
+    {
+        StartCoroutine(Typing(objectTxt));
     }
 
     IEnumerator StartGameTimer()
@@ -278,5 +299,32 @@ public class Game_Mgr : MonoBehaviour
     }
     #endregion
 
+    #region 연출
 
+    IEnumerator WaitText(float delay = 10)
+    {
+        string currentText = Game_Mgr.Inst.Object_Txt.text;
+        for (int i = currentText.Length; i >= 0; i--)
+        {
+            Game_Mgr.Inst.Object_Txt.text = currentText.Substring(0, i);
+            yield return new WaitForSeconds(0.1f);
+        }
+
+        Game_Mgr.Inst.Object_Txt.gameObject.SetActive(false);
+    }
+
+    IEnumerator Typing(string ObjectTxt)
+    {
+        yield return new WaitForSeconds(1f);
+
+        for (int i = 0; i <= ObjectTxt.Length; i++)
+        {
+            Game_Mgr.Inst.Object_Txt.text = ObjectTxt.Substring(0, i);
+            yield return new WaitForSeconds(0.1f);
+        }
+
+        // Typing 효과 끝나고 3초 후에 텍스트 사라짐
+        StartCoroutine(WaitText(3.0f));
+    }
+    #endregion
 }

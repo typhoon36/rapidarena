@@ -50,6 +50,12 @@ MonoBehaviour:
   - TakeDamage
   - UpdateGameState
   - UpdateTimer
+  - RPC_SyncWeaponChange
+  - RPC_PlaySound
+  - RPC_SetTrigger
+  - RPC_PlayAnimation
+  - RPC_EnableWeapon
+  - UpdateObjectTxt
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

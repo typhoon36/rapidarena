@@ -1,3 +1,4 @@
+using Photon.Pun;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
@@ -12,7 +13,8 @@ public class Knife_Ctrl : Weapon_Base
     [SerializeField] private Transform m_KnifeTr;
 
     private AudioSource m_AudioSource;
-    public new bool IsAttack { get; set; } // new 키워드 추가
+    public new bool IsAttack { get; set; }
+
 
     protected override void Awake() // Init
     {
@@ -23,8 +25,10 @@ public class Knife_Ctrl : Weapon_Base
         knifeCollider.knifeCtrl = this; // KnifeCollider에 참조 설정
     }
 
-    void OnEnable()
+    protected override void OnEnable()
     {
+
+
         IsAttack = false;
         Game_Mgr.Inst.UpdateAmmoText(m_AmmoInClip, m_CurrentAmmo);
 

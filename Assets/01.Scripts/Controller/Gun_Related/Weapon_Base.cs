@@ -9,7 +9,7 @@ public enum WeaponType { Main = 0, Sub, Melee, Throw }
 public enum GrenadeType { Default, Smoke }
 
 
-public abstract class Weapon_Base : MonoBehaviour 
+public abstract class Weapon_Base : MonoBehaviourPun
 {
     [Header("Weapon Base")]
     [SerializeField] protected WeaponType m_WeaponType;
@@ -20,7 +20,7 @@ public abstract class Weapon_Base : MonoBehaviour
     protected bool IsReload = false;
     protected bool IsAttack = false;
     protected AudioSource m_ASource;
-    protected Base_Ctrl m_BAnim; 
+    protected Base_Ctrl m_BAnim;
     protected Base_Ctrl m_Anim => m_BAnim;
 
     [Header("Ammo Settings")]
@@ -48,7 +48,19 @@ public abstract class Weapon_Base : MonoBehaviour
         m_CurrentAmmo = m_MaxAmmo;
         m_AmmoInClip = m_ClipSize;
     }
+    protected virtual void OnEnable()
+    {
+        if (photonView.IsMine)
+        {
+            photonView.RPC("RPC_EnableWeapon", RpcTarget.All);
+        }
+    }
 
+    [PunRPC]
+    private void RPC_EnableWeapon()
+    {
+        gameObject.SetActive(true);
+    }
     protected virtual void LateUpdate()
     {
         // 플레이어의 회전을 따라가도록 무기의 회전 설정
@@ -64,7 +76,6 @@ public abstract class Weapon_Base : MonoBehaviour
         m_BAnim = GetComponentInParent<Base_Ctrl>();
     }
 
-
     #region Audio
     protected void PlaySound(AudioClip clip)
     {
@@ -74,13 +85,10 @@ public abstract class Weapon_Base : MonoBehaviour
     }
     #endregion
 
-
     public void IncreaseAmmo(int mag)
     {
         m_CurrentAmmo = Mathf.Min(m_CurrentAmmo + mag, m_WeaponSetting.m_MaxAmmo);
         Game_Mgr.Inst.UpdateAmmoText(m_AmmoInClip, m_CurrentAmmo);
     }
-
-
 }
 

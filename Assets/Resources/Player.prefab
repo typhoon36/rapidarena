@@ -2704,7 +2704,6 @@ GameObject:
   - component: {fileID: 1844240994773203092}
   - component: {fileID: 5575134911543880061}
   - component: {fileID: 3479330319241355576}
-  - component: {fileID: 820059717611915464}
   m_Layer: 6
   m_Name: arms_handgun_01
   m_TagString: Untagged
@@ -2915,45 +2914,6 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!114 &820059717611915464
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3450876487637693102}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9b8c4a61274f60b4ea5fb4299cfdbf14, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ShowLayerWeightsInspector: 1
-  ShowParameterInspector: 1
-  m_SynchronizeParameters:
-  - Type: 9
-    SynchronizeType: 1
-    Name: Idle
-  - Type: 9
-    SynchronizeType: 1
-    Name: Walk
-  - Type: 9
-    SynchronizeType: 1
-    Name: Run
-  - Type: 9
-    SynchronizeType: 1
-    Name: Fire
-  - Type: 9
-    SynchronizeType: 1
-    Name: Reload
-  - Type: 9
-    SynchronizeType: 1
-    Name: Inspect
-  - Type: 4
-    SynchronizeType: 1
-    Name: Aim
-  m_SynchronizeLayers:
-  - SynchronizeType: 0
-    LayerIndex: 0
 --- !u!1 &3488900883031942611
 GameObject:
   m_ObjectHideFlags: 0
@@ -3370,7 +3330,6 @@ GameObject:
   - component: {fileID: 3775432248520047061}
   - component: {fileID: 1599792041413307137}
   - component: {fileID: 3038701026777968442}
-  - component: {fileID: 3764494820331956527}
   m_Layer: 6
   m_Name: arms_assault_rifle_01
   m_TagString: Untagged
@@ -3581,45 +3540,6 @@ MonoBehaviour:
     m_MaxAmmo: 0
   m_Anim: {fileID: 0}
   m_PlayerState: 0
---- !u!114 &3764494820331956527
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3959751942987666287}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9b8c4a61274f60b4ea5fb4299cfdbf14, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ShowLayerWeightsInspector: 1
-  ShowParameterInspector: 1
-  m_SynchronizeParameters:
-  - Type: 9
-    SynchronizeType: 1
-    Name: Idle
-  - Type: 9
-    SynchronizeType: 1
-    Name: Walk
-  - Type: 9
-    SynchronizeType: 1
-    Name: Run
-  - Type: 9
-    SynchronizeType: 1
-    Name: Fire
-  - Type: 9
-    SynchronizeType: 1
-    Name: Reload
-  - Type: 9
-    SynchronizeType: 1
-    Name: Inspect
-  - Type: 4
-    SynchronizeType: 1
-    Name: Aim
-  m_SynchronizeLayers:
-  - SynchronizeType: 1
-    LayerIndex: 0
 --- !u!1 &4036170357539298571
 GameObject:
   m_ObjectHideFlags: 0
@@ -4014,10 +3934,6 @@ MonoBehaviour:
   ObservedComponents:
   - {fileID: 4960764040976952548}
   - {fileID: 4047303102142923237}
-  - {fileID: 3764494820331956527}
-  - {fileID: 820059717611915464}
-  - {fileID: 2829991641062151665}
-  - {fileID: 5929928493069377474}
   sceneViewId: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
@@ -5678,7 +5594,6 @@ GameObject:
   - component: {fileID: 3864640099664422952}
   - component: {fileID: 3392865119067034621}
   - component: {fileID: 4250186560583431799}
-  - component: {fileID: 5929928493069377474}
   m_Layer: 6
   m_Name: arms_Grenade
   m_TagString: Untagged
@@ -5873,36 +5788,6 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!114 &5929928493069377474
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6317801050522334939}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9b8c4a61274f60b4ea5fb4299cfdbf14, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ShowLayerWeightsInspector: 1
-  ShowParameterInspector: 1
-  m_SynchronizeParameters:
-  - Type: 9
-    SynchronizeType: 1
-    Name: Idle
-  - Type: 9
-    SynchronizeType: 1
-    Name: Walk
-  - Type: 9
-    SynchronizeType: 1
-    Name: Run
-  - Type: 9
-    SynchronizeType: 1
-    Name: Attack
-  m_SynchronizeLayers:
-  - SynchronizeType: 0
-    LayerIndex: 0
 --- !u!1 &6333356703920850756
 GameObject:
   m_ObjectHideFlags: 0
@@ -8133,7 +8018,6 @@ GameObject:
   - component: {fileID: 3965877398408771537}
   - component: {fileID: 2241526611311257810}
   - component: {fileID: 6321522706903528305}
-  - component: {fileID: 2829991641062151665}
   m_Layer: 6
   m_Name: arms_Knife
   m_TagString: Untagged
@@ -8230,39 +8114,6 @@ MonoBehaviour:
     m_MaxAmmo: 0
   m_Anim: {fileID: 0}
   m_PlayerState: 0
---- !u!114 &2829991641062151665
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9068376311711208145}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9b8c4a61274f60b4ea5fb4299cfdbf14, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ShowLayerWeightsInspector: 1
-  ShowParameterInspector: 1
-  m_SynchronizeParameters:
-  - Type: 9
-    SynchronizeType: 1
-    Name: Idle
-  - Type: 9
-    SynchronizeType: 1
-    Name: Run
-  - Type: 9
-    SynchronizeType: 1
-    Name: Walk
-  - Type: 9
-    SynchronizeType: 1
-    Name: Attack
-  - Type: 9
-    SynchronizeType: 1
-    Name: Inspect
-  m_SynchronizeLayers:
-  - SynchronizeType: 0
-    LayerIndex: 0
 --- !u!1 &9171016058490631765
 GameObject:
   m_ObjectHideFlags: 0
