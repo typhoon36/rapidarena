@@ -46,11 +46,11 @@
 
 * UI
  * Scene
-   * common UI - 로비로 이동,종료,설정
-   * WorldSpace - 닉네임
-  * InGame  : HP,총기의 상태,팀 우승 상태
-  * Inven : 인벤 슬롯, 인벤 추가, 인벤 버리기 버튼  
-  * Shop : 판매버튼, 간이 인벤 슬롯, 상품 관리
+     * common UI - 로비로 이동,종료,설정
+     * WorldSpace - 닉네임
+   * InGame  : HP,총기의 상태,팀 우승 상태
+   * Inven : 인벤 슬롯, 인벤 추가, 인벤 버리기 버튼  
+   * Shop : 판매버튼, 간이 인벤 슬롯, 상품 관리
  ## 기술 문서
 [기술 문서](https://docs.google.com/presentation/d/1ASBFL0deqHO50BUfyGx-w9X3S-U0FXeQ4qpRaYTWGsU/edit#slide=id.g301078c2494_0_171)
 
