@@ -56,6 +56,11 @@ MonoBehaviour:
   - RPC_PlayAnimation
   - RPC_EnableWeapon
   - UpdateObjectTxt
+  - StartGameTimer
+  - RPC_DisableWeapon
+  - RPC_OnEnableWeapon
+  - ShowTeamObjective
+  - ShowTeamObjectiveRPC
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

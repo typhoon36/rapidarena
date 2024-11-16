@@ -8,12 +8,13 @@ public class DisplayUserId : MonoBehaviour
 {
     public Text userId;
     PhotonView pv = null;
-
+    [HideInInspector] public Ready_Mgr m_ReadyMgr;
 
     void Start()
     {
         pv = GetComponent<PhotonView>();
         userId.text = pv.Owner.NickName;
+        ChangeNameColor(m_ReadyMgr);
     }
 
     public void ChangeNameColor(Ready_Mgr a_ReadyMgr)
@@ -37,6 +38,6 @@ public class DisplayUserId : MonoBehaviour
         {
             return color;
         }
-        return Color.white; 
+        return Color.white;
     }
 }

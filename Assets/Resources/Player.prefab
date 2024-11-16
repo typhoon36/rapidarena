@@ -2124,7 +2124,6 @@ GameObject:
   - component: {fileID: 8998724709336060083}
   - component: {fileID: 9125394903657237976}
   - component: {fileID: 8077201165873117459}
-  - component: {fileID: 5902322262406144173}
   m_Layer: 6
   m_Name: Canvas
   m_TagString: Untagged
@@ -2215,18 +2214,6 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
---- !u!114 &5902322262406144173
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2678557860129901593}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5573acbcef400ae4089a17b450bd5446, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &2712589211076247768
 GameObject:
   m_ObjectHideFlags: 0
@@ -3950,6 +3937,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   userId: {fileID: 1196945444829716739}
+  m_ReadyMgr: {fileID: 0}
 --- !u!114 &4047303102142923237
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5654,7 +5642,7 @@ MonoBehaviour:
   m_WeaponType: 3
   m_GrenadeType: 0
   m_WeaponSetting:
-    name: 5
+    name: 3
     Throwname: 0
     m_Damage: 70
     m_AttackRate: 0
@@ -5682,14 +5670,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   weaponSetting:
-    name: 0
+    name: 3
     Throwname: 0
-    m_Damage: 0
+    m_Damage: 20
     m_AttackRate: 0
     m_AttackDist: 0
     IsAutoAttack: 0
-    m_ClipSize: 0
-    m_MaxAmmo: 0
+    m_ClipSize: 2
+    m_MaxAmmo: 2
   m_Anim: {fileID: 0}
   m_PlayerState: 0
 --- !u!82 &4250186560583431799
@@ -8078,7 +8066,7 @@ MonoBehaviour:
   m_WeaponType: 3
   m_GrenadeType: 0
   m_WeaponSetting:
-    name: 4
+    name: 2
     Throwname: 0
     m_Damage: 50
     m_AttackRate: 0
@@ -8104,14 +8092,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   weaponSetting:
-    name: 0
+    name: 2
     Throwname: 0
     m_Damage: 0
     m_AttackRate: 0
     m_AttackDist: 0
     IsAutoAttack: 0
-    m_ClipSize: 0
-    m_MaxAmmo: 0
+    m_ClipSize: 1
+    m_MaxAmmo: 1
   m_Anim: {fileID: 0}
   m_PlayerState: 0
 --- !u!1 &9171016058490631765

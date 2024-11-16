@@ -25,12 +25,14 @@ public class Knife_Ctrl : Weapon_Base
         knifeCollider.knifeCtrl = this; // KnifeCollider에 참조 설정
     }
 
-    protected override void OnEnable()
+    public override void OnEnable()
     {
-
-
         IsAttack = false;
-        Game_Mgr.Inst.UpdateAmmoText(m_AmmoInClip, m_CurrentAmmo);
+        
+        if (photonView.IsMine)
+        {
+            Game_Mgr.Inst.UpdateAmmoText(m_AmmoInClip, m_CurrentAmmo, photonView);
+        }
 
         // 무기 교체 시 애니메이터 다시 설정
         if (m_Base != null)

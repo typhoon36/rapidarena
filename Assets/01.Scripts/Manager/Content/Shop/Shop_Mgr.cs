@@ -58,6 +58,8 @@ public class Shop_Mgr : MonoBehaviour
     {
         Data_Mgr.LoadData();
 
+        Sound_Mgr.Inst.PlayBGM("ShopBgm", 1f);
+
         #region Top_Panel
         m_ShopBtn.GetComponentInChildren<Text>().color = Color.gray;
         m_ShopBtn.interactable = false;

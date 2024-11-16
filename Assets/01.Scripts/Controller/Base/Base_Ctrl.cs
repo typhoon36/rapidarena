@@ -121,7 +121,14 @@ public class Base_Ctrl : MonoBehaviourPunCallbacks
             playerCtrl.SetAnimation(anim);
         }
     }
-
+    [PunRPC]
+    public void RPC_PlayAnimation(string animName)
+    {
+        if (m_Anim != null && m_Anim.gameObject.activeInHierarchy)
+        {
+            m_Anim.Play(animName);
+        }
+    }
     public virtual void Reload()
     {
         // 예외 처리
@@ -145,6 +152,12 @@ public class Base_Ctrl : MonoBehaviourPunCallbacks
         if (m_Anim != null && m_Anim.gameObject.activeInHierarchy)
         {
             m_Anim.Play(animName);
+        }
+
+        // 애니메이션 상태를 네트워크에 동기화
+        if (photonView.IsMine)
+        {
+            photonView.RPC("RPC_PlayAnimation", RpcTarget.Others, animName);
         }
     }
 
@@ -173,4 +186,8 @@ public class Base_Ctrl : MonoBehaviourPunCallbacks
     {
         m_Anim.SetTrigger(paramName);
     }
+
+
+
+
 }

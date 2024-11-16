@@ -36,6 +36,9 @@ public class Inven_Mgr : MonoBehaviour
     {
         Data_Mgr.LoadData();
 
+        Sound_Mgr.Inst.PlayBGM("InventoryBgm", 1f);
+
+
         #region Top_Panel Init
         m_LoadOutBtn.GetComponentInChildren<Text>().color = Color.gray;
         m_LoadOutBtn.interactable = false;

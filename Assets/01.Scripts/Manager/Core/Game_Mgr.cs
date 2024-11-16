@@ -49,7 +49,6 @@ public class Game_Mgr : MonoBehaviour
     private Weapon_Base m_Weapon;
     #endregion
 
-
     [Header("Message")]
     public Text m_Message;
 
@@ -60,7 +59,6 @@ public class Game_Mgr : MonoBehaviour
 
     [Header("WinLose")]
     public Text m_WinLoseTxt;
-
 
     [Header("End")]
     public Text m_GameEndText;
@@ -73,17 +71,17 @@ public class Game_Mgr : MonoBehaviour
     public Text m_Player4Kill;
     Dictionary<int, int> playerKillCounts = new Dictionary<int, int>();
 
-
-
     [Header("Object")]
     public Text Object_Txt;
 
+    bool IsShown = false;
 
     void Start()
     {
+        Sound_Mgr.Inst.m_AudioSrc.clip = null;
+
         m_GameEndText.gameObject.SetActive(false);
         m_GameObj.SetActive(false);
-
 
         //타이머
         m_LimitTime = 240f;
@@ -98,7 +96,6 @@ public class Game_Mgr : MonoBehaviour
 
         Object_Txt.gameObject.SetActive(false);
 
-
         #region KillBoard 초기화
         m_KillBoard.SetActive(false);
         m_Player1Kill.text = pv.OwnerActorNr.ToString() + " : 0";
@@ -109,52 +106,72 @@ public class Game_Mgr : MonoBehaviour
         playerKillCounts.Clear();
         #endregion
 
-
         if (PhotonNetwork.IsMasterClient)
         {
             StartCoroutine(StartGameTimer());
         }
-
     }
 
     void Update()
     {
-
-
-        //타이머 && 킬로그
-        if (m_GameState == GameState.Play && pv.IsMine)
+        // 타이머 && 킬로그
+        if (m_GameState == GameState.Play)
         {
-            if (Input.GetKeyDown(KeyCode.Tab))
+            // 팀별 목표 텍스트 출력
+            if (!IsShown)
             {
-                m_KillBoard.SetActive(true);
-            }
-            else if (Input.GetKeyUp(KeyCode.Tab))
-            {
-                m_KillBoard.SetActive(false);
-            }
-            //팀별 목표텍스트 출력
-            string a_TeamKind = "blue";
+                if (PhotonNetwork.LocalPlayer.CustomProperties.ContainsKey("MyTeam"))
+                {
+                    string teamKind = PhotonNetwork.LocalPlayer.CustomProperties["MyTeam"].ToString();
 
-            if (Object_Txt != null && pv.IsMine)
-            {
-                Object_Txt.gameObject.SetActive(true);
-                if (a_TeamKind == "blue")
-                {
-                    StartCoroutine(Typing("테러리스트 저지"));
-                }
-                else if (a_TeamKind == "red")
-                {
-                    StartCoroutine(Typing("대테러부대 저지"));
+                    if (teamKind == "blue")
+                    {
+                        pv.RPC("ShowTeamObjectiveRPC", RpcTarget.All, "테러리스트 저지");
+                    }
+                    else if (teamKind == "red")
+                    {
+                        pv.RPC("ShowTeamObjectiveRPC", RpcTarget.All, "대테러부대 저지");
+                    }
+
+                    IsShown = true;
                 }
             }
 
+            if (pv.IsMine)
+            {
+                if (Input.GetKeyDown(KeyCode.Tab))
+                {
+                    m_KillBoard.SetActive(true);
+                }
+                else if (Input.GetKeyUp(KeyCode.Tab))
+                {
+                    m_KillBoard.SetActive(false);
+                }
+            }
         }
 
         if (m_GameState == GameState.End)
         {
             KillRank();
+            StopCoroutine(StartGameTimer());
+            StopCoroutine(Typing(""));
         }
+    }
 
+    [PunRPC]
+    void ShowTeamObjectiveRPC(string objectiveText)
+    {
+        ShowTeamObjectiveText(objectiveText);
+    }
+
+    void ShowTeamObjectiveText(string objectiveText)
+    {
+
+        // 텍스트 UI 요소 활성화
+        Game_Mgr.Inst.Object_Txt.gameObject.SetActive(true);
+
+        // 코루틴 시작
+        StartCoroutine(Typing(objectiveText));
     }
 
     [PunRPC]
@@ -164,12 +181,8 @@ public class Game_Mgr : MonoBehaviour
         System.TimeSpan timeSpan = System.TimeSpan.FromSeconds(m_LimitTime);
         m_Timer.text = timeSpan.ToString(@"mm\:ss");
     }
-    [PunRPC]
-    void UpdateObjectTxt(string objectTxt)
-    {
-        StartCoroutine(Typing(objectTxt));
-    }
 
+    [PunRPC]
     IEnumerator StartGameTimer()
     {
         while (m_LimitTime > 0)
@@ -193,14 +206,17 @@ public class Game_Mgr : MonoBehaviour
     public void SetWeapon(Weapon_Base weapon)
     {
         m_Weapon = weapon;
-        UpdateAmmoText(m_Weapon.AmmoInClip, m_Weapon.CurrentAmmo);
+        UpdateAmmoText(m_Weapon.AmmoInClip, m_Weapon.CurrentAmmo, pv);
         UpdateGunModeText(m_Weapon.WeaponType, m_Weapon.WeaponSetting.IsAutoAttack);
     }
 
-    public void UpdateAmmoText(int ammoInClip, int currentAmmo)
+    public void UpdateAmmoText(int ammoInClip, int currentAmmo, PhotonView pv)
     {
-        m_LoadTxt.text = ammoInClip.ToString() + "/";
-        m_MaxAmmoTxt.text = currentAmmo.ToString();
+        if (pv.IsMine)
+        {
+            m_LoadTxt.text = ammoInClip.ToString() + "/ ";
+            m_MaxAmmoTxt.text = currentAmmo.ToString();
+        }
     }
 
     public void UpdateGunModeText(WeaponType weaponType, bool isAutoAttack)
@@ -237,31 +253,6 @@ public class Game_Mgr : MonoBehaviour
     }
     #endregion
 
-    #region Message
-    public void ShowMessage(float msg = 50f, bool IsMsg = false)
-    {
-        if (IsMsg == true)
-        {
-            m_Message.text = "장치 감지! " + msg.ToString("N1") + "초 후 폭발합니다.";
-            m_Message.gameObject.SetActive(true);
-            StartCoroutine(HideMsgDelay(3f));
-        }
-        else
-        {
-            m_Message.gameObject.SetActive(false);
-            m_Message.text = "";
-        }
-
-    }
-
-    IEnumerator HideMsgDelay(float delay)
-    {
-        yield return new WaitForSeconds(delay);
-        m_Message.gameObject.SetActive(false);
-        m_Message.text = "";
-    }
-    #endregion
-
     #region KillBoard
     public void UpdateKillCount(int playerId, int killCount)
     {
@@ -274,6 +265,7 @@ public class Game_Mgr : MonoBehaviour
             playerKillCounts.Add(playerId, killCount);
         }
     }
+
     void KillRank()
     {
         var sortedKills = playerKillCounts.OrderByDescending(x => x.Value).ToList();
@@ -299,26 +291,24 @@ public class Game_Mgr : MonoBehaviour
     }
     #endregion
 
-    #region 연출
-
-    IEnumerator WaitText(float delay = 10)
-    {
-        string currentText = Game_Mgr.Inst.Object_Txt.text;
-        for (int i = currentText.Length; i >= 0; i--)
-        {
-            Game_Mgr.Inst.Object_Txt.text = currentText.Substring(0, i);
-            yield return new WaitForSeconds(0.1f);
-        }
-
-        Game_Mgr.Inst.Object_Txt.gameObject.SetActive(false);
-    }
-
     IEnumerator Typing(string ObjectTxt)
     {
+        // 게임 상태가 종료인지 확인
+        if (m_GameState == GameState.End)
+        {
+            yield break; // 게임이 종료되었으면 코루틴 종료
+        }
+
         yield return new WaitForSeconds(1f);
 
         for (int i = 0; i <= ObjectTxt.Length; i++)
         {
+            // 게임 상태가 종료인지 확인
+            if (m_GameState == GameState.End)
+            {
+                yield break; // 게임이 종료되었으면 코루틴 종료
+            }
+
             Game_Mgr.Inst.Object_Txt.text = ObjectTxt.Substring(0, i);
             yield return new WaitForSeconds(0.1f);
         }
@@ -326,5 +316,30 @@ public class Game_Mgr : MonoBehaviour
         // Typing 효과 끝나고 3초 후에 텍스트 사라짐
         StartCoroutine(WaitText(3.0f));
     }
-    #endregion
+
+    IEnumerator WaitText(float delay = 10)
+    {
+        // 게임 상태가 종료인지 확인
+        if (m_GameState == GameState.End)
+        {
+            yield break; // 게임이 종료되었으면 코루틴 종료
+        }
+
+        yield return new WaitForSeconds(delay);
+
+        string currentText = Game_Mgr.Inst.Object_Txt.text;
+        for (int i = currentText.Length; i >= 0; i--)
+        {
+            // 게임 상태가 종료인지 확인
+            if (m_GameState == GameState.End)
+            {
+                yield break; // 게임이 종료되었으면 코루틴 종료
+            }
+
+            Game_Mgr.Inst.Object_Txt.text = currentText.Substring(0, i);
+            yield return new WaitForSeconds(0.1f);
+        }
+
+        Game_Mgr.Inst.Object_Txt.gameObject.SetActive(false);
+    }
 }

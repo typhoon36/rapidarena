@@ -4,9 +4,6 @@ using Photon.Pun;
 using Photon.Realtime;
 using UnityEngine.SceneManagement;
 using System.Collections.Generic;
-using System.Collections;
-using UnityEngine.EventSystems;
-
 public enum GameState
 {
     Ready = 0,
@@ -122,7 +119,6 @@ public class Ready_Mgr : MonoBehaviourPunCallbacks
             m_Team1ToTeam2.onClick.AddListener(() =>
             {
                 SendSelTeam("red");
-
             });
 
         if (m_Team1Ready != null)
@@ -135,7 +131,6 @@ public class Ready_Mgr : MonoBehaviourPunCallbacks
             m_Team2ToTeam1.onClick.AddListener(() =>
             {
                 SendSelTeam("blue");
-
             });
 
         if (m_Team2Ready != null)
@@ -415,6 +410,9 @@ public class Ready_Mgr : MonoBehaviourPunCallbacks
 
         PhotonNetwork.LocalPlayer.SetCustomProperties(m_SelTeamProps);
 
+        if (Player_Ctrl.Inst != null)
+            Player_Ctrl.Inst.ChangeTeamMaterial(a_Team);
+
     }
 
     //팀 선택 정보 받기
@@ -634,6 +632,9 @@ public class Ready_Mgr : MonoBehaviourPunCallbacks
                 if (m_GoWaitGame <= 0.0f)
                 {
                     SendState(GameState.Play);
+
+                    // 게임 시작 시 채팅 패널 비활성화
+
                     Cursor.lockState = CursorLockMode.Locked;
                     Cursor.visible = false;
 
@@ -642,11 +643,7 @@ public class Ready_Mgr : MonoBehaviourPunCallbacks
                     // 게임 시작 시 타이머 시작 & 목표 텍스트 출력하라 RPC 호출
                     Game_Mgr.Inst.pv.RPC("UpdateGameState", RpcTarget.All, GameState.Play);
 
-                    Game_Mgr.Inst.pv.RPC("UpdateObjectTxt", RpcTarget.All, GameState.Play);
-
-                    // 게임 시작 시 채팅 패널 비활성화
                     m_ChatPanel.SetActive(false);
-
                 }
             }
         }

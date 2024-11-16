@@ -130,9 +130,6 @@ public class Player_Ctrl : Base_Ctrl
                 PlaySound(null, false);
             }
         }
-
-        ChangeTeamMaterial();
-
     }
 
 
@@ -212,23 +209,58 @@ public class Player_Ctrl : Base_Ctrl
 
     public void C_Weapon(Weapon_Base newWeapon)
     {
-        if (currentWeapon != null)
-        {
-            currentWeapon.gameObject.SetActive(false);
-        }
-        currentWeapon = newWeapon;
-        currentWeapon.gameObject.SetActive(true);
-        Game_Mgr.Inst.SetWeapon(currentWeapon);
-
-        UpdateAnimationState();
-
         if (pv.IsMine)
         {
-            Game_Mgr.Inst.UpdateGunModeText(currentWeapon.WeaponType, currentWeapon.WeaponSetting.IsAutoAttack);
-            photonView.RPC("RPC_UpdateAnimationState", RpcTarget.All, m_PlayerState);
+            if (currentWeapon != null)
+            {
+                currentWeapon.gameObject.SetActive(false);
+            }
+
+            if (newWeapon != null)
+            {
+                currentWeapon = newWeapon;
+                currentWeapon.gameObject.SetActive(true);
+
+                // 모든 클라이언트에서 OnEnable 호출
+                pv.RPC("RPC_OnEnableWeapon", RpcTarget.Others, currentWeapon.name);
+
+                UpdateAnimationState();
+
+                // 텍스트 업데이트는 자신이 소유한 경우에만 수행
+                Game_Mgr.Inst.SetWeapon(currentWeapon);
+                Game_Mgr.Inst.UpdateAmmoText(currentWeapon.AmmoInClip, currentWeapon.CurrentAmmo, pv);
+            }
         }
-      
     }
+
+    [PunRPC]
+    void RPC_OnEnableWeapon(string weaponName)
+    {
+        Transform weaponTransform = transform.Find(weaponName);
+        if (weaponTransform != null)
+        {
+            // 모든 무기를 비활성화
+            foreach (Transform child in transform)
+            {
+                if (child.GetComponent<Weapon_Base>() != null)
+                {
+                    child.gameObject.SetActive(false);
+                }
+            }
+
+            // 새로운 무기 활성화
+            GameObject weaponObject = weaponTransform.gameObject;
+            weaponObject.SetActive(true);
+            weaponObject.GetComponent<Weapon_Base>().OnEnable();
+
+            // 텍스트 업데이트는 자신이 소유한 경우에만 수행
+            if (pv.IsMine == true)
+            {
+                Game_Mgr.Inst.SetWeapon(weaponObject.GetComponent<Weapon_Base>());
+            }
+        }
+    }
+
 
 
     void IsChange()
@@ -255,15 +287,18 @@ public class Player_Ctrl : Base_Ctrl
         Game_Mgr.Inst.UpdateGunModeText(currentWeapon.WeaponType, currentWeapon.WeaponSetting.IsAutoAttack);
     }
 
+
     void HandleWeaponActions()
     {
         if (Input.GetMouseButtonDown(0))
         {
             currentWeapon.StartWAtt(0, pv.Owner.ActorNumber);
+            SetAnimation("Fire");
         }
         else if (Input.GetMouseButton(0) && currentWeapon.WeaponSetting.IsAutoAttack)
         {
             currentWeapon.StartWAtt(0, pv.Owner.ActorNumber);
+            SetAnimation("Fire");
         }
         else if (Input.GetMouseButtonUp(0))
         {
@@ -272,6 +307,7 @@ public class Player_Ctrl : Base_Ctrl
         else if (Input.GetMouseButtonDown(1))
         {
             currentWeapon.StartWAtt(1, pv.Owner.ActorNumber);
+            SetAnimation("AimFire");
         }
         else if (Input.GetMouseButtonUp(1))
         {
@@ -281,10 +317,12 @@ public class Player_Ctrl : Base_Ctrl
         if (Input.GetKeyDown(KeyCode.R))
         {
             currentWeapon.Reload();
+            SetAnimation("Reload");
         }
         else if (Input.GetKeyDown(KeyCode.L))
         {
             currentWeapon.Inspect();
+            SetAnimation("Inspect");
         }
         else if (Input.GetKeyDown(KeyCode.B))
         {
@@ -292,20 +330,20 @@ public class Player_Ctrl : Base_Ctrl
         }
     }
 
-    public void ChangeTeamMaterial()
+
+    public void ChangeTeamMaterial(string team)
     {
-        if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue("MyTeam", out object team))
+        if (team == "blue")
         {
-            if (team.ToString() == "blue")
-            {
-                m_DefMesh.material = m_TeamMaterial[0];
-            }
-            else if (team.ToString() == "red")
-            {
-                m_DefMesh.material = m_TeamMaterial[1];
-            }
+            m_DefMesh.material = m_TeamMaterial[0];
+        }
+        else if (team == "red")
+        {
+            m_DefMesh.material = m_TeamMaterial[1];
         }
     }
+
+   
 
 
 }

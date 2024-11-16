@@ -10,7 +10,7 @@
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <RootNamespace></RootNamespace>
-    <ProjectGuid>{6B47AEED-CFC3-600A-F868-DE06EB02CEF3}</ProjectGuid>
+    <ProjectGuid>{32ED5216-C075-FFF0-D2DE-EE6EFF1063E1}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <AssemblyName>Hierarchy2.Runtime</AssemblyName>

@@ -48,19 +48,15 @@ public abstract class Weapon_Base : MonoBehaviourPun
         m_CurrentAmmo = m_MaxAmmo;
         m_AmmoInClip = m_ClipSize;
     }
-    protected virtual void OnEnable()
+    public virtual void OnEnable()
     {
         if (photonView.IsMine)
         {
-            photonView.RPC("RPC_EnableWeapon", RpcTarget.All);
+            Game_Mgr.Inst.UpdateAmmoText(m_AmmoInClip, m_CurrentAmmo, photonView);
         }
     }
 
-    [PunRPC]
-    private void RPC_EnableWeapon()
-    {
-        gameObject.SetActive(true);
-    }
+
     protected virtual void LateUpdate()
     {
         // 플레이어의 회전을 따라가도록 무기의 회전 설정
@@ -88,7 +84,7 @@ public abstract class Weapon_Base : MonoBehaviourPun
     public void IncreaseAmmo(int mag)
     {
         m_CurrentAmmo = Mathf.Min(m_CurrentAmmo + mag, m_WeaponSetting.m_MaxAmmo);
-        Game_Mgr.Inst.UpdateAmmoText(m_AmmoInClip, m_CurrentAmmo);
+        Game_Mgr.Inst.UpdateAmmoText(m_AmmoInClip, m_CurrentAmmo, photonView);
     }
 }
 

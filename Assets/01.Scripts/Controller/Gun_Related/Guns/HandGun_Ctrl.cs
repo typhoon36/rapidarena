@@ -65,8 +65,15 @@ public class HandGun_Ctrl : Weapon_Base
         }
     }
 
-    protected override void OnEnable()
+    public override void OnEnable()
     {
+        base.OnEnable();
+
+        if (photonView.IsMine)
+        {
+            Game_Mgr.Inst.UpdateAmmoText(m_AmmoInClip, m_CurrentAmmo, photonView);
+        }
+
 
         if (m_TakeOutSound != null)
         {
@@ -78,7 +85,7 @@ public class HandGun_Ctrl : Weapon_Base
             m_FireEffect.SetActive(false);
         }
 
-        Game_Mgr.Inst.UpdateAmmoText(m_AmmoInClip, m_CurrentAmmo);
+        Game_Mgr.Inst.UpdateAmmoText(m_AmmoInClip, m_CurrentAmmo, photonView);
         ResetVar();
 
         if (m_Base != null)
@@ -122,7 +129,7 @@ public class HandGun_Ctrl : Weapon_Base
 
                 m_CasingPool.SpawnCase(m_SpawnPoint.position, m_SpawnPoint.right);
                 m_AmmoInClip--;
-                Game_Mgr.Inst.UpdateAmmoText(m_AmmoInClip, m_CurrentAmmo);
+                Game_Mgr.Inst.UpdateAmmoText(m_AmmoInClip, m_CurrentAmmo, photonView);
 
                 string Anim = m_Base.Aim ? "AimFire" : "Fire";
                 m_Base.SetAnimation(Anim);
@@ -178,7 +185,7 @@ public class HandGun_Ctrl : Weapon_Base
             m_AmmoInClip += m_CurrentAmmo;
             m_CurrentAmmo = 0;
         }
-        Game_Mgr.Inst.UpdateAmmoText(m_AmmoInClip, m_CurrentAmmo);
+        Game_Mgr.Inst.UpdateAmmoText(m_AmmoInClip, m_CurrentAmmo, photonView);
         //리로드 사운드 
         PlaySound(m_ReloadSound);
         //리로드 애니메이션
