@@ -7,14 +7,13 @@ using UnityEngine.UI;
 public class DisplayUserId : MonoBehaviour
 {
     public Text userId;
-    PhotonView pv = null;
+    PhotonView pv;
     [HideInInspector] public Ready_Mgr m_ReadyMgr;
 
     void Start()
     {
         pv = GetComponent<PhotonView>();
         userId.text = pv.Owner.NickName;
-        ChangeNameColor(m_ReadyMgr);
     }
 
     public void ChangeNameColor(Ready_Mgr a_ReadyMgr)

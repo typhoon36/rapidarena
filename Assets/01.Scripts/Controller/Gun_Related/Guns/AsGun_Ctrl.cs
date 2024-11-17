@@ -173,6 +173,7 @@ public class AsGun_Ctrl : Weapon_Base
         {
             GameObject bullet = Instantiate(m_BulletPrefab, m_BulletSpawnPoint.transform.position, Quaternion.identity);
             bullet.transform.forward = m_BulletSpawnPoint.transform.forward;
+
             Bullet_Ctrl bulletCtrl = bullet.GetComponent<Bullet_Ctrl>();
             if (bulletCtrl != null)
             {

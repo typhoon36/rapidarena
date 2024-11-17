@@ -63,23 +63,10 @@
     ],
     "User": [
         {
-            "UserName": "",
-            "UserID": "",
-            "Points": 99219
+            "UserName": "DefaultUserName",
+            "UserID": "DefaultUserID",
+            "Points": 3400
         }
     ],
-    "InvenSlots": [
-        {
-            "SlotID": 0,
-            "ItemID": 6,
-            "ItemCount": 1,
-            "ImagePath": "Product/Smoke"
-        },
-        {
-            "SlotID": 1,
-            "ItemID": 5,
-            "ItemCount": 1,
-            "ImagePath": "Product/Skinned_Box"
-        }
-    ]
+    "InvenSlots": []
 }

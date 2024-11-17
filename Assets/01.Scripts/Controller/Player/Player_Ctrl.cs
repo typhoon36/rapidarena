@@ -34,6 +34,18 @@ public class Player_Ctrl : Base_Ctrl
     AudioSource m_ASource;
     #endregion
 
+    #region ChangeTPSColor
+    [Header("ChangeTPSColor")]
+    public Material[] m_TeamMaterial;
+    public MeshRenderer m_DefMesh;
+    #endregion
+
+    #region MarkerColor(MiniMap)
+    [Header("MarkerColor")]
+    public Material[] m_TeamMarkerMtrl;
+    public MeshRenderer m_DefMarkerMesh;
+    #endregion
+
     #region References
     Weapon_Base m_GunBase;
     GameState m_GameState;
@@ -45,11 +57,8 @@ public class Player_Ctrl : Base_Ctrl
     private Weapon_Base currentWeapon;
     #endregion
 
-    #region ChangeTPSColor
-    public Material[] m_TeamMaterial;
-    public MeshRenderer m_DefMesh;
-    #endregion
 
+    //Singleton
     public static Player_Ctrl Inst;
 
     void Awake()
@@ -63,10 +72,12 @@ public class Player_Ctrl : Base_Ctrl
 
         // 자식 객체 중 이름이 "Capsule"인 객체를 찾아 m_DefMesh를 설정
         Transform m_Capsule = transform.Find("Capsule");
-        if (m_Capsule != null)
-        {
-            m_DefMesh = m_Capsule.GetComponent<MeshRenderer>();
-        }
+        m_DefMesh = m_Capsule.GetComponent<MeshRenderer>();
+
+        //자식 객체 중 Pl_Marker라는 이름의 객체를 찾아 m_DefMarkerMesh를 설정
+        Transform m_Marker = transform.Find("Pl_Marker");
+        m_DefMarkerMesh = m_Marker.GetComponent<MeshRenderer>();
+
         Inst = this;
     }
 
@@ -293,12 +304,10 @@ public class Player_Ctrl : Base_Ctrl
         if (Input.GetMouseButtonDown(0))
         {
             currentWeapon.StartWAtt(0, pv.Owner.ActorNumber);
-            SetAnimation("Fire");
         }
         else if (Input.GetMouseButton(0) && currentWeapon.WeaponSetting.IsAutoAttack)
         {
             currentWeapon.StartWAtt(0, pv.Owner.ActorNumber);
-            SetAnimation("Fire");
         }
         else if (Input.GetMouseButtonUp(0))
         {
@@ -307,7 +316,6 @@ public class Player_Ctrl : Base_Ctrl
         else if (Input.GetMouseButtonDown(1))
         {
             currentWeapon.StartWAtt(1, pv.Owner.ActorNumber);
-            SetAnimation("AimFire");
         }
         else if (Input.GetMouseButtonUp(1))
         {
@@ -317,12 +325,10 @@ public class Player_Ctrl : Base_Ctrl
         if (Input.GetKeyDown(KeyCode.R))
         {
             currentWeapon.Reload();
-            SetAnimation("Reload");
         }
         else if (Input.GetKeyDown(KeyCode.L))
         {
             currentWeapon.Inspect();
-            SetAnimation("Inspect");
         }
         else if (Input.GetKeyDown(KeyCode.B))
         {
@@ -331,6 +337,7 @@ public class Player_Ctrl : Base_Ctrl
     }
 
 
+    //팀에 맞춰 표시되는 캐릭터 색상 변경
     public void ChangeTeamMaterial(string team)
     {
         if (team == "blue")
@@ -343,7 +350,19 @@ public class Player_Ctrl : Base_Ctrl
         }
     }
 
-   
+    //미내맵에 표시되는 마커를 팀에 맞춰 변경
+    public void ChangeMarkerMaterial(string team)
+    {
+        if (team == "blue")
+        {
+            m_DefMarkerMesh.material = m_TeamMarkerMtrl[0];
+        }
+        else if (team == "red")
+        {
+            m_DefMarkerMesh.material = m_TeamMarkerMtrl[1];
+        }
+    }
+
 
 
 }

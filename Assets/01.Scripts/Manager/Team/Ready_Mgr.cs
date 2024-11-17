@@ -411,7 +411,11 @@ public class Ready_Mgr : MonoBehaviourPunCallbacks
         PhotonNetwork.LocalPlayer.SetCustomProperties(m_SelTeamProps);
 
         if (Player_Ctrl.Inst != null)
+        {
             Player_Ctrl.Inst.ChangeTeamMaterial(a_Team);
+            Player_Ctrl.Inst.ChangeMarkerMaterial(a_Team);
+
+        }
 
     }
 
@@ -506,6 +510,21 @@ public class Ready_Mgr : MonoBehaviourPunCallbacks
             }
 
         }
+
+
+        //플레이어 이름 색상 변경
+        DisplayUserId a_DpUserId = null;
+        GameObject[] a_Users = GameObject.FindGameObjectsWithTag("Player");
+        foreach (GameObject user in a_Users)
+        {
+            a_DpUserId = user.GetComponent<DisplayUserId>();
+            if (a_DpUserId == null)
+                continue;
+
+            a_DpUserId.ChangeNameColor(this);
+
+        }
+
 
         if (ReceiveReady(PhotonNetwork.LocalPlayer) == true)
         {

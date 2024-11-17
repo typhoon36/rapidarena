@@ -68,8 +68,8 @@
     <Compile Include="Assets\08.Utilty\Photon\PhotonChat\Demos\DemoChat\NamePickGui.cs" />
     <Compile Include="Assets\08.Utilty\Standard Assets\Utility\EventSystemChecker.cs" />
     <Compile Include="Assets\08.Utilty\Standard Assets\Utility\FollowTarget.cs" />
+    <Compile Include="Assets\01.Scripts\Utilty\Act\ConfigBox.cs" />
     <Compile Include="Assets\08.Utilty\Standard Assets\CrossPlatformInput\Scripts\AxisTouchButton.cs" />
-    <Compile Include="Assets\01.Scripts\Manager\Content\Sound_Mgr.cs" />
     <Compile Include="Assets\08.Utilty\Standard Assets\CrossPlatformInput\Scripts\ButtonHandler.cs" />
     <Compile Include="Assets\08.Utilty\Standard Assets\CrossPlatformInput\Scripts\TiltInput.cs" />
     <Compile Include="Assets\01.Scripts\Controller\Gun_Related\Weapon_Base.cs" />
@@ -101,7 +101,6 @@
     <Compile Include="Assets\01.Scripts\Manager\Core\Game_Mgr.cs" />
     <Compile Include="Assets\06.Model\Low Poly FPS Pack - Free (Sample)\Components\Scripts\Weapon_Scripts\HandgunScriptLPFP.cs" />
     <Compile Include="Assets\01.Scripts\Manager\Core\Lobby_Mgr.cs" />
-    <Compile Include="Assets\01.Scripts\Controller\Gun_Related\Grenade\StickyBomb.cs" />
     <Compile Include="Assets\01.Scripts\Controller\Player\Cam_Ctrl.cs" />
     <Compile Include="Assets\01.Scripts\Manager\Core\Data_Mgr.cs" />
     <Compile Include="Assets\08.Utilty\Photon\PhotonRealtime\Demos\DemoLoadBalancing\ConnectAndJoinRandomLb.cs" />
@@ -110,6 +109,7 @@
     <Compile Include="Assets\08.Utilty\Standard Assets\CrossPlatformInput\Scripts\Joystick.cs" />
     <Compile Include="Assets\08.Utilty\Standard Assets\Utility\WaypointProgressTracker.cs" />
     <Compile Include="Assets\01.Scripts\Manager\Content\Shop\Shop_Mgr.cs" />
+    <Compile Include="Assets\01.Scripts\Utilty\Act\MonoSingleton.cs" />
     <Compile Include="Assets\06.Model\Low Poly FPS Pack - Free (Sample)\Components\Scripts\Weapon_Scripts\AutomaticGunScriptLPFP.cs" />
     <Compile Include="Assets\08.Utilty\Photon\PhotonLibs\WebSocket\SocketWebTcp.cs" />
     <Compile Include="Assets\06.Model\Low Poly FPS Pack - Free (Sample)\Components\Demo_Scene_Components\Scripts\DebrisScript.cs" />
@@ -129,17 +129,16 @@
     <Compile Include="Assets\01.Scripts\Manager\Content\Inven\Slot.cs" />
     <Compile Include="Assets\01.Scripts\Controller\Gun_Related\Bullet_Ctrl.cs" />
     <Compile Include="Assets\01.Scripts\Controller\Gun_Related\Grenade\Grenade_Ctrl.cs" />
-    <Compile Include="Assets\01.Scripts\Utilty\MonoSingleton.cs" />
     <Compile Include="Assets\08.Utilty\Standard Assets\Utility\FPSCounter.cs" />
     <Compile Include="Assets\01.Scripts\Controller\Gun_Related\Guns\AsGun_Ctrl.cs" />
     <Compile Include="Assets\01.Scripts\Controller\Gun_Related\Shell\Casing_Ctrl.cs" />
-    <Compile Include="Assets\01.Scripts\Utilty\DisplayUserId.cs" />
     <Compile Include="Assets\08.Utilty\Standard Assets\ParticleSystems\Scripts\Explosive.cs" />
     <Compile Include="Assets\01.Scripts\Controller\Gun_Related\Grenade\Grenade_Projectile.cs" />
     <Compile Include="Assets\01.Scripts\Controller\Gun_Related\Guns\HandGun_Ctrl.cs" />
     <Compile Include="Assets\08.Utilty\Standard Assets\ParticleSystems\Scripts\FireLight.cs" />
     <Compile Include="Assets\01.Scripts\Utilty\Produce\ParticleAutoDestroyerByTime.cs" />
     <Compile Include="Assets\08.Utilty\Standard Assets\Utility\SimpleMouseRotator.cs" />
+    <Compile Include="Assets\01.Scripts\Utilty\Room\DisplayUserId.cs" />
     <Compile Include="Assets\08.Utilty\Standard Assets\Utility\DragRigidbody.cs" />
     <Compile Include="Assets\08.Utilty\Photon\PhotonLibs\WebSocket\WebSocket.cs" />
     <Compile Include="Assets\08.Utilty\Standard Assets\CrossPlatformInput\Scripts\MobileControlRig.cs" />
@@ -158,7 +157,7 @@
     <Compile Include="Assets\08.Utilty\Standard Assets\Utility\LerpControlledBob.cs" />
     <Compile Include="Assets\08.Utilty\Standard Assets\Utility\CurveControlledBob.cs" />
     <Compile Include="Assets\01.Scripts\Controller\Gun_Related\Shell\Casing_Pool.cs" />
-    <Compile Include="Assets\01.Scripts\Utilty\ConfigBox.cs" />
+    <Compile Include="Assets\01.Scripts\Utilty\Act\Sound_Mgr.cs" />
     <Compile Include="Assets\01.Scripts\Controller\FeildItem\ItemBase.cs" />
     <Compile Include="Assets\08.Utilty\Standard Assets\CrossPlatformInput\Scripts\TouchPad.cs" />
     <Compile Include="Assets\08.Utilty\Standard Assets\Utility\SimpleActivatorMenu.cs" />

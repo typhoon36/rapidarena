@@ -5,7 +5,7 @@ using UnityEngine;
 public class Casing_Ctrl : MonoBehaviour
 {
     [SerializeField]
-    private float m_dTime = 5f;//탄피 등장 후 사라지는 시간
+    private float m_CTime = 5f;//탄피 등장 후 사라지는 시간
 
     [SerializeField]
     private float m_CSpin = 1.0f;//탄피 회전 속도
@@ -42,7 +42,7 @@ public class Casing_Ctrl : MonoBehaviour
 
     IEnumerator DeactivateAfterTime()
     {
-        yield return new WaitForSeconds(m_dTime);
+        yield return new WaitForSeconds(m_CTime);
         m_Pool.DeactivateItem(this.gameObject);
     }
 

@@ -47,6 +47,8 @@ public class Lobby_Mgr : MonoBehaviourPunCallbacks
 
     void Start()
     {
+        Sound_Mgr.Inst.PlayBGM("LobbyBGM");
+
         if (CreateRoomBtn != null)
             CreateRoomBtn.onClick.AddListener(OnClickCreateRoom);
 

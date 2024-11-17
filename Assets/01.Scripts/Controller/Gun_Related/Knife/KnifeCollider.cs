@@ -5,7 +5,7 @@ using UnityEngine;
 public class KnifeCollider : MonoBehaviour
 {
     private new Collider collider;
-    private int m_Damage;
+    int m_Damage;
     public Knife_Ctrl knifeCtrl; // Knife_Ctrl 참조 추가
 
     private void Awake()
@@ -27,10 +27,9 @@ public class KnifeCollider : MonoBehaviour
         collider.enabled = false;
     }
 
-    private void OnTriggerEnter(Collider collision)
+    void OnTriggerEnter(Collider collision)
     {
         if (collision.gameObject.CompareTag("Muzzle")) return;
-        if (collision.gameObject.CompareTag("Player")) return; // 플레이어 태그 무시
         if (collision.gameObject.CompareTag("Item")) return;
         if (collision.gameObject.CompareTag("Untagged")) return; // 태그 없는 오브젝트 무시
 
