@@ -113,6 +113,7 @@
     <Compile Include="Assets\06.Model\Low Poly FPS Pack - Free (Sample)\Components\Scripts\Weapon_Scripts\AutomaticGunScriptLPFP.cs" />
     <Compile Include="Assets\08.Utilty\Photon\PhotonLibs\WebSocket\SocketWebTcp.cs" />
     <Compile Include="Assets\06.Model\Low Poly FPS Pack - Free (Sample)\Components\Demo_Scene_Components\Scripts\DebrisScript.cs" />
+    <Compile Include="Assets\01.Scripts\Utilty\Produce\BillboardCanvas.cs" />
     <Compile Include="Assets\08.Utilty\Photon\PhotonChat\Demos\Common\TextButtonTransition.cs" />
     <Compile Include="Assets\08.Utilty\Standard Assets\Utility\TimedObjectActivator.cs" />
     <Compile Include="Assets\01.Scripts\Manager\Content\Inven\Equip_Slot.cs" />
