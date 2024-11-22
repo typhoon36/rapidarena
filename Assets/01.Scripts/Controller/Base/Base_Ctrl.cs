@@ -100,16 +100,20 @@ public class Base_Ctrl : MonoBehaviourPunCallbacks
         }
 
         // 애니메이션 상태를 네트워크에 동기화
-        if (photonView.IsMine == true)
+        if (photonView.IsMine)
         {
-            photonView.RPC("RPC_UpdateAnimationState", RpcTarget.Others, m_PlayerState);
+            photonView.RPC("RPC_UpdateAnimationState", RpcTarget.Others, (int)m_PlayerState);
         }
     }
 
     [PunRPC]
-    void RPC_UpdateAnimationState(DefState state)
+    void RPC_UpdateAnimationState(int state)
     {
-        m_PlayerState = state;
+        if (photonView.IsMine)
+        {
+            photonView.RPC("RPC_UpdateAnimationState", RpcTarget.Others, (int)m_PlayerState);
+        }
+        m_PlayerState = (DefState)state;
         UpdateAnimationState();
     }
 

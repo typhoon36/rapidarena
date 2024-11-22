@@ -244,6 +244,7 @@ public class Player_Ctrl : Base_Ctrl
         }
     }
 
+    #region Weapon
     [PunRPC]
     void RPC_OnEnableWeapon(string weaponName)
     {
@@ -273,7 +274,6 @@ public class Player_Ctrl : Base_Ctrl
     }
 
 
-
     void IsChange()
     {
         float scroll = Input.GetAxis("Mouse ScrollWheel");
@@ -297,6 +297,7 @@ public class Player_Ctrl : Base_Ctrl
         currentWeapon.WeaponSetting.IsAutoAttack = !currentWeapon.WeaponSetting.IsAutoAttack;
         Game_Mgr.Inst.UpdateGunModeText(currentWeapon.WeaponType, currentWeapon.WeaponSetting.IsAutoAttack);
     }
+    #endregion
 
 
     void HandleWeaponActions()
@@ -337,7 +338,14 @@ public class Player_Ctrl : Base_Ctrl
     }
 
 
-    //팀에 맞춰 표시되는 캐릭터 색상 변경
+    [PunRPC]
+    public void RPC_ChangeTeamMaterial(string team)
+    {
+        ChangeTeamMaterial(team);
+        ChangeMarkerMaterial(team);
+    }
+
+    // 팀에 맞춰 표시되는 캐릭터 색상 변경
     public void ChangeTeamMaterial(string team)
     {
         if (team == "blue")
@@ -350,7 +358,7 @@ public class Player_Ctrl : Base_Ctrl
         }
     }
 
-    //미내맵에 표시되는 마커를 팀에 맞춰 변경
+    // 미니맵에 표시되는 마커를 팀에 맞춰 변경
     public void ChangeMarkerMaterial(string team)
     {
         if (team == "blue")
@@ -362,8 +370,5 @@ public class Player_Ctrl : Base_Ctrl
             m_DefMarkerMesh.material = m_TeamMarkerMtrl[1];
         }
     }
-
-
-
 }
 

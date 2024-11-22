@@ -9,13 +9,11 @@ public class Team_Mgr : MonoBehaviourPunCallbacks
 {
     [HideInInspector] public double m_CheckWinTime = 2.0f;
     // 팀1 
-    int IsRoomBuf_Team1Win = 0; //룸 버퍼를 생각.
+    int IsRoomBuf_Team1Win = 0; 
     [HideInInspector] public int m_Team1Win = 0;
     // 팀2
-    int IsRoomBuf_Team2Win = 0;//위와 같은 의미.
-    [HideInInspector] public int m_Team2Win = 0;
-
-    bool IsAward = false;//포인트 증가 여부
+    int IsRoomBuf_Team2Win = 0;
+    [HideInInspector] public int m_Team2Win = 0; 
 
 
     #region Custom Properties
@@ -45,12 +43,12 @@ public class Team_Mgr : MonoBehaviourPunCallbacks
     //승패 Observer 함수 
     public void WinLossObserver(Ready_Mgr a_ReadyMgr)
     {
-        if (a_ReadyMgr == null)
-            return;
+        if (a_ReadyMgr == null) return;
 
         if (Ready_Mgr.m_GameState == GameState.Play)
         {
             m_CheckWinTime -= Time.deltaTime;
+           
             if (m_CheckWinTime <= 0.0f)
             {
                 CheckAliveTeam(a_ReadyMgr);
@@ -63,7 +61,7 @@ public class Team_Mgr : MonoBehaviourPunCallbacks
                                               "<color=#DC626D>" + "Team2 : " +
                                               m_Team2Win.ToString() + "</color>";
 
-        if (5 <= (m_Team1Win + m_Team2Win))
+        if (5 <= (m_Team1Win + m_Team2Win)) //5라운드 이상이면 게임 종료
         {
             if (PhotonNetwork.IsMasterClient == true)
                 a_ReadyMgr.SendState(GameState.End);
@@ -72,22 +70,19 @@ public class Team_Mgr : MonoBehaviourPunCallbacks
             {
                 Game_Mgr.Inst.m_GameEndText.gameObject.SetActive(true);
 
-                if (!IsAward) // 포인트가 아직 증가하지 않았다면 먼저 승리팀 체크
+                if (m_Team1Win < m_Team2Win)
                 {
-                    if (m_Team1Win < m_Team2Win)
-                    {
-                        Game_Mgr.Inst.m_GameEndText.text = "<color=#DC626D>" + "레드팀 승리" + "</color>";
-                        Cursor.lockState = CursorLockMode.None;
-                        Data_Mgr.m_UserData.Points += 500;//포인트 증가(라운드 총합 포인트)
-                    }
-                    else
-                    {
-                        Game_Mgr.Inst.m_GameEndText.text = "<color=#4179A3>" + "블루팀 승리" + "</color>";
-                        Cursor.lockState = CursorLockMode.None;
-                        Data_Mgr.m_UserData.Points += 500;//포인트 증가(라운드 총합 포인트)
-                    }
-                    IsAward = true; //포인트 증가함
+                    Game_Mgr.Inst.m_GameEndText.text = "<color=#DC626D>" + "레드팀 승리" + "</color>";
+                    Cursor.lockState = CursorLockMode.None;
+                    Data_Mgr.m_UserData.Points += 500;//포인트 증가(라운드 총합 포인트)
                 }
+                else
+                {
+                    Game_Mgr.Inst.m_GameEndText.text = "<color=#4179A3>" + "블루팀 승리" + "</color>";
+                    Cursor.lockState = CursorLockMode.None;
+                    Data_Mgr.m_UserData.Points += 500;//포인트 증가(라운드 총합 포인트)
+                }
+
             }
 
             if (a_ReadyMgr.m_WaitTmText != null)
@@ -96,16 +91,17 @@ public class Team_Mgr : MonoBehaviourPunCallbacks
             return;
         }
 
+        //라운드 끝나고 다음 라운드 준비
         if (a_ReadyMgr.m_OldState != GameState.Ready && Ready_Mgr.m_GameState == GameState.Ready)
         {
-            GameObject[] users = GameObject.FindGameObjectsWithTag("Player");
+            GameObject[] users = GameObject.FindGameObjectsWithTag("Player");//다 대기로 만들어주기
             foreach (GameObject user in users)
             {
                 Damage a_Damage = user.GetComponent<Damage>();
 
                 if (a_Damage != null)
                 {
-                    a_Damage.ReadyStateUser();
+                    a_Damage.ReadyStateUser();//다음 라운드 
                 }
             }
         }
@@ -122,8 +118,8 @@ public class Team_Mgr : MonoBehaviourPunCallbacks
 
         GameObject[] Players = GameObject.FindGameObjectsWithTag("Player");
 
-        Player[] players = PhotonNetwork.PlayerList;
-        foreach (Player a_player in players)
+        Player[] users = PhotonNetwork.PlayerList;
+        foreach (Player a_player in users)
         {
             if (a_player.CustomProperties.ContainsKey("MyTeam") == true)
                 a_PlrTeam = (string)a_player.CustomProperties["MyTeam"];
@@ -160,7 +156,7 @@ public class Team_Mgr : MonoBehaviourPunCallbacks
 
         a_ReadyMgr.m_GoWaitGame = 4.0f;
 
-        if (0 < rowTm1 && 0 < rowTm2) return;
+        if (0 < rowTm1 && 0 < rowTm2) return; //두팀 모두 한명이상 살아있으면 리턴
 
         if (5 <= (m_Team1Win + m_Team2Win)) return;
 
@@ -198,7 +194,7 @@ public class Team_Mgr : MonoBehaviourPunCallbacks
                 m_CheckWinTime = -150000.0f;
             }
             SendTeam1Win(IsRoomBuf_Team1Win);
-           
+
         }
     }
 
@@ -257,7 +253,4 @@ public class Team_Mgr : MonoBehaviourPunCallbacks
         PhotonNetwork.CurrentRoom.SetCustomProperties(m_Team2WinProps);
     }
     #endregion
-
-   
-
 }

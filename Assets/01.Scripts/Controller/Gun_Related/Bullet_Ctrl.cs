@@ -35,9 +35,10 @@ public class Bullet_Ctrl : MonoBehaviour
     void OnTriggerEnter(Collider coll)
     {
         if (coll.tag == "Bullet") return;
-        else if (coll.tag == "Wall") return;
         else if (coll.tag == "Item") return;
+        else if (coll.tag == "Muzzle") return;
 
+        // 벽 또는 적에게 닿은경우 코루틴 실행
         StartCoroutine(this.Spark(0.1f));
     }
 
@@ -65,6 +66,8 @@ public class Bullet_Ctrl : MonoBehaviour
 
         Destroy(obj, 1.0f);
 
+        //폭발후 스폰한 총알 삭제
+        Destroy(this.gameObject, 0.1f);
     }
 
 

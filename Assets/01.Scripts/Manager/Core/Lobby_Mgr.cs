@@ -86,7 +86,7 @@ public class Lobby_Mgr : MonoBehaviourPunCallbacks
         {
             m_HomeBtn.onClick.AddListener(() =>
             {
-            
+
                 SceneManager.LoadScene("Pt_LobbyScene");
             });
         }
@@ -95,7 +95,7 @@ public class Lobby_Mgr : MonoBehaviourPunCallbacks
         {
             m_SettingBtn.onClick.AddListener(() =>
             {
-                Instantiate(m_ConfigObj,Canvas_Parent);
+                Instantiate(m_ConfigObj, Canvas_Parent);
             });
         }
     }
@@ -109,15 +109,6 @@ public class Lobby_Mgr : MonoBehaviourPunCallbacks
     public override void OnJoinedLobby()
     {
         userId.text = GetUserId();
-    }
-
-    public void ClickJoinRandomRoom()
-    {
-        PhotonNetwork.LocalPlayer.NickName = userId.text;
-
-        PlayerPrefs.SetString("USER_ID", userId.text);
-
-        PhotonNetwork.JoinRandomRoom();
     }
 
     public override void OnJoinedRoom()
@@ -151,7 +142,7 @@ public class Lobby_Mgr : MonoBehaviourPunCallbacks
         RoomOptions roomOptions = new RoomOptions();
         roomOptions.IsOpen = true;
         roomOptions.IsVisible = true;
-        roomOptions.MaxPlayers = 8;
+        roomOptions.MaxPlayers = 4;
 
         PhotonNetwork.CreateRoom(_roomName, roomOptions, TypedLobby.Default);
     }
@@ -208,11 +199,9 @@ public class Lobby_Mgr : MonoBehaviourPunCallbacks
 
     int MyFindIndex(RoomItem[] a_RmItemList, RoomInfo a_RoomInfo)
     {
-        if (a_RmItemList == null)
-            return -1;
+        if (a_RmItemList == null) return -1;
 
-        if (a_RmItemList.Length <= 0)
-            return -1;
+        if (a_RmItemList.Length <= 0) return -1;
 
         for (int i = 0; i < a_RmItemList.Length; i++)
         {
@@ -227,11 +216,9 @@ public class Lobby_Mgr : MonoBehaviourPunCallbacks
 
     void MyDestroy(RoomItem[] a_RmItemList, RoomInfo a_RoomInfo)
     {
-        if (a_RmItemList == null)
-            return;
+        if (a_RmItemList == null) return;
 
-        if (a_RmItemList.Length <= 0)
-            return;
+        if (a_RmItemList.Length <= 0) return;
 
         for (int i = 0; i < a_RmItemList.Length; i++)
         {
@@ -262,7 +249,4 @@ public class Lobby_Mgr : MonoBehaviourPunCallbacks
     }
     #endregion
 
-    #region UI Methods
-
-    #endregion
 }

@@ -8,17 +8,18 @@ using UnityEngine.UI;
 
 public class Damage : MonoBehaviourPunCallbacks, IPunObservable
 {
+    MeshRenderer[] m_Rends;
+
     GameObject _Effect;
 
-    int InitHp = 440;
-    [HideInInspector] public int m_CurHP = 440;
-    int NetHP = 440;
+    int InitHp = 400;
+    [HideInInspector] public int m_CurHP = 400;
+    int NetHP = 400;
 
-    #region 킬카운트 
-    [Header("KillCount")]
+
     public Canvas m_Canvas;
-    [HideInInspector] public int PlayerId = -1;
-    #endregion
+    [HideInInspector] public int PlayerId = -1;//플레이어 아이디(고유번호)
+
 
     Image m_HPBar;
     //Private인 이유는 Game_Mgr에서 가져와 유저들이 사용해주기 위함.
@@ -27,8 +28,6 @@ public class Damage : MonoBehaviourPunCallbacks, IPunObservable
     PhotonView pv;
     int m_KillCount = 0;
     int m_Cur_LAttId = -1;
-    ExitGames.Client.Photon.Hashtable KillProps =
-                                        new ExitGames.Client.Photon.Hashtable();
 
     [HideInInspector] public float m_ReSetTime = 0.0f;
 
@@ -39,8 +38,14 @@ public class Damage : MonoBehaviourPunCallbacks, IPunObservable
     void Start()
     {
         pv = GetComponent<PhotonView>();
-        PlayerId = pv.Owner.ActorNumber;//Owner: 해당 오브젝트를 소유한 플레이어
+        PlayerId = pv.Owner.ActorNumber;//플레이어가 설정한 아이디를 가져온다.
 
+        _Effect = Resources.Load<GameObject>("ExplosionMobile");//죽었을때의 이펙트 로드
+
+        m_Rends = GetComponentsInChildren<MeshRenderer>();//캡슐의 렌더러 가져오기
+
+        //플레이어들 각 HP 초기화
+        //true인 이유는 fps에서 플레이어들이 m_HPBar를 가져와 사용하기 때문
         if (pv.IsMine == true)
         {
             InitHp = m_CurHP;//초기화
@@ -48,15 +53,15 @@ public class Damage : MonoBehaviourPunCallbacks, IPunObservable
             m_HPBar.fillAmount = 1.0f;
             m_HPBar.color = Color.green;
         }
-
-        _Effect = Resources.Load<GameObject>("ExplosionMobile");
     }
 
     int m_UpdateCk = 2;
     void Update()
     {
+        //들어왔을때 초기화
         if (0 < m_UpdateCk)
         {
+            //플레이어의 캡슐을 보이지않게 하여 숨기기
             m_UpdateCk--;
             if (m_UpdateCk <= 0)
                 ReadyStateUser();
@@ -66,24 +71,23 @@ public class Damage : MonoBehaviourPunCallbacks, IPunObservable
             m_ReSetTime -= Time.deltaTime;
 
         if (PhotonNetwork.CurrentRoom == null || PhotonNetwork.LocalPlayer == null) return;
-
-        if (PhotonNetwork.IsMasterClient)
-        {
-            Game_Mgr.Inst.UpdateKillCount(PlayerId, m_KillCount);
-        }
-
     }
+
     public void ReadyStateUser()
     {
         if (Ready_Mgr.m_GameState != GameState.Ready) return;
 
+        m_CurHP = InitHp;
+        UpdateHPBar();
+
         StartCoroutine(this.WaitReadyUser());
     }
 
+    //게임 시작 전까지 대기
     IEnumerator WaitReadyUser()
     {
+        //시작전이니 모두 숨기기
         m_Canvas.enabled = false;
-        Game_Mgr.Inst.m_GameObj.SetActive(false);
 
         SetVisible(false);
 
@@ -101,7 +105,7 @@ public class Damage : MonoBehaviourPunCallbacks, IPunObservable
         int a_SitPosIdx = ReceiveSitPosIdx(pv.Owner);
 
         //팀에 따라 다른 위치에 앉게 하기
-        if (0 <= a_SitPosIdx && a_SitPosIdx < 4)
+        if (0 <= a_SitPosIdx && a_SitPosIdx < 2)
         {
             //블루팀
             if (a_TeamKind == "blue")
@@ -120,32 +124,35 @@ public class Damage : MonoBehaviourPunCallbacks, IPunObservable
 
         if (pv != null && pv.IsMine == true && m_HPBar !=null)
         {
-
             m_HPBar.fillAmount = 1.0f;
             m_HPBar.color = Color.green;
-
             m_CurHP = InitHp;
 
-            m_Canvas.enabled = true;
             Game_Mgr.Inst.m_GameObj.SetActive(true);
 
         }
 
 
+        m_Canvas.enabled = true;
+
         SetVisible(true);
 
         m_StPos = a_SitPos;
         m_StCount = 5;
-
     }
 
     void SetVisible(bool IsVisible)
     {
+        foreach (MeshRenderer a_Rend in m_Rends)
+        {
+            a_Rend.enabled = IsVisible;
+        }
 
         if (IsVisible == true)
             m_ReSetTime = 10.0f;
     }
 
+    #region Damage
     void OnTriggerEnter(Collider coll)
     {
         if (coll.tag == "Bullet" && m_CurHP > 0)
@@ -231,39 +238,27 @@ public class Damage : MonoBehaviourPunCallbacks, IPunObservable
                 m_HPBar.color = Color.green;
         }
     }
-
+    #endregion
     IEnumerator ExplosionUser()
     {
         GameObject _Eff = GameObject.Instantiate(_Effect, transform.position, Quaternion.identity);
 
-        Destroy(_Eff, 2.0f);
+        Destroy(_Eff, 3.0f);//이펙트 제거
 
-        m_Canvas.enabled = false;
+        if (pv.IsMine == true)
+        {
+            m_Canvas.enabled = false;//닉네임 캔버스 숨기기
 
-        //hp바 숨기기
-        Game_Mgr.Inst.m_GameObj.SetActive(false);
+            Game_Mgr.Inst.m_GameObj.SetActive(false);//HP바 포함한 게임 오브젝트 숨기기
 
+        }
+
+        //투명처리
         SetVisible(false);
 
-
-        // m_ReSetTime을 10으로 설정
-        m_ReSetTime = 10.0f;
-
-        yield return new WaitForSeconds(2.0f); // 폭발 후 2초 대기
-
-        // HP 초기화
-        m_CurHP = InitHp;
-        UpdateHPBar();
-
-        // 플레이어 위치 초기화
-        this.gameObject.transform.position = m_StPos;
-
-        // 캔버스와 게임 오브젝트 다시 활성화
-        m_Canvas.enabled = true;
-        Game_Mgr.Inst.m_GameObj.SetActive(true);
-
-        SetVisible(true);
+        yield return null; // 한 프레임 대기 후 코루틴 다음 함수 실행
     }
+
 
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
     {

@@ -4,6 +4,9 @@ using Photon.Pun;
 using Photon.Realtime;
 using UnityEngine.SceneManagement;
 using System.Collections.Generic;
+using System.Collections;
+using UnityEngine.EventSystems;
+
 public enum GameState
 {
     Ready = 0,
@@ -46,8 +49,8 @@ public class Ready_Mgr : MonoBehaviourPunCallbacks
     ExitGames.Client.Photon.Hashtable SitPosInxProps =
                                 new ExitGames.Client.Photon.Hashtable();
 
-    [HideInInspector] public static Vector3[] m_Team1Pos = new Vector3[4];
-    [HideInInspector] public static Vector3[] m_Team2Pos = new Vector3[4];
+    [HideInInspector] public static Vector3[] m_Team1Pos = new Vector3[2];
+    [HideInInspector] public static Vector3[] m_Team2Pos = new Vector3[2];
     #endregion
 
     #region TeamSelect
@@ -82,14 +85,11 @@ public class Ready_Mgr : MonoBehaviourPunCallbacks
         m_GameState = GameState.Ready;
 
         m_Team1Pos[0] = new Vector3(31.3f, 4f, -75f);
-        m_Team1Pos[1] = new Vector3(31.3f, 4f, -77f);
-        m_Team1Pos[2] = new Vector3(31.3f, 4f, -79f);
-        m_Team1Pos[3] = new Vector3(31.3f, 4, -82f);
+        m_Team1Pos[1] = new Vector3(31.3f, 4, -83f);
 
-        m_Team2Pos[0] = new Vector3(102.3f, 4f, -77.24f);
-        m_Team2Pos[1] = new Vector3(102.3f, 4f, -79.14f);
-        m_Team2Pos[2] = new Vector3(102.3f, 4f, -81.10f);
-        m_Team2Pos[3] = new Vector3(102.3f, 4f, -83.42f);
+        m_Team2Pos[0] = new Vector3(102.3f, 4f, -77f);
+        m_Team2Pos[1] = new Vector3(102.3f, 4f, -83f);
+
 
 
         IsEnter = false;
@@ -119,6 +119,7 @@ public class Ready_Mgr : MonoBehaviourPunCallbacks
             m_Team1ToTeam2.onClick.AddListener(() =>
             {
                 SendSelTeam("red");
+
             });
 
         if (m_Team1Ready != null)
@@ -131,6 +132,7 @@ public class Ready_Mgr : MonoBehaviourPunCallbacks
             m_Team2ToTeam1.onClick.AddListener(() =>
             {
                 SendSelTeam("blue");
+
             });
 
         if (m_Team2Ready != null)
@@ -196,6 +198,7 @@ public class Ready_Mgr : MonoBehaviourPunCallbacks
             Team1Panel.SetActive(false);
             Team2Panel.SetActive(false);
             m_WaitTmText.gameObject.SetActive(false);
+            m_ChatPanel.SetActive(false);
         }
 
         //팀 전멸 & 승패 판정
@@ -219,21 +222,10 @@ public class Ready_Mgr : MonoBehaviourPunCallbacks
     //플레이어 생성
     void CreatePlayer()
     {
-        string team = ReceiveSelTeam(PhotonNetwork.LocalPlayer);
-        Vector3 spawnPos;
+      
 
-        if (team == "blue")
-        {
-            int index = PhotonNetwork.LocalPlayer.ActorNumber % m_Team1Pos.Length;
-            spawnPos = m_Team1Pos[index];
-        }
-        else //(team == "red")
-        {
-            int index = PhotonNetwork.LocalPlayer.ActorNumber % m_Team2Pos.Length;
-            spawnPos = m_Team2Pos[index];
-        }
-
-        PhotonNetwork.Instantiate("Player", spawnPos, Quaternion.identity, 0);
+        float pos  = Random.Range(-10.0f, 10.0f);
+        PhotonNetwork.Instantiate("Player", new Vector3(pos,3,pos), Quaternion.identity, 0);
     }
 
     void OnApplicationFocus(bool a_Focus)
@@ -241,6 +233,7 @@ public class Ready_Mgr : MonoBehaviourPunCallbacks
         IsFocus = a_Focus;
     }
 
+    //접속자 수 표시
     void GetConnectPlayerCount()
     {
         Room currRoom = PhotonNetwork.CurrentRoom;
@@ -321,6 +314,7 @@ public class Ready_Mgr : MonoBehaviourPunCallbacks
 
     List<string> m_MsgList = new List<string>();
 
+    //채팅 로그 출력
     [PunRPC]
     void LogMsg(string msg, bool isChatMsg, PhotonMessageInfo info)
     {
@@ -409,14 +403,6 @@ public class Ready_Mgr : MonoBehaviourPunCallbacks
             m_SelTeamProps.Add("MyTeam", a_Team);
 
         PhotonNetwork.LocalPlayer.SetCustomProperties(m_SelTeamProps);
-
-        if (Player_Ctrl.Inst != null)
-        {
-            Player_Ctrl.Inst.ChangeTeamMaterial(a_Team);
-            Player_Ctrl.Inst.ChangeMarkerMaterial(a_Team);
-
-        }
-
     }
 
     //팀 선택 정보 받기
@@ -511,21 +497,22 @@ public class Ready_Mgr : MonoBehaviourPunCallbacks
 
         }
 
-
-        //플레이어 이름 색상 변경
+        //팀원 이름 색상 변경
         DisplayUserId a_DpUserId = null;
         GameObject[] a_Users = GameObject.FindGameObjectsWithTag("Player");
-        foreach (GameObject user in a_Users)
+        foreach (GameObject a_User in a_Users)
         {
-            a_DpUserId = user.GetComponent<DisplayUserId>();
+            a_DpUserId = a_User.GetComponent<DisplayUserId>();
+
             if (a_DpUserId == null)
                 continue;
 
             a_DpUserId.ChangeNameColor(this);
-
         }
 
 
+
+        //팀 선택 정보에 따른 UI 처리
         if (ReceiveReady(PhotonNetwork.LocalPlayer) == true)
         {
             m_Team1Ready.gameObject.SetActive(false);
@@ -651,18 +638,22 @@ public class Ready_Mgr : MonoBehaviourPunCallbacks
                 if (m_GoWaitGame <= 0.0f)
                 {
                     SendState(GameState.Play);
-
-                    // 게임 시작 시 채팅 패널 비활성화
-
                     Cursor.lockState = CursorLockMode.Locked;
-                    Cursor.visible = false;
 
+                    // 게임 시작 시 타이머 시작
                     Game_Mgr.Inst.m_LimitTime = 240f;
 
-                    // 게임 시작 시 타이머 시작 & 목표 텍스트 출력하라 RPC 호출
-                    Game_Mgr.Inst.pv.RPC("UpdateGameState", RpcTarget.All, GameState.Play);
+                    GameObject[] a_Users = GameObject.FindGameObjectsWithTag("Player");
+                    foreach (GameObject a_User in a_Users)
+                    {
+                        PhotonView userPv = a_User.GetComponent<PhotonView>();
+                        string a_TeamKind = Ready_Mgr.Inst.ReceiveSelTeam(userPv.Owner);
 
-                    m_ChatPanel.SetActive(false);
+                        userPv.RPC("RPC_ChangeTeamMaterial", RpcTarget.All, a_TeamKind);
+                    }
+
+                    // 게임 시작 시 타이머 시작
+                    Game_Mgr.Inst.pv.RPC("UpdateGameState", RpcTarget.All, GameState.Play);
                 }
             }
         }
@@ -699,5 +690,32 @@ public class Ready_Mgr : MonoBehaviourPunCallbacks
     }
     #endregion
 
+    #region 연출
 
+    IEnumerator WaitText(float delay = 10)
+    {
+        string currentText = Game_Mgr.Inst.Object_Txt.text;
+        for (int i = currentText.Length; i >= 0; i--)
+        {
+            Game_Mgr.Inst.Object_Txt.text = currentText.Substring(0, i);
+            yield return new WaitForSeconds(0.1f);
+        }
+
+        Game_Mgr.Inst.Object_Txt.gameObject.SetActive(false);
+    }
+
+    IEnumerator Typing(string ObjectTxt)
+    {
+        yield return new WaitForSeconds(1f);
+
+        for (int i = 0; i <= ObjectTxt.Length; i++)
+        {
+            Game_Mgr.Inst.Object_Txt.text = ObjectTxt.Substring(0, i);
+            yield return new WaitForSeconds(0.1f);
+        }
+
+        // Typing 효과 끝나고 3초 후에 텍스트 사라짐
+        StartCoroutine(WaitText(3.0f));
+    }
+    #endregion
 }

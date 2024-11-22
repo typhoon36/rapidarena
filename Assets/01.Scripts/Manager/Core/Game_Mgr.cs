@@ -1,10 +1,7 @@
 using Photon.Pun;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
-using UnityEngine.EventSystems;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 
@@ -49,8 +46,6 @@ public class Game_Mgr : MonoBehaviour
     private Weapon_Base m_Weapon;
     #endregion
 
-    [Header("Message")]
-    public Text m_Message;
 
     [Header("Timer")]
     public Text m_Timer;
@@ -63,13 +58,6 @@ public class Game_Mgr : MonoBehaviour
     [Header("End")]
     public Text m_GameEndText;
 
-    [Header("KillBoard")]
-    public GameObject m_KillBoard;
-    public Text m_Player1Kill;
-    public Text m_Player2Kill;
-    public Text m_Player3Kill;
-    public Text m_Player4Kill;
-    Dictionary<int, int> playerKillCounts = new Dictionary<int, int>();
 
     [Header("Object")]
     public Text Object_Txt;
@@ -96,15 +84,7 @@ public class Game_Mgr : MonoBehaviour
 
         Object_Txt.gameObject.SetActive(false);
 
-        #region KillBoard 초기화
-        m_KillBoard.SetActive(false);
-        m_Player1Kill.text = pv.OwnerActorNr.ToString() + " : 0";
-        m_Player2Kill.text = pv.OwnerActorNr.ToString() + " : 0";
-        m_Player3Kill.text = pv.OwnerActorNr.ToString() + " : 0";
-        m_Player4Kill.text = pv.OwnerActorNr.ToString() + " : 0";
-
-        playerKillCounts.Clear();
-        #endregion
+    
 
         if (PhotonNetwork.IsMasterClient)
         {
@@ -127,32 +107,19 @@ public class Game_Mgr : MonoBehaviour
                     if (teamKind == "blue")
                     {
                         pv.RPC("ShowTeamObjectiveRPC", RpcTarget.All, "테러리스트 저지");
+                        IsShown = true;
                     }
                     else if (teamKind == "red")
                     {
                         pv.RPC("ShowTeamObjectiveRPC", RpcTarget.All, "대테러부대 저지");
+                        IsShown = true;
                     }
-
-                    IsShown = true;
-                }
-            }
-
-            if (pv.IsMine)
-            {
-                if (Input.GetKeyDown(KeyCode.Tab))
-                {
-                    m_KillBoard.SetActive(true);
-                }
-                else if (Input.GetKeyUp(KeyCode.Tab))
-                {
-                    m_KillBoard.SetActive(false);
                 }
             }
         }
 
         if (m_GameState == GameState.End)
         {
-            KillRank();
             StopCoroutine(StartGameTimer());
             StopCoroutine(Typing(""));
         }
@@ -253,43 +220,6 @@ public class Game_Mgr : MonoBehaviour
     }
     #endregion
 
-    #region KillBoard
-    public void UpdateKillCount(int playerId, int killCount)
-    {
-        if (playerKillCounts.ContainsKey(playerId))
-        {
-            playerKillCounts[playerId] = killCount;
-        }
-        else
-        {
-            playerKillCounts.Add(playerId, killCount);
-        }
-    }
-
-    void KillRank()
-    {
-        var sortedKills = playerKillCounts.OrderByDescending(x => x.Value).ToList();
-
-        for (int i = 0; i < sortedKills.Count; i++)
-        {
-            switch (i)
-            {
-                case 0:
-                    m_Player1Kill.text = $"Player {sortedKills[i].Key} : {sortedKills[i].Value}";
-                    break;
-                case 1:
-                    m_Player2Kill.text = $"Player {sortedKills[i].Key} : {sortedKills[i].Value}";
-                    break;
-                case 2:
-                    m_Player3Kill.text = $"Player {sortedKills[i].Key} : {sortedKills[i].Value}";
-                    break;
-                case 3:
-                    m_Player4Kill.text = $"Player {sortedKills[i].Key} : {sortedKills[i].Value}";
-                    break;
-            }
-        }
-    }
-    #endregion
 
     IEnumerator Typing(string ObjectTxt)
     {
