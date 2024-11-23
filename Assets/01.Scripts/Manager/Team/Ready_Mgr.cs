@@ -222,10 +222,8 @@ public class Ready_Mgr : MonoBehaviourPunCallbacks
     //플레이어 생성
     void CreatePlayer()
     {
-      
-
         float pos  = Random.Range(-10.0f, 10.0f);
-        PhotonNetwork.Instantiate("Player", new Vector3(pos,3,pos), Quaternion.identity, 0);
+        PhotonNetwork.Instantiate("Player", new Vector3(pos, 10 ,pos), Quaternion.identity, 0);
     }
 
     void OnApplicationFocus(bool a_Focus)

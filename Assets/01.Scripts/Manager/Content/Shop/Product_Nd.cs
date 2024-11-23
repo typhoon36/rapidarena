@@ -13,26 +13,23 @@ public class Product_Nd : MonoBehaviour
     public Text m_PriceTxt;
     public Button m_Buy_Btn;
 
+    Desc_Nd m_DescNd;
 
-     Desc_Nd m_DescNd;
-
+    Shop_Mgr m_ShopMgr;
 
     void Start()
     {
         // Desc_Nd 인스턴스 찾기
         m_DescNd = GameObject.FindObjectOfType<Desc_Nd>();
 
-        //상품 자체를 클릭했을 때
+        // 상품 자체를 클릭했을 때
         Button a_Btn = GetComponent<Button>();
         if (a_Btn != null)
             a_Btn.onClick.AddListener(() => m_DescNd.SetItem(m_ItemData));
 
-
-
         if (m_Buy_Btn != null)
             m_Buy_Btn.onClick.AddListener(() =>
             {
-                //Debug.Log("BuyBtn Clicked");
                 Shop_Mgr a_ShopMgr = GameObject.FindObjectOfType<Shop_Mgr>();
                 if (a_ShopMgr != null)
                 {
@@ -56,5 +53,11 @@ public class Product_Nd : MonoBehaviour
         m_ItemNameTxt.text = m_ItemData.ItemName;
         m_CountTxt.text = m_ItemData.Amount.ToString();
         m_PriceTxt.text = m_ItemData.ItemPrice.ToString();
+    }
+
+    //상점이 켜졌을때 호출
+    public void SetShopManager(Shop_Mgr shopMgr)
+    {
+        m_ShopMgr = shopMgr;
     }
 }

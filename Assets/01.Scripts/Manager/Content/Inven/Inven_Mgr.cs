@@ -32,12 +32,20 @@ public class Inven_Mgr : MonoBehaviour
     public GameObject EquipSlotObj;
     public Transform EquipParent;
 
+    #region Singleton
+    public static Inven_Mgr Inst;
+    void Awake()
+    {
+
+        Inst = this;
+    }
+    #endregion
+
     void Start()
     {
         Data_Mgr.LoadData();
 
         Sound_Mgr.Inst.PlayBGM("InventoryBgm", 1f);
-
 
         #region Top_Panel Init
         m_LoadOutBtn.GetComponentInChildren<Text>().color = Color.gray;
@@ -74,7 +82,7 @@ public class Inven_Mgr : MonoBehaviour
             });
         #endregion
 
-        //인벤토리 슬롯 생성
+        // 인벤토리 슬롯 생성
         for (int i = 0; i < 20; i++)
         {
             GameObject a_SlotObj = Instantiate(SlotObj, InvenParent);
@@ -89,6 +97,7 @@ public class Inven_Mgr : MonoBehaviour
                 if (a_ItemData != null)
                 {
                     a_Slot.AddItem(a_ItemData);
+                    Debug.Log($"슬롯 {i}에 아이템 추가됨: {a_ItemData.ItemID}");
                 }
             }
         }
@@ -101,9 +110,7 @@ public class Inven_Mgr : MonoBehaviour
             a_Slot.m_ESlotID = i; // 슬롯 ID 설정
         }
 
-
-
-        //1.전체 삭제 버튼
+        // 1. 전체 삭제 버튼
         AllDel_Btn.onClick.AddListener(() =>
         {
             Slot[] a_Slots = InvenParent.GetComponentsInChildren<Slot>();
@@ -113,13 +120,12 @@ public class Inven_Mgr : MonoBehaviour
             }
         });
 
-        //2.슬롯 추가 버튼
+        // 2. 슬롯 추가 버튼
         AddSlot_Btn.onClick.AddListener(() =>
         {
-            //추가버튼을 누르면 스폰되어있는 슬롯을 확인후 이어 스폰
+            // 추가 버튼을 누르면 스폰되어있는 슬롯을 확인 후 이어 스폰
             AddSlot();
         });
- 
     }
 
     // 슬롯 추가

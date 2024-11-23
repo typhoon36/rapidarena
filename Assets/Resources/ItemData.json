@@ -65,8 +65,69 @@
         {
             "UserName": "DefaultUserName",
             "UserID": "DefaultUserID",
-            "Points": 3400
+            "Points": 10
         }
     ],
-    "InvenSlots": []
+    "InvenSlots": [
+        {
+            "SlotID": 0,
+            "ItemID": 1,
+            "ItemCount": 1,
+            "ImagePath": "Product/medkit"
+        },
+        {
+            "SlotID": 1,
+            "ItemID": 2,
+            "ItemCount": 1,
+            "ImagePath": "Product/AmmoBox"
+        },
+        {
+            "SlotID": 2,
+            "ItemID": 3,
+            "ItemCount": 1,
+            "ImagePath": "Product/DefuseKit"
+        },
+        {
+            "SlotID": 3,
+            "ItemID": 2,
+            "ItemCount": 1,
+            "ImagePath": "Product/AmmoBox"
+        },
+        {
+            "SlotID": 4,
+            "ItemID": 4,
+            "ItemCount": 1,
+            "ImagePath": "Product/WeaponKit"
+        },
+        {
+            "SlotID": 5,
+            "ItemID": 4,
+            "ItemCount": 1,
+            "ImagePath": "Product/WeaponKit"
+        },
+        {
+            "SlotID": 6,
+            "ItemID": 4,
+            "ItemCount": 1,
+            "ImagePath": "Product/WeaponKit"
+        },
+        {
+            "SlotID": 7,
+            "ItemID": 1,
+            "ItemCount": 1,
+            "ImagePath": "Product/medkit"
+        },
+        {
+            "SlotID": 8,
+            "ItemID": 1,
+            "ItemCount": 1,
+            "ImagePath": "Product/medkit"
+        },
+        {
+            "SlotID": 9,
+            "ItemID": 1,
+            "ItemCount": 1,
+            "ImagePath": "Product/medkit"
+        }
+    ]
 }

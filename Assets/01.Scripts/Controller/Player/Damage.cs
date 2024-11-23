@@ -239,6 +239,7 @@ public class Damage : MonoBehaviourPunCallbacks, IPunObservable
         }
     }
     #endregion
+
     IEnumerator ExplosionUser()
     {
         GameObject _Eff = GameObject.Instantiate(_Effect, transform.position, Quaternion.identity);
@@ -255,6 +256,8 @@ public class Damage : MonoBehaviourPunCallbacks, IPunObservable
 
         //투명처리
         SetVisible(false);
+
+        transform.position = m_StPos;
 
         yield return null; // 한 프레임 대기 후 코루틴 다음 함수 실행
     }

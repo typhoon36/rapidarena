@@ -47,9 +47,7 @@ public class Shop_Mgr : MonoBehaviour
     public static Shop_Mgr Inst;
     void Awake()
     {
-
         Inst = this;
-        DontDestroyOnLoad(gameObject);
     }
     #endregion
 
@@ -162,7 +160,7 @@ public class Shop_Mgr : MonoBehaviour
         }
     }
 
-    #region Item Buy / Sell
+    #region BuyItem & SellItem
     public void BuyItem(ItemData a_Data)
     {
         if (Data_Mgr.m_UserData.Points < a_Data.ItemPrice)
@@ -183,6 +181,8 @@ public class Shop_Mgr : MonoBehaviour
                 ImagePath = a_Data.ImagePath
             };
             Data_Mgr.InvenSlots.Add(newSlot);
+
+            Debug.Log($"아이템 추가됨: {a_Data.ItemID}, 총 슬롯 수: {Data_Mgr.InvenSlots.Count}");
 
             RefreshItemList();
             RefreshInvenSlots();
@@ -222,9 +222,11 @@ public class Shop_Mgr : MonoBehaviour
     {
         if (Data_Mgr.InvenSlots.Count > a_Slot.m_SlotID)
         {
+            //Debug.Log("df");
             ItemData a_ItemData = Data_Mgr.ItemOrder.Find(x => x.ItemID == Data_Mgr.InvenSlots[a_Slot.m_SlotID].ItemID);
             if (a_ItemData != null)
             {
+                //Debug.Log("freshx");
                 a_Slot.AddItem(a_ItemData);
             }
         }
@@ -232,10 +234,13 @@ public class Shop_Mgr : MonoBehaviour
 
     public void RefreshInvenSlots()
     {
+
         Slot[] slots = InvenParent.GetComponentsInChildren<Slot>();
+
         foreach (var slot in slots)
         {
             Refresh_Slot(slot);
+            //Debug.Log("xxx");
         }
     }
 
@@ -267,4 +272,15 @@ public class Shop_Mgr : MonoBehaviour
         }
     }
     #endregion
+
+    void OnEnable()
+    {
+        // 씬 전환 후 필요한 참조를 다시 설정
+        Product_Nd[] products = FindObjectsOfType<Product_Nd>();
+        foreach (var product in products)
+        {
+            product.SetShopManager(this);
+        }
+    }
+
 }
