@@ -19,6 +19,14 @@
 
 - 엔진 환경 : Unity 2022.03.15(LTS)
 
+## 구현 기능
+* UI
+   * Scene
+      * Scene  : 시작 , 종료 버튼,설정버튼
+      * InGame : HP 
+   * WorldSPace
+      * 닉네임
+
 
 ## 사용 기술
 
