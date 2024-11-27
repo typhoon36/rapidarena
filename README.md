@@ -45,6 +45,6 @@
 [블로그](https://velog.io/@typhoon760/posts?tag=%ED%8F%AC%ED%8A%B8%ED%8F%B4%EB%A6%AC%EC%98%A4)
 
  ## 영상
-[플레이 영상](https://youtu.be/7IL2NW_SoXI?si=WMTmHV96WeVGsZX_)
+[플레이 영상](https://youtu.be/yoXBKNGJcDc?si=EIzZ-bqbERNuDQdl)
  
   
